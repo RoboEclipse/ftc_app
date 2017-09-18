@@ -27,22 +27,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.Robot3;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
-@Disabled
-public class ConceptNullOp extends OpMode {
+//@Disabled
+public class NullOp extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
