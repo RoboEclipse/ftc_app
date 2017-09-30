@@ -16,13 +16,13 @@ public class MecanumRobot {
 
     public MecanumRobot(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get("lf");
-        lr = hardwareMap.dcMotor.get("lr");
-        rf = hardwareMap.dcMotor.get("rf");
-        rr = hardwareMap.dcMotor.get("rr");
+        lf = hardwareMap.dcMotor.get("leftf_motor");
+        lr = hardwareMap.dcMotor.get("leftb_motor");
+        rf = hardwareMap.dcMotor.get("rightf_motor");
+        rr = hardwareMap.dcMotor.get("rightb_motor");
 
-        rr.setDirection(DcMotorSimple.Direction.REVERSE);
-        rf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lr.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
 
         lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
