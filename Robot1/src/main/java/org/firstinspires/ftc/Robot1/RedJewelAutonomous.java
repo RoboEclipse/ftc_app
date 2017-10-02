@@ -45,15 +45,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="RedJewelAutonomous", group="Linear Opmode")
+@TeleOp(name = "RedJewelAutonomous", group = "Linear Opmode")
 //@Disabled
 public class RedJewelAutonomous extends LinearOpMode {
 
@@ -68,14 +68,15 @@ public class RedJewelAutonomous extends LinearOpMode {
     I2cDevice colorC;
     I2cDeviceSynch colorCreader;
 
-    float armPosition = 1.0f;
-    boolean finished = false;
+    private float armPosition = 1.0f;
+    private boolean finished = false;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        lf  = hardwareMap.get(DcMotor.class, "leftf_drive");
+        lf = hardwareMap.get(DcMotor.class, "leftf_drive");
         lb = hardwareMap.get(DcMotor.class, "leftb_drive");
         rf = hardwareMap.get(DcMotor.class, "rightf_drive");
         rb = hardwareMap.get(DcMotor.class, "rightb_drive");
@@ -100,30 +101,42 @@ public class RedJewelAutonomous extends LinearOpMode {
             arm.setPosition(armPosition);
             //display values
             telemetry.addData("2 #C", colorCcache[0] & 0xFF);
-            if(colorCcache[0]>=9) {
+            if (colorCcache[0] >= 9) {
+                arm.setPosition(0.5);
                 tankDrive(-1.0, 1000);
                 finished = true;
             }
-            if(colorCcache[0]<=3 && colorCcache[0] != 0){
-                tankDrive(1.0,1000);
+            if (colorCcache[0] <= 3 && colorCcache[0] != 0) {
+                arm.setPosition(0.5);
+                tankDrive(1.0, 1000);
                 finished = true;
             }
-            if(colorCcache[0]==0){
+            if (colorCcache[0] == 0) {
                 armPosition -= 0.05;
-                if(armPosition<0.8){
+                if (armPosition < 0.8) {
+                    arm.setPosition(0.5);
                     finished = true;
                 }
             }
-            if(finished = true){
+            if (finished) {
                 arm.setPosition(0.3);
                 tankDrive(1.0, 5000);
+                break;
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
         }
+
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Running Time: " + runtime.toString());
+            telemetry.update();
+        }
     }
-    public void tankDrive(double power, int milliseconds){
+
+    private void tankDrive(double power, int milliseconds) {
         lf.setPower(power);
         lb.setPower(power);
         rf.setPower(power);

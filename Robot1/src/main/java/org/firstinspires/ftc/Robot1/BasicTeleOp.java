@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="BasicTeleOp", group="Iterative Opmode")
-@Disabled
+//@Disabled
 public class BasicTeleOp extends OpMode
 {
     // Declare OpMode members.
@@ -77,8 +76,8 @@ public class BasicTeleOp extends OpMode
         lb = hardwareMap.get(DcMotor.class, "leftb_drive");
         rf = hardwareMap.get(DcMotor.class, "rightf_drive");
         rb = hardwareMap.get(DcMotor.class, "rightb_drive");
-        arm = hardwareMap.get(DcMotor.class, "Arm");
-        claw = hardwareMap.get(Servo.class, "Claw");
+        arm = hardwareMap.get(DcMotor.class, "Arm_drive");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -116,7 +115,22 @@ public class BasicTeleOp extends OpMode
         leftPower  = -gamepad1.left_stick_y;
         rightPower = -gamepad1.right_stick_y;
         armPower = -gamepad2.left_stick_y;
-
+        if(gamepad1.dpad_up){
+            leftPower = 1;
+            rightPower = 1;
+        }
+        if(gamepad1.dpad_down){
+            leftPower = -1;
+            rightPower = -1;
+        }
+        if(gamepad1.dpad_left){
+            leftPower = 1;
+            rightPower = -1;
+        }
+        if(gamepad1.dpad_right){
+            leftPower = -1;
+            rightPower = 1;
+        }
         // Send calculated power to wheels
         lf.setPower(leftPower);
         lb.setPower(leftPower);
@@ -125,18 +139,6 @@ public class BasicTeleOp extends OpMode
         arm.setPower(armPower);
 
 
-        if(gamepad1.dpad_left){
-            lf.setPower(1.0);
-            rf.setPower(-1.0);
-            lb.setPower(1.0);
-            rb.setPower(-1.0);
-        }
-        if(gamepad1.dpad_right){
-            rf.setPower(1.0);
-            lf.setPower(-1.0);
-            rb.setPower(1.0);
-            lb.setPower(-1.0);
-        }
         if(gamepad2.a){
             claw.setPosition(0.5);
         }

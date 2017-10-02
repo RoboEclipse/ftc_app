@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MecanumRobot {
+class MecanumRobot {
     private DcMotor lf, lr, rf, rr;
     private Telemetry telemetry;
 
