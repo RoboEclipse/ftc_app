@@ -66,6 +66,7 @@ public class TestTeleOp extends OpMode {
             armPower = g.left_trigger * 0.3; // Maximum speed of arm motor os 0.3
         } else if (g.right_trigger > 0.0)
             armPower = g.right_trigger * -0.3;
+        else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
 
         telemetry.addData("jewel color", myRobot.readJewelColor());
