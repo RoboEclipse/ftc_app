@@ -3,6 +3,9 @@ package org.firstinspires.ftc.Robot1;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -10,16 +13,25 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 class MecanumRobot {
-    private DcMotor lf, lr, rf, rr;
+    private DcMotor lf, lr, rf, rr, ad, ls;
+
+    private NormalizedColorSensor jewelsensor, bottomsensor, gyrosensor;
+
     private Telemetry telemetry;
 
 
     public MecanumRobot(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get("leftf_motor");
-        lr = hardwareMap.dcMotor.get("leftb_motor");
-        rf = hardwareMap.dcMotor.get("rightf_motor");
-        rr = hardwareMap.dcMotor.get("rightb_motor");
+        lf = hardwareMap.dcMotor.get(RobotConfiguration.LeftFrontMotorName);
+        lr = hardwareMap.dcMotor.get(RobotConfiguration.LeftRearMotorName);
+        rf = hardwareMap.dcMotor.get(RobotConfiguration.RightFrontMotorName);
+        rr = hardwareMap.dcMotor.get(RobotConfiguration.RightRearMotorName);
+        ad = hardwareMap.dcMotor.get(RobotConfiguration.ArmDriveMotorName);
+        ls = hardwareMap.dcMotor.get(RobotConfiguration.LinearSlideMotorName);
+
+        jewelsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.JewelColorSensorName);
+        bottomsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.BottomColorSensorName);
+        gyrosensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.GyroSensorName);
 
         lr.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -316,6 +328,16 @@ class MecanumRobot {
         return 0;
 //        int angle = gyro.getIntegratedZValue() % 360;
 //        return angle;
+    }
+
+    public NormalizedRGBA getJewelSensorColor()
+    {
+        return jewelsensor.getNormalizedColors();
+    }
+
+    public NormalizedRGBA getBottomSensorColor()
+    {
+        return bottomsensor.getNormalizedColors();
     }
 
     public void disableEncoders() {
