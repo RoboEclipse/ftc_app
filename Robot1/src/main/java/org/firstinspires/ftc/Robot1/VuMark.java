@@ -28,6 +28,8 @@ public class VuMark {
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
 
+    private RelicRecoveryVuMark vuMark = null;
+
     public VuMark(Telemetry t, HardwareMap h)
     {
         telemetry = t;
@@ -57,16 +59,16 @@ public class VuMark {
 
     public void onLoop() {
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
         }
-
+/*
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
         telemetry.addData("Pose", format(pose));
 
-        /* We further illustrate how to decompose the pose into useful rotational and
-         * translational components */
+        // We further illustrate how to decompose the pose into useful rotational and
+        // translational components
         if (pose != null) {
             VectorF trans = pose.getTranslation();
             Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
@@ -84,10 +86,23 @@ public class VuMark {
         else {
             telemetry.addData("VuMark", "not visible");
         }
-
-        // Display the current value
-        telemetry.addData(">", "Press Stop to end test." );
+*/
         telemetry.update();
+    }
+
+    public boolean isCenterRelicVisiable()
+    {
+        return vuMark == RelicRecoveryVuMark.CENTER;
+    }
+
+    public boolean isLeftRelicVisiable()
+    {
+        return vuMark == RelicRecoveryVuMark.LEFT;
+    }
+
+    public boolean isRightRelicVisiable()
+    {
+        return vuMark == RelicRecoveryVuMark.RIGHT;
     }
 
     String format(OpenGLMatrix transformationMatrix) {
