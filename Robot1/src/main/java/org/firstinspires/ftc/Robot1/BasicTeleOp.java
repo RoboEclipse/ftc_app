@@ -55,12 +55,9 @@ public class BasicTeleOp extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor lf;
-    private DcMotor lb;
-    private DcMotor rf;
-    private DcMotor rb;
-    private DcMotor arm;
+    private DcMotor lf, lb, rf, rb, arm;
     private Servo claw;
+    private Servo left, right;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -78,7 +75,8 @@ public class BasicTeleOp extends OpMode
         rb = hardwareMap.get(DcMotor.class, "rightb_drive");
         arm = hardwareMap.get(DcMotor.class, "Arm_drive");
         claw = hardwareMap.get(Servo.class, "claw");
-
+        left = hardwareMap.get(Servo.class, "left");
+        right = hardwareMap.get(Servo.class, "right");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         lf.setDirection(DcMotor.Direction.REVERSE);
@@ -131,6 +129,22 @@ public class BasicTeleOp extends OpMode
             leftPower = -1;
             rightPower = 1;
         }
+        if(gamepad2.left_bumper){
+            if(gamepad2.left_trigger>0f){
+                left.setPosition(1);
+                right.setPosition(1);
+            }
+            if(gamepad2.right_trigger>0f){
+                left.setPosition(0.5);
+                left.setPosition(0.5);
+            }
+        }
+        if(gamepad2.a){
+            claw.setPosition(0.5);
+        }
+        if(gamepad2.b){
+            claw.setPosition(1.0);
+        }
         // Send calculated power to wheels
         lf.setPower(leftPower);
         lb.setPower(leftPower);
@@ -138,7 +152,16 @@ public class BasicTeleOp extends OpMode
         rb.setPower(rightPower);
         arm.setPower(armPower);
 
-
+        if(gamepad2.left_bumper){
+            if(gamepad2.left_trigger>0f){
+                left.setPosition(1);
+                right.setPosition(1);
+            }
+            if(gamepad2.right_trigger>1f){
+                left.setPosition(0.5);
+                left.setPosition(0.5);
+            }
+        }
         if(gamepad2.a){
             claw.setPosition(0.5);
         }
