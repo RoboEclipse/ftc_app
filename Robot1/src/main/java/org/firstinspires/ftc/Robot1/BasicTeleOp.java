@@ -49,15 +49,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="BasicTeleOp", group="Iterative Opmode")
+@TeleOp(name="TankDriveTeleOp", group="Iterative Opmode")
 //@Disabled
 public class BasicTeleOp extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor lf, lb, rf, rb, arm;
+    private DcMotor lfMotor, lbMotor, rfMotor, rbMotor, arm, extender;
     private Servo claw;
-    private Servo left, right;
+    //private Servo left, right;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -65,22 +65,23 @@ public class BasicTeleOp extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        lf  = hardwareMap.get(DcMotor.class, "leftf_drive");
-        lb = hardwareMap.get(DcMotor.class, "leftb_drive");
-        rf = hardwareMap.get(DcMotor.class, "rightf_drive");
-        rb = hardwareMap.get(DcMotor.class, "rightb_drive");
-        arm = hardwareMap.get(DcMotor.class, "Arm_drive");
+
+        lfMotor = hardwareMap.get(DcMotor.class, "leftf_motor");
+        lbMotor = hardwareMap.get(DcMotor.class, "leftb_motor");
+        rfMotor = hardwareMap.get(DcMotor.class, "rightf_motor");
+        rbMotor = hardwareMap.get(DcMotor.class, "rightb_motor");
+        arm = hardwareMap.get(DcMotor.class, "arm_drive");
+        extender = hardwareMap.get(DcMotor.class, "linearslide_motor");
         claw = hardwareMap.get(Servo.class, "claw");
-        left = hardwareMap.get(Servo.class, "left");
-        right = hardwareMap.get(Servo.class, "right");
+        //left = hardwareMap.get(Servo.class, "left");
+        //right = hardwareMap.get(Servo.class, "right");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        lf.setDirection(DcMotor.Direction.REVERSE);
-        lb.setDirection(DcMotor.Direction.REVERSE);
+        lfMotor.setDirection(DcMotor.Direction.REVERSE);
+        lbMotor.setDirection(DcMotor.Direction.REVERSE);
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -109,10 +110,13 @@ public class BasicTeleOp extends OpMode
         double leftPower;
         double rightPower;
         double armPower;
+        double extenderPower;
 
         leftPower  = -gamepad1.left_stick_y;
         rightPower = -gamepad1.right_stick_y;
-        armPower = -gamepad2.left_stick_y;
+        armPower = -gamepad2.left_stick_y*0.5;
+        extenderPower = -gamepad2.right_stick_y*0.5;
+
         if(gamepad1.dpad_up){
             leftPower = 1;
             rightPower = 1;
@@ -129,6 +133,15 @@ public class BasicTeleOp extends OpMode
             leftPower = -1;
             rightPower = 1;
         }
+        if(gamepad1.dpad_left){
+            lbMotor.setPower(-1.0);
+            rbMotor.setPower(1.0);
+        }
+        if(gamepad1.dpad_right){
+            lbMotor.setPower(1.0);
+            rbMotor.setPower(-1.0);
+        }
+        /*
         if(gamepad2.left_bumper){
             if(gamepad2.left_trigger>0f){
                 left.setPosition(1);
@@ -139,6 +152,7 @@ public class BasicTeleOp extends OpMode
                 left.setPosition(0.5);
             }
         }
+        */
         if(gamepad2.a){
             claw.setPosition(0.5);
         }
@@ -146,28 +160,13 @@ public class BasicTeleOp extends OpMode
             claw.setPosition(1.0);
         }
         // Send calculated power to wheels
-        lf.setPower(leftPower);
-        lb.setPower(leftPower);
-        rf.setPower(rightPower);
-        rb.setPower(rightPower);
+        lfMotor.setPower(leftPower);
+        lbMotor.setPower(leftPower);
+        rfMotor.setPower(rightPower);
+        rbMotor.setPower(rightPower);
         arm.setPower(armPower);
+        extender.setPower(extenderPower);
 
-        if(gamepad2.left_bumper){
-            if(gamepad2.left_trigger>0f){
-                left.setPosition(1);
-                right.setPosition(1);
-            }
-            if(gamepad2.right_trigger>1f){
-                left.setPosition(0.5);
-                left.setPosition(0.5);
-            }
-        }
-        if(gamepad2.a){
-            claw.setPosition(0.5);
-        }
-        if(gamepad2.b){
-            claw.setPosition(1.0);
-        }
 
 
         // Show the elapsed game time and wheel power.

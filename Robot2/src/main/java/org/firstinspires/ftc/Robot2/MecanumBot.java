@@ -1,41 +1,51 @@
-package org.firstinspires.ftc.Robot1;
+package org.firstinspires.ftc.Robot2;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-class MecanumRobot {
-    public DcMotor lf, lr, rf, rr, ad, ls;
-
-    private NormalizedColorSensor jewelsensor, bottomsensor;
-    private Gyroscope gyrosensor;
+class MecanumBot {
+    private DcMotor lf, lr, rf, rr, armDrive;
     private Telemetry telemetry;
-    private VuMark vuMark;
+    private BNO055IMU imu;
+    private Orientation angles;
+    private Acceleration gravity;
+    private ColorSensor jewelColorSensor;
+    private ColorSensor floorColorSensor;
 
+    private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
+    private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
+    private static final double ENCODER_DRIVE_POWER = 0.3;
 
-    public MecanumRobot(HardwareMap hardwareMap, Telemetry _telemetry) {
+    private double encoder_drive_power = ENCODER_DRIVE_POWER;
+    private double armDrivePower = 0.2;
+
+    public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get(RobotConfiguration.LeftFrontMotorName);
-        lr = hardwareMap.dcMotor.get(RobotConfiguration.LeftRearMotorName);
-        rf = hardwareMap.dcMotor.get(RobotConfiguration.RightFrontMotorName);
-        rr = hardwareMap.dcMotor.get(RobotConfiguration.RightRearMotorName);
-        ad = hardwareMap.dcMotor.get(RobotConfiguration.ArmDriveMotorName);
-        ls = hardwareMap.dcMotor.get(RobotConfiguration.LinearSlideMotorName);
-
-        jewelsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.JewelColorSensorName);
-        bottomsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.BottomColorSensorName);
-        gyrosensor = hardwareMap.get(Gyroscope.class, RobotConfiguration.GyroSensorName);
+        lf = hardwareMap.dcMotor.get("leftf_motor");
+        lr = hardwareMap.dcMotor.get("leftb_motor");
+        rf = hardwareMap.dcMotor.get("rightf_motor");
+        rr = hardwareMap.dcMotor.get("rightb_motor");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        armDrive = hardwareMap.dcMotor.get("armdrive");
+        jewelColorSensor = hardwareMap.colorSensor.get("jewelrcolor");
+        floorColorSensor = hardwareMap.colorSensor.get("floorcolor");
 
         lr.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -45,28 +55,41 @@ class MecanumRobot {
         rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        vuMark = new VuMark(_telemetry, hardwareMap);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
+        floorColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
+
     }
 
-    public AngularVelocity getGyrosensorValue()
-    {
-        return gyrosensor.getAngularVelocity(AngleUnit.DEGREES);
-    }
+    public double getAngle () {
+        double angleX;
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angleX = angles.thirdAngle;  //ToDo: assume the 3rd angle is the Robot front direction
+        //convert the angle to be within the +/-180 degree range
+        if (angleX > 180)  angleX -= 360;
+        if (angleX <= -180) angleX += 360;
+        return (angleX);
+        }
+
+    public double getGravity (){
+        gravity=imu.getGravity();
+        return(gravity.zAccel);
+        }
 
     public void onStart() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rr, rf);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rr, rf);
-        vuMark.onInit(VuforiaLocalizer.CameraDirection.BACK);
     }
-
-    public void onStop() {
-        stopDriveMotors();
-    }
-
-    private interface Stoppable {
-        public boolean stopped();
-    }
-
 
     private int averageRemainingTicks(DcMotor... ms) {
         int total = 0;
@@ -95,31 +118,6 @@ class MecanumRobot {
         }
     }
 
-    // Things that need to happen in the teleop loop to accommodate long-running
-    // tasks like running the flipper one at a time.
-    public void loop() {
-
-        encoderDriveSlowdown();
-        manageEncoderAccelleration(lf, lr, rf, rr);
-        vuMark.onLoop();
-    }
-
-
-    public void updateSensorTelemetry() {
-
-        telemetry.addData("Encoder Remain", averageRemainingTicks(lf, lr, rf, rr));
-        telemetry.addData("EncodersC", String.format(Locale.US, "%d\t%d\t%d\t%d\t%d",
-                lf.getCurrentPosition(),
-                lr.getCurrentPosition(),
-                rf.getCurrentPosition(),
-                rr.getCurrentPosition()));
-        telemetry.addData("EncodersT", String.format(Locale.US, "%d\t%d\t%d\t%d\t%d",
-                lf.getTargetPosition(),
-                lr.getTargetPosition(),
-                rf.getTargetPosition(),
-                rr.getTargetPosition()));
-    }
-
     /// Maximum absolute value of some number of arguments
     private static double ma(double... xs) {
         double ret = 0.0;
@@ -145,7 +143,7 @@ class MecanumRobot {
         final double td = direction;
         final double vt = rotationVelocity;
 
-        double s =  Math.sin(td + Math.PI / 4.0);
+        double s = Math.sin(td + Math.PI / 4.0);
         double c = Math.cos(td + Math.PI / 4.0);
         double m = Math.max(Math.abs(s), Math.abs(c));
         s /= m;
@@ -175,26 +173,16 @@ class MecanumRobot {
     public void stopDriveMotors() {
         lf.setPower(0.0);
         lr.setPower(0.0);
-
         rf.setPower(0.0);
         rr.setPower(0.0);
     }
-
-    // Encoder Driving
-
-    // Assuming 4" wheels
-    private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
-    private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
-    private static final double ENCODER_DRIVE_POWER = .3; // .35;
-
-    private double encoder_drive_power = ENCODER_DRIVE_POWER;
 
     void setEncoderDrivePower(double p) {
         encoder_drive_power = p;
     }
 
     void clearEncoderDrivePower() {
-        encoder_drive_power = ENCODER_DRIVE_POWER;
+        encoder_drive_power = 0.0;
     }
 
     private void setMode(DcMotor.RunMode mode, DcMotor... ms) {
@@ -333,28 +321,22 @@ class MecanumRobot {
         light_meter_readings_tooken = 0;
     }
 
-    public void resetGyro() {
-        //gyro.resetZAxisIntegrator();
-    }
-
-    public int getHeading() {
-        return 0;
-//        int angle = gyro.getIntegratedZValue() % 360;
-//        return angle;
-    }
-
-    public NormalizedRGBA getJewelSensorColor()
-    {
-        return jewelsensor.getNormalizedColors();
-    }
-
-    public NormalizedRGBA getBottomSensorColor()
-    {
-        return bottomsensor.getNormalizedColors();
-    }
-
     public void disableEncoders() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
+    }
+
+    public void controlArm (double armPower) {
+        armDrive.setPower (armPower);
+    }
+
+    public int[] readJewelColor() {
+        int[] rgb = {jewelColorSensor.red(), jewelColorSensor.green(),jewelColorSensor.blue()};
+        return (rgb);
+    }
+
+    public int[] readFloorColor() {
+        int[] rgb = {floorColorSensor.red(), floorColorSensor.green(),floorColorSensor.blue()};
+        return (rgb);
     }
 }
 

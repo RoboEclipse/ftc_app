@@ -29,8 +29,8 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "RedJewelAutonomous", group = "Linear Opmode")
+@Autonomous(name = "RedJewelAutonomous", group = "Linear Opmode")
 //@Disabled
 public class RedJewelAutonomous extends LinearOpMode {
 
@@ -76,12 +76,12 @@ public class RedJewelAutonomous extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        lf = hardwareMap.get(DcMotor.class, "leftf_drive");
-        lb = hardwareMap.get(DcMotor.class, "leftb_drive");
-        rf = hardwareMap.get(DcMotor.class, "rightf_drive");
-        rb = hardwareMap.get(DcMotor.class, "rightb_drive");
-        arm = hardwareMap.get(Servo.class, "JewelArm");
-        colorC = hardwareMap.i2cDevice.get("cc");
+        lf = hardwareMap.get(DcMotor.class, "leftf_motor");
+        lb = hardwareMap.get(DcMotor.class, "leftb_motor");
+        rf = hardwareMap.get(DcMotor.class, "rightf_motor");
+        rb = hardwareMap.get(DcMotor.class, "rightb_motor");
+        arm = hardwareMap.get(Servo.class, "jewel_arm");
+        colorC = hardwareMap.i2cDevice.get("jewel_sensor");
         colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
         colorCreader.engage();
         colorCreader.write8(3, 0);

@@ -1,41 +1,25 @@
-package org.firstinspires.ftc.Robot1;
+package org.firstinspires.ftc.Robot3;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 class MecanumRobot {
-    public DcMotor lf, lr, rf, rr, ad, ls;
-
-    private NormalizedColorSensor jewelsensor, bottomsensor;
-    private Gyroscope gyrosensor;
+    private DcMotor lf, lr, rf, rr;
     private Telemetry telemetry;
-    private VuMark vuMark;
 
 
     public MecanumRobot(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get(RobotConfiguration.LeftFrontMotorName);
-        lr = hardwareMap.dcMotor.get(RobotConfiguration.LeftRearMotorName);
-        rf = hardwareMap.dcMotor.get(RobotConfiguration.RightFrontMotorName);
-        rr = hardwareMap.dcMotor.get(RobotConfiguration.RightRearMotorName);
-        ad = hardwareMap.dcMotor.get(RobotConfiguration.ArmDriveMotorName);
-        ls = hardwareMap.dcMotor.get(RobotConfiguration.LinearSlideMotorName);
-
-        jewelsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.JewelColorSensorName);
-        bottomsensor = hardwareMap.get(NormalizedColorSensor.class, RobotConfiguration.BottomColorSensorName);
-        gyrosensor = hardwareMap.get(Gyroscope.class, RobotConfiguration.GyroSensorName);
+        lf = hardwareMap.dcMotor.get("leftf_motor");
+        lr = hardwareMap.dcMotor.get("leftb_motor");
+        rf = hardwareMap.dcMotor.get("rightf_motor");
+        rr = hardwareMap.dcMotor.get("rightb_motor");
 
         lr.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -44,19 +28,11 @@ class MecanumRobot {
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        vuMark = new VuMark(_telemetry, hardwareMap);
-    }
-
-    public AngularVelocity getGyrosensorValue()
-    {
-        return gyrosensor.getAngularVelocity(AngleUnit.DEGREES);
     }
 
     public void onStart() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rr, rf);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rr, rf);
-        vuMark.onInit(VuforiaLocalizer.CameraDirection.BACK);
     }
 
     public void onStop() {
@@ -101,7 +77,6 @@ class MecanumRobot {
 
         encoderDriveSlowdown();
         manageEncoderAccelleration(lf, lr, rf, rr);
-        vuMark.onLoop();
     }
 
 
@@ -341,16 +316,6 @@ class MecanumRobot {
         return 0;
 //        int angle = gyro.getIntegratedZValue() % 360;
 //        return angle;
-    }
-
-    public NormalizedRGBA getJewelSensorColor()
-    {
-        return jewelsensor.getNormalizedColors();
-    }
-
-    public NormalizedRGBA getBottomSensorColor()
-    {
-        return bottomsensor.getNormalizedColors();
     }
 
     public void disableEncoders() {
