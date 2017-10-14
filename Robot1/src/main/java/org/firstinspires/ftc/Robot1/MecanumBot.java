@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -21,41 +22,47 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 class MecanumBot {
-    private DcMotor lf, lr, rf, rr, armDrive;
+    private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
     private BNO055IMU imu;
     private Orientation angles;
     private Acceleration gravity;
-    private ColorSensor jewelColorSensor;
-    private ColorSensor floorColorSensor;
+    private ColorSensor jewelColorSensor, bottomColorSensor;
+    private Servo clawServo, jewelServo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
     private static final double ENCODER_DRIVE_POWER = 0.3;
 
     private double encoder_drive_power = ENCODER_DRIVE_POWER;
-    private double armDrivePower = 0.2;
+
+    RobotConfiguration myRobotConfig = new RobotConfiguration();
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get("leftf_motor");
-        lr = hardwareMap.dcMotor.get("leftb_motor");
-        rf = hardwareMap.dcMotor.get("rightf_motor");
-        rr = hardwareMap.dcMotor.get("rightb_motor");
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        armDrive = hardwareMap.dcMotor.get("armdrive");
-        jewelColorSensor = hardwareMap.colorSensor.get("jewelrcolor");
-        floorColorSensor = hardwareMap.colorSensor.get("floorcolor");
+        lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
+        lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
+        rf = hardwareMap.dcMotor.get(myRobotConfig.RightFrontMotorName);
+        rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
+        armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
+        slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
+        //jewelColorSensor = hardwareMap.colorSensor.get(myRobotConfig.JewelColorSensorName);
+        //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
+        //imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
+        //clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
+        //jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
-        lr.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lr.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rr.setDirection(DcMotorSimple.Direction.REVERSE);
 
         lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -67,7 +74,7 @@ class MecanumBot {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
-        floorColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
+        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));*/
 
     }
 
@@ -86,39 +93,56 @@ class MecanumBot {
         return(gravity.zAccel);
         }
 
-    public void onStart() {
+    public void controlArm (double armPower) {
+        armMotor.setPower (armPower);
+    }
+
+    public int[] readJewelColor() {
+        int[] rgb = {jewelColorSensor.red(), jewelColorSensor.green(),jewelColorSensor.blue()};
+        return (rgb);
+    }
+
+    public int[] readFloorColor() {
+        int[] rgb = {bottomColorSensor.red(), bottomColorSensor.green(),bottomColorSensor.blue()};
+        return (rgb);
+    }
+
+    public void moveJewelServo (double position){
+        jewelServo.setPosition( position);
+    }
+
+    public void moveClawServo ( double position) {
+        clawServo.setPosition( position);
+    }
+
+    /*public void onStart() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rr, rf);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rr, rf);
     }
 
-    private int averageRemainingTicks(DcMotor... ms) {
-        int total = 0;
-        int count = 0;
-        for (DcMotor m : ms) {
-            if (m.getMode() == DcMotor.RunMode.RUN_TO_POSITION && 100 < Math.abs(m.getTargetPosition())) {
-                total += Math.abs(m.getTargetPosition() - m.getCurrentPosition());
-                count += 1;
-            }
-        }
-        return 0 == count ? 0 : total / count;
+    public void encoderDriveTiles(double direction, double tiles) {
+        encoderDriveInches(direction, 24.0 * tiles);
     }
 
-    private static int SLOW_DOWN_HERE = 1120;
-    private static double ARBITRARY_SLOW_SPEED = .3;
-    private boolean slowedDown = false;
-    private void encoderDriveSlowdown() {
-        if (! slowedDown) {
-            if (lf.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
-                int remaining = averageRemainingTicks(lf, lr, rf, rr);
-                if (remaining < SLOW_DOWN_HERE) {
-                    slowedDown = true;
-                    setPower(ARBITRARY_SLOW_SPEED, lf, lr, rf, rr);
-                }
-            }
-        }
+    void setEncoderDrivePower(double p) {
+        encoder_drive_power = p;
     }
 
-    /// Maximum absolute value of some number of arguments
+    void clearEncoderDrivePower() {
+        encoder_drive_power = 0.0;
+    }
+
+    private double total_light_meter_reading = 0.0;
+    private int light_meter_readings_tooken = 0;
+    private boolean collect_light_meter_info = false;
+
+    public void startCollectingLightMeter() {
+        collect_light_meter_info = true;
+        total_light_meter_reading = 0.0;
+        light_meter_readings_tooken = 0;
+    }*/
+
+    // Maximum absolute value of some number of arguments
     private static double ma(double... xs) {
         double ret = 0.0;
         for (double x : xs) {
@@ -169,20 +193,12 @@ class MecanumBot {
         telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
     }
 
-    /// Shut down all motors
+    // Shut down all motors
     public void stopDriveMotors() {
         lf.setPower(0.0);
         lr.setPower(0.0);
         rf.setPower(0.0);
         rr.setPower(0.0);
-    }
-
-    void setEncoderDrivePower(double p) {
-        encoder_drive_power = p;
-    }
-
-    void clearEncoderDrivePower() {
-        encoder_drive_power = 0.0;
     }
 
     private void setMode(DcMotor.RunMode mode, DcMotor... ms) {
@@ -204,6 +220,7 @@ class MecanumBot {
     }
 
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
+
     private boolean busy(DcMotor... ms) {
         int total = 0;
         for (DcMotor m : ms) {
@@ -221,10 +238,6 @@ class MecanumBot {
 
     }
 
-    public void encoderDriveTiles(double direction, double tiles) {
-        encoderDriveInches(direction, 24.0 * tiles);
-    }
-
     public void encoderDriveInches(double direction, double inches) {
         final Wheels w = getWheels(direction, 1.0, 0.0);
         final int ticks = (int)(inches * TICKS_PER_INCH);
@@ -240,6 +253,34 @@ class MecanumBot {
 
     private void encoderDrive(double lft, double rft, double lrt, double rrt) {
         encoderDrive((int) lft, (int) rft, (int) lrt, (int) rrt);
+    }
+
+    private static int SLOW_DOWN_HERE = 1120;
+    private static double ARBITRARY_SLOW_SPEED = .3;
+    private boolean slowedDown = false;
+
+    private int averageRemainingTicks(DcMotor... ms) {
+        int total = 0;
+        int count = 0;
+        for (DcMotor m : ms) {
+            if (m.getMode() == DcMotor.RunMode.RUN_TO_POSITION && 100 < Math.abs(m.getTargetPosition())) {
+                total += Math.abs(m.getTargetPosition() - m.getCurrentPosition());
+                count += 1;
+            }
+        }
+        return 0 == count ? 0 : total / count;
+    }
+
+    private void encoderDriveSlowdown() {
+        if (! slowedDown) {
+            if (lf.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+                int remaining = averageRemainingTicks(lf, lr, rf, rr);
+                if (remaining < SLOW_DOWN_HERE) {
+                    slowedDown = true;
+                    setPower(ARBITRARY_SLOW_SPEED, lf, lr, rf, rr);
+                }
+            }
+        }
     }
 
     private void encoderDrive(int lft, int rft, int lrt, int rrt) {
@@ -311,32 +352,9 @@ class MecanumBot {
         setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
     }
 
-    private double total_light_meter_reading = 0.0;
-    private int light_meter_readings_tooken = 0;
-    private boolean collect_light_meter_info = false;
-
-    public void startCollectingLightMeter() {
-        collect_light_meter_info = true;
-        total_light_meter_reading = 0.0;
-        light_meter_readings_tooken = 0;
-    }
-
     public void disableEncoders() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
     }
 
-    public void controlArm (double armPower) {
-        armDrive.setPower (armPower);
-    }
-
-    public int[] readJewelColor() {
-        int[] rgb = {jewelColorSensor.red(), jewelColorSensor.green(),jewelColorSensor.blue()};
-        return (rgb);
-    }
-
-    public int[] readFloorColor() {
-        int[] rgb = {floorColorSensor.red(), floorColorSensor.green(),floorColorSensor.blue()};
-        return (rgb);
-    }
 }
 
