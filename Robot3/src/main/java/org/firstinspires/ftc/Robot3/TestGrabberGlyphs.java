@@ -26,7 +26,7 @@ public class TestGrabberGlyphs extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        leftservo = HardwareMap.get(com.qualcomm.robotcore.hardware.Servo.class, "leftarm");
+        leftservo = hardwareMap.get(com.qualcomm.robotcore.hardware.Servo.class, "leftarm");
         // Set the servo to the max position first;
         leftservo.setPosition(leftposition);
 

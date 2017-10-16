@@ -9,18 +9,25 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 public class TestTeleOp extends OpMode {
 
     MecanumBot myRobot = new MecanumBot();
-    Gamepad g = gamepad1;
+    Gamepad g;
 
     final double dpad_speed = 0.3;
+    double armPower = 0.0;
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
+    double servoMinPos = 0.0;
+    double servoMaxPos = 0.5; //ToDo need to check with real robot on servo position
+    double jewelServoPos = 0.5;
+    double INCREMENT = 0.01;
+    double clawServoMinPos = 0.0;
+    double clawServoMaxPos = 0.5;
+    double clawServoPos = 0.5;
     /*
      * Code to run ONCE when the driver hits INIT
      */
 
-    double armPower = 0.0;
     @Override
     public void init() {
-
+        g = gamepad1;
         myRobot.initMecanumBot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -34,7 +41,7 @@ public class TestTeleOp extends OpMode {
 
     }
     @Override
-    public void loop() {
+   public void loop() {
         if (g.dpad_up) {
             theta = 0.0;
             v_theta = dpad_speed;
@@ -55,21 +62,55 @@ public class TestTeleOp extends OpMode {
             v_theta = Math.sqrt(lx * lx + ly * ly);
             v_rotation = g.right_stick_x;
         }
-        if (g.right_bumper || g.left_bumper) {
-            theta += Math.PI / 2.0;
-        }
+
         myRobot.drive(theta, v_theta, v_rotation); //move robot
 
         if (g.left_trigger > 0.0) {
-            armPower = g.left_trigger * 0.3; // Maximum speed of arm motor os 0.3
+            armPower = g.left_trigger * 0.2; // Maximum speed of arm motor os 0.2
         } else if (g.right_trigger > 0.0)
-            armPower = g.right_trigger * -0.3;
+            armPower = g.right_trigger * -0.2;
         else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
+        
+        /*if (g.a) {
+            // jewel servo go down
+            jewelServoPos -= INCREMENT;
+            if (jewelServoPos <= servoMinPos) {
+                jewelServoPos = servoMinPos;
+            }
+        }
+         if (g.b) {
+             jewelServoPos += INCREMENT;
+             if (jewelServoPos >= servoMaxPos) {
+                 jewelServoPos = servoMaxPos;
+             }
+         }
+        // Set the servo to the new position and pause;
+       myRobot.moveJewelServo(jewelServoPos);
+
+
+        if (g.right_bumper) {
+            clawServoPos -= INCREMENT ;
+            if (clawServoPos <= clawServoMinPos) {
+                clawServoPos = clawServoMinPos;
+            }
+        }
+        if (g.left_bumper) {
+            clawServoPos += INCREMENT ;
+            if (clawServoPos >= clawServoMaxPos){
+                clawServoPos = clawServoMinPos;
+            }
+        }
+
+        myRobot.moveClawServo(clawServoPos);
+
 
         telemetry.addData("jewel color", myRobot.readJewelColor());
-        telemetry.addData("floor color", myRobot.readFloorColor());
+        telemetry.addData("bottom color", myRobot.readFloorColor());
         telemetry.addData("heading", myRobot.getAngle());
+        telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);
+        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);*/
         telemetry.update();
+
     }
 }
