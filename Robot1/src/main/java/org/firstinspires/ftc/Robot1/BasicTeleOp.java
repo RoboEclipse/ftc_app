@@ -57,6 +57,8 @@ public class BasicTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor lfMotor, lbMotor, rfMotor, rbMotor, arm, extender;
     private Servo claw;
+    private MecanumBot Drivetrain= null;
+    private double clawPosition=1;
     //private Servo left, right;
 
     /*
@@ -68,7 +70,6 @@ public class BasicTeleOp extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-
         lfMotor = hardwareMap.get(DcMotor.class, "leftf_motor");
         lbMotor = hardwareMap.get(DcMotor.class, "leftb_motor");
         rfMotor = hardwareMap.get(DcMotor.class, "rightf_motor");
@@ -80,10 +81,18 @@ public class BasicTeleOp extends OpMode
         //right = hardwareMap.get(Servo.class, "right");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        lfMotor.setDirection(DcMotor.Direction.REVERSE);
-        lbMotor.setDirection(DcMotor.Direction.REVERSE);
+        rfMotor.setDirection(DcMotor.Direction.REVERSE);
+        rbMotor.setDirection(DcMotor.Direction.REVERSE);
         // Tell the driver that initialization is complete.
+        /*
+        lbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lfMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rfMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        */
         telemetry.addData("Status", "Initialized");
+
+
     }
 
     /*
@@ -105,6 +114,7 @@ public class BasicTeleOp extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
+
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
@@ -112,9 +122,11 @@ public class BasicTeleOp extends OpMode
         double armPower;
         double extenderPower;
 
+
+
         leftPower  = -gamepad1.left_stick_y;
         rightPower = -gamepad1.right_stick_y;
-        armPower = -gamepad2.left_stick_y*0.5;
+        armPower = -gamepad2.left_stick_y*0.25;
         extenderPower = -gamepad2.right_stick_y*0.5;
 
         if(gamepad1.dpad_up){
@@ -134,12 +146,36 @@ public class BasicTeleOp extends OpMode
             rightPower = 1;
         }
         if(gamepad1.dpad_left){
-            lbMotor.setPower(-1.0);
-            rbMotor.setPower(1.0);
+            /*
+            lbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lbMotor.setTargetPosition(-1000);
+            lfMotor.setTargetPosition(1000);
+            rfMotor.setTargetPosition(-1000);
+            rbMotor.setTargetPosition(1000);
+            */
+            lbMotor.setPower(-1);
+            lfMotor.setPower(1);
+            rfMotor.setPower(-1);
+            rbMotor.setPower(1);
         }
         if(gamepad1.dpad_right){
-            lbMotor.setPower(1.0);
-            rbMotor.setPower(-1.0);
+            /*
+            lbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lbMotor.setTargetPosition(1000);
+            lfMotor.setTargetPosition(-1000);
+            rbMotor.setTargetPosition(-1000);
+            rfMotor.setTargetPosition(1000);
+            */
+            lbMotor.setPower(1);
+            lfMotor.setPower(-1);
+            rfMotor.setPower(1);
+            rbMotor.setPower(-1);
         }
         /*
         if(gamepad2.left_bumper){
@@ -154,10 +190,14 @@ public class BasicTeleOp extends OpMode
         }
         */
         if(gamepad2.a){
-            claw.setPosition(0.5);
+            if(clawPosition>0.5){
+                clawPosition-=0.1;
+            }
         }
         if(gamepad2.b){
-            claw.setPosition(1.0);
+            if(clawPosition<1.0){
+                clawPosition+=0.1;
+            }
         }
         // Send calculated power to wheels
         lfMotor.setPower(leftPower);
@@ -165,6 +205,7 @@ public class BasicTeleOp extends OpMode
         rfMotor.setPower(rightPower);
         rbMotor.setPower(rightPower);
         arm.setPower(armPower);
+        claw.setPosition(clawPosition);
         extender.setPower(extenderPower);
 
 
