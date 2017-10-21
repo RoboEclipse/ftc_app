@@ -71,7 +71,7 @@ public class MecanumTeleop extends OpMode {
             }
         }
         arm.setPower(armPower);
-        claw.setPosition(clawPosition);
+        //robot.moveClaw(clawPosition);
         extender.setPower(extenderPower);
         if (debug_mode) {
             robot.updateSensorTelemetry();

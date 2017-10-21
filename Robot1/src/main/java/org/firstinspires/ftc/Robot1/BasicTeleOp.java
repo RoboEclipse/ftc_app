@@ -57,8 +57,10 @@ public class BasicTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor lfMotor, lbMotor, rfMotor, rbMotor, arm, extender;
     private Servo claw;
-    private MecanumBot Drivetrain= null;
+    private MecanumRobot myRobot= null;
     private double clawPosition=1;
+    final double dpad_speed = 0.3;
+    double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     //private Servo left, right;
 
     /*
@@ -83,6 +85,7 @@ public class BasicTeleOp extends OpMode
         // Reverse the motor that runs backwards when connected directly to the battery
         rfMotor.setDirection(DcMotor.Direction.REVERSE);
         rbMotor.setDirection(DcMotor.Direction.REVERSE);
+        myRobot = new MecanumRobot(hardwareMap, telemetry);
         // Tell the driver that initialization is complete.
         /*
         lbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -137,45 +140,15 @@ public class BasicTeleOp extends OpMode
             leftPower = -1;
             rightPower = -1;
         }
-        if(gamepad1.dpad_left){
-            leftPower = 1;
-            rightPower = -1;
+        if (gamepad1.dpad_left) {
+            theta = 3.0 * Math.PI / 2.0;
+            v_theta = dpad_speed;
+            myRobot.drive(theta, v_theta, v_rotation);
         }
-        if(gamepad1.dpad_right){
-            leftPower = -1;
-            rightPower = 1;
-        }
-        if(gamepad1.dpad_left){
-            /*
-            lbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lbMotor.setTargetPosition(-1000);
-            lfMotor.setTargetPosition(1000);
-            rfMotor.setTargetPosition(-1000);
-            rbMotor.setTargetPosition(1000);
-            */
-            lbMotor.setPower(-1);
-            lfMotor.setPower(1);
-            rfMotor.setPower(-1);
-            rbMotor.setPower(1);
-        }
-        if(gamepad1.dpad_right){
-            /*
-            lbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rbMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rfMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lbMotor.setTargetPosition(1000);
-            lfMotor.setTargetPosition(-1000);
-            rbMotor.setTargetPosition(-1000);
-            rfMotor.setTargetPosition(1000);
-            */
-            lbMotor.setPower(1);
-            lfMotor.setPower(-1);
-            rfMotor.setPower(1);
-            rbMotor.setPower(-1);
+        if (gamepad1.dpad_right) {
+            theta = Math.PI / 2.0;
+            v_theta = dpad_speed;
+            myRobot.drive(theta, v_theta, v_rotation);
         }
         /*
         if(gamepad2.left_bumper){
