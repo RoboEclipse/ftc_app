@@ -69,9 +69,9 @@ public class TestTeleOp extends OpMode {
         myRobot.drive(theta, v_theta, v_rotation); //move robot
 
         if (g.left_trigger > 0.0) {
-            armPower = g.left_trigger * 0.2; // Maximum speed of arm motor os 0.2
+            armPower += INCREMENT * 0.5; // Maximum speed of arm motor os 0.2
         } else if (g.right_trigger > 0.0)
-            armPower = g.right_trigger * -0.2;
+            armPower -= INCREMENT * 0.5;
         else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
 
@@ -98,7 +98,7 @@ public class TestTeleOp extends OpMode {
              }
          }
         // Set the servo to the new position and pause;
-       myRobot.moveJewelServo(jewelServoPos);
+       myRobot.moveJewelServo(jewelServoPos);*/
 
 
         if (g.right_bumper) {
@@ -117,11 +117,11 @@ public class TestTeleOp extends OpMode {
         myRobot.moveClawServo(clawServoPos);
 
 
-        telemetry.addData("jewel color", myRobot.readJewelColor());
+        /*telemetry.addData("jewel color", myRobot.readJewelColor());
         telemetry.addData("bottom color", myRobot.readFloorColor());
         telemetry.addData("heading", myRobot.getAngle());
-        telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);
-        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);*/
+        telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);*/
+        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
         telemetry.update();
 
     }

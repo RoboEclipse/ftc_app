@@ -49,7 +49,7 @@ class MecanumBot {
         //jewelColorSensor = hardwareMap.colorSensor.get(myRobotConfig.JewelColorSensorName);
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         //imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
-        //clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
+        clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
         //jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
