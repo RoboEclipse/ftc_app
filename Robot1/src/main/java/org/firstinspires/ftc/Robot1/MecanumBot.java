@@ -97,6 +97,8 @@ class MecanumBot {
         armMotor.setPower (armPower);
     }
 
+    public void controlSlide ( double slidePower) { slideMotor.setPower (slidePower) ; }
+
     public int[] readJewelColor() {
         int[] rgb = {jewelColorSensor.red(), jewelColorSensor.green(),jewelColorSensor.blue()};
         return (rgb);

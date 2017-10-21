@@ -21,6 +21,7 @@ public class TestTeleOp extends OpMode {
     double clawServoMinPos = 0.0;
     double clawServoMaxPos = 0.5;
     double clawServoPos = 0.5;
+    double slidePower = 0.0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -31,6 +32,8 @@ public class TestTeleOp extends OpMode {
         myRobot.initMecanumBot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        slidePower = 0.0;
+        armPower = 0.0;
     }
 
     /*
@@ -71,6 +74,15 @@ public class TestTeleOp extends OpMode {
             armPower = g.right_trigger * -0.2;
         else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
+
+        // uses x and y to control linear slide. x is slide out, y is slide in
+        if (g.x )
+            slidePower += INCREMENT;
+        else if (g.y)
+            slidePower -= INCREMENT;
+        else slidePower = 0.0;
+
+        myRobot.controlSlide(slidePower);
         
         /*if (g.a) {
             // jewel servo go down
