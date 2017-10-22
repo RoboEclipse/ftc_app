@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 public class TestTeleOp extends OpMode {
 
     MecanumBot myRobot = new MecanumBot();
-    Gamepad g1; //Controlls drive//
-    Gamepad g2;//Controls arm, slider, and servos//
+    Gamepad g;
 
     final double dpad_speed = 0.3;
     double armPower = 0.0;
@@ -28,9 +27,7 @@ public class TestTeleOp extends OpMode {
 
     @Override
     public void init() {
-        g1 = gamepad1;
-        g2 = gamepad2;
-
+        g = gamepad1;
         myRobot.initMecanumBot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -45,44 +42,44 @@ public class TestTeleOp extends OpMode {
     }
     @Override
    public void loop() {
-        if (g1.dpad_up) {
+        if (g.dpad_up) {
             theta = 0.0;
             v_theta = dpad_speed;
-        } else if (g1.dpad_down) {
+        } else if (g.dpad_down) {
             theta = Math.PI;
             v_theta = dpad_speed;
-        } else if (g1.dpad_left) {
+        } else if (g.dpad_left) {
             theta = 3.0 * Math.PI / 2.0;
             v_theta = dpad_speed;
-        } else if (g1.dpad_right) {
+        } else if (g.dpad_right) {
             theta = Math.PI / 2.0;
             v_theta = dpad_speed;
         } else {
-            final double lx = g1.left_stick_x;
-            final double ly = -g1.left_stick_y;
+            final double lx = g.left_stick_x;
+            final double ly = -g.left_stick_y;
 
             theta = Math.atan2(lx, ly);
             v_theta = Math.sqrt(lx * lx + ly * ly);
-            v_rotation = g1.right_stick_x;
+            v_rotation = g.right_stick_x;
         }
 
         myRobot.drive(theta, v_theta, v_rotation); //move robot
 
-        if (g2.left_trigger > 0.0) {
-            armPower = g2.left_trigger * 0.05; // Maximum speed of arm motor os 0.2
-        } else if (g2.right_trigger > 0.0)
-            armPower = g2.right_trigger * (-0.05);
+        if (g.left_trigger > 0.0) {
+            armPower = g.left_trigger * 0.2; // Maximum speed of arm motor os 0.2
+        } else if (g.right_trigger > 0.0)
+            armPower = g.right_trigger * -0.2;
         else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
         
-        /*if (g2.a) {
+        /*if (g.a) {
             // jewel servo go down
             jewelServoPos -= INCREMENT;
             if (jewelServoPos <= servoMinPos) {
                 jewelServoPos = servoMinPos;
             }
         }
-         if (g2.b) {
+         if (g.b) {
              jewelServoPos += INCREMENT;
              if (jewelServoPos >= servoMaxPos) {
                  jewelServoPos = servoMaxPos;
@@ -90,15 +87,15 @@ public class TestTeleOp extends OpMode {
          }
         // Set the servo to the new position and pause;
        myRobot.moveJewelServo(jewelServoPos);
-*/
 
-        if (g2.right_bumper) {
+
+        if (g.right_bumper) {
             clawServoPos -= INCREMENT ;
             if (clawServoPos <= clawServoMinPos) {
                 clawServoPos = clawServoMinPos;
             }
         }
-        if (g2.left_bumper) {
+        if (g.left_bumper) {
             clawServoPos += INCREMENT ;
             if (clawServoPos >= clawServoMaxPos){
                 clawServoPos = clawServoMinPos;
@@ -108,11 +105,11 @@ public class TestTeleOp extends OpMode {
         myRobot.moveClawServo(clawServoPos);
 
 
-        //telemetry.addData("jewel color", myRobot.readJewelColor());
-        //telemetry.addData("bottom color", myRobot.readFloorColor());
-        //telemetry.addData("heading", myRobot.getAngle());
-        //telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);
-        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
+        telemetry.addData("jewel color", myRobot.readJewelColor());
+        telemetry.addData("bottom color", myRobot.readFloorColor());
+        telemetry.addData("heading", myRobot.getAngle());
+        telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);
+        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);*/
         telemetry.update();
 
     }
