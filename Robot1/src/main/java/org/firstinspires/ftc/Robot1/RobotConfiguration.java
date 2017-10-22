@@ -15,8 +15,8 @@ public class RobotConfiguration {
     public static final String LinearSlideMotorName = "linearslide_motor";
 
     // Servos
-    public static final String ClawServoName = "claw_servo";
-    public static final String JewelServoName= "jewel_servo";
+    public static final String ClawServoName = "clawServo";
+    public static final String JewelServoName= "jewelServo";
 
     //Sensors
     public static final String JewelColorSensorName= "jewel_sensor";
