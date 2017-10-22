@@ -49,7 +49,7 @@ class MecanumBot {
         //jewelColorSensor = hardwareMap.colorSensor.get(myRobotConfig.JewelColorSensorName);
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         //imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
-        //clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
+        clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
         //jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -115,7 +115,7 @@ class MecanumBot {
         clawServo.setPosition( position);
     }
 
-    /*public void onStart() {
+    public void onStart() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rr, rf);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rr, rf);
     }
@@ -140,7 +140,7 @@ class MecanumBot {
         collect_light_meter_info = true;
         total_light_meter_reading = 0.0;
         light_meter_readings_tooken = 0;
-    }*/
+    }
 
     // Maximum absolute value of some number of arguments
     private static double ma(double... xs) {
