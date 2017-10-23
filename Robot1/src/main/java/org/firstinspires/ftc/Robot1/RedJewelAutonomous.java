@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -54,7 +55,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name = "RedJewelAutonomous", group = "Linear Opmode")
-//@Disabled
+@Disabled
 public class RedJewelAutonomous extends LinearOpMode {
 
     // Declare OpMode members.
@@ -67,6 +68,7 @@ public class RedJewelAutonomous extends LinearOpMode {
     byte[] colorCcache;
     I2cDevice colorC;
     I2cDeviceSynch colorCreader;
+    MecanumBot myRobot= new MecanumBot();
 
     private float armPosition = 1.0f;
     private boolean finished = false;
@@ -81,6 +83,7 @@ public class RedJewelAutonomous extends LinearOpMode {
         rf = hardwareMap.get(DcMotor.class, "rightf_motor");
         rb = hardwareMap.get(DcMotor.class, "rightb_motor");
         arm = hardwareMap.get(Servo.class, "jewel_arm");
+
         colorC = hardwareMap.i2cDevice.get("jewel_sensor");
         colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
         colorCreader.engage();

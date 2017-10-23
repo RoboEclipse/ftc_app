@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -15,8 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -46,11 +42,11 @@ class MecanumBot {
         rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
         armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
         slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
-        //jewelColorSensor = hardwareMap.colorSensor.get(myRobotConfig.JewelColorSensorName);
+        jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         //imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
         clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
-        //jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
+        jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -357,6 +353,20 @@ class MecanumBot {
     public void disableEncoders() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
     }
-
+    public int GetJewelSensorBlue(){
+        return jewelColorSensor.blue();
+    }
+    public int GetJewelSensorRed(){
+        return jewelColorSensor.red();
+    }
+    public void setJewelArm(double jewelPosition){
+        jewelServo.setPosition(jewelPosition);
+    }
+    public void tankDrive(double power) {
+        lf.setPower(power);
+        lr.setPower(power);
+        rf.setPower(power);
+        rr.setPower(power);
+    }
 }
 
