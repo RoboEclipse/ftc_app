@@ -42,7 +42,7 @@ class MecanumRobot {
         armDrive = hardwareMap.dcMotor.get(RobotConfiguration.ArmDriveMotorName);
         linearSlider = hardwareMap.dcMotor.get(RobotConfiguration.LinearSlideMotorName);
 
-        claw = hardwareMap.servo.get(RobotConfiguration.ClawName);
+        claw = hardwareMap.servo.get(RobotConfiguration.ClawServoName);
 
         jewelsensor = hardwareMap.get(ColorSensor.class, RobotConfiguration.JewelColorSensorName);
         bottomsensor = hardwareMap.get(ColorSensor.class, RobotConfiguration.BottomColorSensorName);

@@ -45,7 +45,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "RedJewelAutonomousREVEdition", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class RedJewelAutonomousREVEdition extends LinearOpMode {
-    double armPosition = 1.0;
+    double maxExtension = 0.9;
+    double minExtension = 0.4;
+    double armPosition = maxExtension;
     boolean finished = false;
     ElapsedTime runtime = new ElapsedTime();
     /**
@@ -69,43 +71,59 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        myRobot.initMecanumBot(hardwareMap, telemetry);
         // wait for the start button to be pressed.
+
         waitForStart();
+        //Set arm to correct Position
+        myRobot.setJewelArm(maxExtension);
+        int blue = myRobot.GetJewelSensorBlue();
+        int red = myRobot.GetJewelSensorRed();
+
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("Red  ", red);
+        telemetry.addData("Blue ", blue);
+
+        telemetry.update();
+        int threshold = 190;
 
         while (opModeIsActive()) {
-            //Set arm to correct Position
-            myRobot.setJewelArm(armPosition);
+
             //Read Red and Blue Values
-            int blue = myRobot.GetJewelSensorBlue();
-            int red = myRobot.GetJewelSensorRed();
+
+            blue = myRobot.GetJewelSensorBlue();
+            red = myRobot.GetJewelSensorRed();
 
             //If Red is detected, center jewel arm and drive backwards
-            if (red>200) {
-                myRobot.setJewelArm(0.5);
-                myRobot.encoderDriveCM(-1.0, -10);
+            if (red>threshold) {
+                myRobot.setJewelArm(maxExtension);
+                myRobot.encoderDriveCM(0, -10);
                 finished = true;
             }
             //If Blue is detected, center jewel arm and drive forwards
-            if (blue>200) {
-                myRobot.setJewelArm(0.5);
-                myRobot.encoderDriveCM(1.0, 10);
+            if (blue>threshold) {
+                myRobot.setJewelArm(maxExtension);
+                myRobot.encoderDriveCM(0, 10);
                 finished = true;
             }
             //If no color is detected, adjust arm
             //If arm is raised too high, abort and cancel
-            if (red < 200 && blue <200) {
-                armPosition -= 0.05;
-                if (armPosition < 0.8) {
-                    myRobot.setJewelArm(0.5);
-                    finished = true;
+            if (red < threshold && blue <threshold) {
+                armPosition -= 0.05 ;
+                if (armPosition < maxExtension*0.9) {
+                    myRobot.setJewelArm(maxExtension);
+                    // finished = true;
                 }
             }
             //When Jewel part is ran, raise arm and drive forward
             if (finished) {
-                myRobot.setJewelArm(0.3);
-                myRobot.encoderDriveCM(1.0, 75);
-                break;
+                myRobot.setJewelArm(minExtension);
+                myRobot.encoderDriveCM(0, 75);
+                //break;
             }
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             // send the info back to driver station using telemetry function.
@@ -113,6 +131,7 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             telemetry.addData("Blue ", blue);
 
             telemetry.update();
+
         }
 
 

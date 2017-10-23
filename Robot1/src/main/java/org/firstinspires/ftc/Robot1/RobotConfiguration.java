@@ -22,7 +22,6 @@ public class RobotConfiguration {
     public static final String JewelColorSensorName= "jewel_sensor";
     public static final String BottomColorSensorName= "bottom_sensor";
     public static final String GyroSensorName= "gyro_sensor";
-    public static final String ClawName= "claw";
 
     public static final double PowerIncrement = 0.01;
 }
