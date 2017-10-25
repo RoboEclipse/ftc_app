@@ -45,7 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "RedJewelAutonomousREVEdition", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class RedJewelAutonomousREVEdition extends LinearOpMode {
-    double maxExtension = 0.9;
+    double maxExtension = 0.95;
     double minExtension = 0.4;
     double armPosition = maxExtension;
     boolean finished = false;
@@ -87,7 +87,6 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
         telemetry.addData("Blue ", blue);
 
         telemetry.update();
-        int threshold = 190;
 
         while (opModeIsActive()) {
 
@@ -97,20 +96,26 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             red = myRobot.GetJewelSensorRed();
 
             //If Red is detected, center jewel arm and drive backwards
-            if (red>threshold) {
+            if (red>blue*3 && !finished) {
                 myRobot.setJewelArm(maxExtension);
-                myRobot.encoderDriveCM(0, -10);
+                sleep(1000);
+                myRobot.tankDrive(-0.5);
+                sleep(1000);
+                myRobot.stopDriveMotors();
                 finished = true;
             }
             //If Blue is detected, center jewel arm and drive forwards
-            if (blue>threshold) {
+            if (blue>red+5 && !finished) {
                 myRobot.setJewelArm(maxExtension);
-                myRobot.encoderDriveCM(0, 10);
+                sleep(1000);
+                myRobot.tankDrive(0.5);
+                sleep(1000);
+                myRobot.stopDriveMotors();
                 finished = true;
             }
             //If no color is detected, adjust arm
             //If arm is raised too high, abort and cancel
-            if (red < threshold && blue <threshold) {
+            if (red < blue*3 && blue <red*3 && !finished) {
                 armPosition -= 0.05 ;
                 if (armPosition < maxExtension*0.9) {
                     myRobot.setJewelArm(maxExtension);
@@ -120,7 +125,10 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             //When Jewel part is ran, raise arm and drive forward
             if (finished) {
                 myRobot.setJewelArm(minExtension);
-                myRobot.encoderDriveCM(0, 75);
+                sleep(1000);
+                myRobot.tankDrive(0.5);
+                sleep(1000);
+                myRobot.stopDriveMotors();
                 //break;
             }
 
