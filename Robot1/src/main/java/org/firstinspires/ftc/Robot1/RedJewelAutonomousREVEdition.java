@@ -48,6 +48,7 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
     double maxExtension = 0.95;
     double minExtension = 0.4;
     double armPosition = maxExtension;
+    double movement = 0.5;
     boolean finished = false;
     ElapsedTime runtime = new ElapsedTime();
     /**
@@ -99,37 +100,38 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             if (red>blue*3 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
-                myRobot.tankDrive(-0.5);
+                myRobot.drive(0,-movement,0);
                 sleep(1000);
                 myRobot.stopDriveMotors();
                 finished = true;
+                movement+=0.5;
             }
             //If Blue is detected, center jewel arm and drive forwards
             if (blue>red+5 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
-                myRobot.tankDrive(0.5);
+                myRobot.drive(0,movement,0);
                 sleep(1000);
                 myRobot.stopDriveMotors();
                 finished = true;
             }
             //If no color is detected, adjust arm
             //If arm is raised too high, abort and cancel
-            if (red < blue*3 && blue <red*3 && !finished) {
+            if (red < blue*3 && blue <red && !finished) {
                 armPosition -= 0.05 ;
                 if (armPosition < maxExtension*0.9) {
                     myRobot.setJewelArm(maxExtension);
-                    // finished = true;
+                    //finished = true;
                 }
             }
             //When Jewel part is ran, raise arm and drive forward
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.tankDrive(0.5);
+                myRobot.drive(0,movement,0);
                 sleep(1000);
                 myRobot.stopDriveMotors();
-                //break;
+                break;
             }
 
             // Show the elapsed game time and wheel power.
