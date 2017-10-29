@@ -368,5 +368,8 @@ class MecanumBot {
         rf.setPower(power);
         rr.setPower(power);
     }
+    public void extenderDrive (double power){
+        slideMotor.setPower(power);
+    }
 }
 

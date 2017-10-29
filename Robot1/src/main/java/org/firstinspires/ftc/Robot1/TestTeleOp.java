@@ -23,6 +23,7 @@ public class TestTeleOp extends OpMode {
     double clawServoMaxPos = 0.5;
     double clawServoPos = 0.5;
     double currentArmPower = 0.2;
+    double extenderPower ;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -66,8 +67,30 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(theta, v_theta, v_rotation); //move robot
+        myRobot.drive(0.75*theta, v_theta, v_rotation); //move robot
 
+        armPower = -gamepad2.left_stick_y*0.2;
+        extenderPower = -gamepad2.right_stick_y*0.5;
+
+        if(armPower>0){
+            armPower=armPower*3;
+        }
+
+
+        if(gamepad2.right_bumper){
+            if(clawServoPos>=0.3){
+                clawServoPos-=0.05;
+            }
+        }
+        if(gamepad2.left_bumper){
+            if(clawServoPos<=0.6){
+                clawServoPos+=0.05;
+            }
+        }
+        myRobot.moveClawServo(clawServoPos);
+        myRobot.extenderDrive(extenderPower);
+        myRobot.controlArm(armPower);
+        /*
         if (g2.a)
         {
             currentArmPower += RobotConfiguration.PowerIncrement;
@@ -83,8 +106,8 @@ public class TestTeleOp extends OpMode {
             armPower = -currentArmPower / 5;
         else armPower = 0.0;
         myRobot.controlArm(armPower); //move arm up and down
-        
-        /*if (g1.a) {
+
+       if (g1.a) {
             // jewel servo go down
             jewelServoPos -= INCREMENT;
             if (jewelServoPos <= servoMinPos) {
@@ -100,22 +123,23 @@ public class TestTeleOp extends OpMode {
          }
         // Set the servo to the new position and pause;
        myRobot.moveJewelServo(jewelServoPos);
-*/
 
+/*
         if (g2.right_bumper) {
             clawServoPos -= INCREMENT ;
             myRobot.moveClawServo(clawServoPos);
-           /* if (clawServoPos <= clawServoMinPos) {
+            if (clawServoPos <= clawServoMinPos) {
                 clawServoPos = clawServoMinPos;
-            }*/
+            }
         }
         if (g2.left_bumper) {
             clawServoPos += INCREMENT ;
             myRobot.moveClawServo(clawServoPos);
-           /* if (clawServoPos >= clawServoMaxPos){
+           if (clawServoPos >= clawServoMaxPos){
                 clawServoPos = clawServoMinPos;
-            }*/
+            }
         }
+        */
 
 
 

@@ -85,7 +85,8 @@ public class BasicTeleOp extends OpMode
         // Reverse the motor that runs backwards when connected directly to the battery
         rfMotor.setDirection(DcMotor.Direction.REVERSE);
         rbMotor.setDirection(DcMotor.Direction.REVERSE);
-        myRobot = new MecanumRobot(hardwareMap, telemetry);
+        MecanumBot myRobot= new MecanumBot();
+        myRobot.initMecanumBot(hardwareMap, telemetry);
         // Tell the driver that initialization is complete.
         /*
         lbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

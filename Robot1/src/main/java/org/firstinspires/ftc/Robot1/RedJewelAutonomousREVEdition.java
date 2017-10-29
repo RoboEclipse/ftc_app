@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,12 +46,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "RedJewelAutonomousREVEdition", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class RedJewelAutonomousREVEdition extends LinearOpMode {
+    //region Constants
     double maxExtension = 0.95;
     double minExtension = 0.4;
-    double armPosition = maxExtension;
-    double movement = 0.5;
+    double power = 0.5;
+    //endregion
+    //region Variables
+    double time = 1000;//If time or power is changed, the other must changed as well
     boolean finished = false;
     ElapsedTime runtime = new ElapsedTime();
+    //endregion
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
      * It has a light/distance (range) sensor.  It also has an RGB color sensor.
@@ -95,26 +100,34 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
 
             blue = myRobot.GetJewelSensorBlue();
             red = myRobot.GetJewelSensorRed();
-
+            //Todo: Increase consistency of movement through encoders or gyro
             //If Red is detected, center jewel arm and drive backwards
+            //The color sensor works proportianally to light. From expirementation we have determined that if red
+            //is over 3 times the value of blue, we can be confident it is red, but it will still detect the red from a distance
             if (red>blue*3 && !finished) {
                 myRobot.setJewelArm(maxExtension);
+                time = 400;
                 sleep(1000);
-                myRobot.drive(0,-movement,0);
-                sleep(1000);
+                myRobot.drive(0,-power,0);
+                sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                movement+=0.5;
+                time=2000;
             }
             //If Blue is detected, center jewel arm and drive forwards
-            if (blue>red+5 && !finished) {
+            //Note that the sensor detects red much more intensely than blue, so if blue is only slightly greater than red,
+            //we can have reasonable confidence that the object is blue
+            else if (blue>red+5 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
-                myRobot.drive(0,movement,0);
-                sleep(1000);
+                time = 500;
+                myRobot.drive(0, power,0);
+                sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
+                time = 750;
             }
+            /*
             //If no color is detected, adjust arm
             //If arm is raised too high, abort and cancel
             if (red < blue*3 && blue <red && !finished) {
@@ -124,12 +137,13 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
                     //finished = true;
                 }
             }
+            */
             //When Jewel part is ran, raise arm and drive forward
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.drive(0,movement,0);
-                sleep(1000);
+                myRobot.drive(0, power,0);
+                sleep((int)time);
                 myRobot.stopDriveMotors();
                 break;
             }
