@@ -244,7 +244,7 @@ class MecanumBot {
 
     public void encoderDriveCM(double direction, double cm) {
         direction %= Math.PI * 2.0;
-        final Wheels w = getWheels(direction, 1.0, 0.0);
+        final Wheels w = getWheels(direction, 0.5, 0.0);
         final int ticks = (int)(cm * TICKS_PER_CM);
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }

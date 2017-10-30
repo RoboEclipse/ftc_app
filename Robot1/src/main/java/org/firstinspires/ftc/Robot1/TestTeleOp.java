@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name="FTC11138: Test TeleOp Mode", group="Test Sensors")
+@TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
 
 public class TestTeleOp extends OpMode {
 
@@ -67,24 +67,26 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(0.75*theta, v_theta, v_rotation); //move robot
+        myRobot.drive(theta, 0.65*v_theta, 0.50*v_rotation); //move robot
 
         armPower = -gamepad2.left_stick_y*0.2;
         extenderPower = -gamepad2.right_stick_y*0.5;
-
+        if(gamepad1.a){
+            myRobot.setJewelArm(0.4);
+        }
         if(armPower>0){
-            armPower=armPower*3;
+            armPower=armPower*2.5;
         }
 
 
-        if(gamepad2.right_bumper){
+        if(gamepad2.dpad_up){
             if(clawServoPos>=0.3){
-                clawServoPos-=0.05;
+                clawServoPos-=0.01;
             }
         }
-        if(gamepad2.left_bumper){
-            if(clawServoPos<=0.6){
-                clawServoPos+=0.05;
+        if(gamepad2.dpad_down){
+            if(clawServoPos<=0.7){
+                clawServoPos+=0.01;
             }
         }
         myRobot.moveClawServo(clawServoPos);

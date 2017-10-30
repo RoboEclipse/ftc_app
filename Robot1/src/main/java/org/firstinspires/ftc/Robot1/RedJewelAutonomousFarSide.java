@@ -43,9 +43,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "RedJewelAutonomousREVEdition", group = "Sensor")
+@Autonomous(name = "FTC11138:FarRedJewelAutonomous", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
-public class RedJewelAutonomousREVEdition extends LinearOpMode {
+public class RedJewelAutonomousFarSide extends LinearOpMode {
     //region Constants
     double maxExtension = 0.95;
     double minExtension = 0.4;
@@ -102,9 +102,9 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             red = myRobot.GetJewelSensorRed();
             //Todo: Increase consistency of movement through encoders or gyro
             //If Red is detected, center jewel arm and drive backwards
-            //The color sensor works proportianally to light. From expirementation we have determined that if red
+            //The color sensor works proportionally to light. From expirementation we have determined that if red
             //is over 3 times the value of blue, we can be confident it is red, but it will still detect the red from a distance
-            if (red>blue*3 && !finished) {
+            if (red>blue*2 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 time = 400;
                 sleep(1000);
@@ -112,12 +112,12 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time=2000;
+                time=1750;
             }
             //If Blue is detected, center jewel arm and drive forwards
             //Note that the sensor detects red much more intensely than blue, so if blue is only slightly greater than red,
             //we can have reasonable confidence that the object is blue
-            else if (blue>red+5 && !finished) {
+            else if (blue>red+20 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
                 time = 500;
@@ -125,7 +125,7 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time = 750;
+                time = 850;
             }
             /*
             //If no color is detected, adjust arm
@@ -141,6 +141,8 @@ public class RedJewelAutonomousREVEdition extends LinearOpMode {
             //When Jewel part is ran, raise arm and drive forward
             if (finished) {
                 myRobot.setJewelArm(minExtension);
+                sleep(1000);
+                myRobot.drive(30,power,3);
                 sleep(1000);
                 myRobot.drive(0, power,0);
                 sleep((int)time);
