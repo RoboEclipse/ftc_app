@@ -97,14 +97,14 @@ public class RedJewelAutonomousAudienceSide extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Read Red and Blue Values
-
+            sleep(1000);
             blue = myRobot.GetJewelSensorBlue();
             red = myRobot.GetJewelSensorRed();
             //Todo: Increase consistency of movement through encoders or gyro
             //If Red is detected, center jewel arm and drive backwards
             //The color sensor works proportionally to light. From expirementation we have determined that if red
             //is over 3 times the value of blue, we can be confident it is red, but it will still detect the red from a distance
-            if (red>blue*2 && !finished) {
+            if (red>blue*2.2 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 time = 400;
                 sleep(1000);
@@ -117,7 +117,7 @@ public class RedJewelAutonomousAudienceSide extends LinearOpMode {
             //If Blue is detected, center jewel arm and drive forwards
             //Note that the sensor detects red much more intensely than blue, so if blue is only slightly greater than red,
             //we can have reasonable confidence that the object is blue
-            else if (blue>red+20 && !finished) {
+            if (blue>red+20 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
                 time = 500;

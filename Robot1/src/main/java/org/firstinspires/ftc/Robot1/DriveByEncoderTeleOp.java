@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
+@TeleOp(name="FTC11138:EncoderTeleOp", group="Test Sensors")
 
-public class TestTeleOp extends OpMode {
+public class DriveByEncoderTeleOp extends OpMode {
 
     MecanumBot myRobot = new MecanumBot();
     Gamepad g1;
@@ -67,7 +67,19 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(theta, 0.65*v_theta, 0.50*v_rotation); //move robot
+        if (g1.left_bumper)
+        {
+            myRobot.encoderDriveCM(theta, 200);
+        }
+
+        if (g1.right_bumper)
+        {
+            myRobot.encoderDriveCM(theta, -200);
+        }
+
+        myRobot.loop();
+
+        //myRobot.drive(theta, 0.65*v_theta, 0.60*v_rotation); //move robot
 
         armPower = -gamepad2.left_stick_y*0.2;
         extenderPower = -gamepad2.right_stick_y*0.5;

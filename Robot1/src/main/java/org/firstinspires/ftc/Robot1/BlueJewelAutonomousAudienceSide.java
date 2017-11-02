@@ -125,7 +125,7 @@ public class BlueJewelAutonomousAudienceSide extends LinearOpMode {
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time = 850;
+                time = 1000;
             }
             /*
             //If no color is detected, adjust arm
@@ -142,7 +142,7 @@ public class BlueJewelAutonomousAudienceSide extends LinearOpMode {
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.drive(0, -power,0);
+                myRobot.tankDrive(-0.5,-0.45);
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 break;

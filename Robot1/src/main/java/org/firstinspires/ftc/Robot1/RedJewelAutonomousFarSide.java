@@ -97,7 +97,7 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Read Red and Blue Values
-
+            sleep(1000);
             blue = myRobot.GetJewelSensorBlue();
             red = myRobot.GetJewelSensorRed();
             //Todo: Increase consistency of movement through encoders or gyro
@@ -142,10 +142,8 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.drive(30,power,3);
-                sleep(1000);
-                myRobot.drive(0, power,0);
-                sleep((int)time);
+                myRobot.tankDrive(0.45, 0.5);
+                sleep((int)time-100);
                 myRobot.stopDriveMotors();
                 break;
             }

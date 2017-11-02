@@ -244,7 +244,7 @@ class MecanumBot {
 
     public void encoderDriveCM(double direction, double cm) {
         direction %= Math.PI * 2.0;
-        final Wheels w = getWheels(direction, 0.5, 0.0);
+        final Wheels w = getWheels(direction, 1, 0);
         final int ticks = (int)(cm * TICKS_PER_CM);
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }
@@ -362,11 +362,27 @@ class MecanumBot {
     public void setJewelArm(double jewelPosition){
         jewelServo.setPosition(jewelPosition);
     }
-    public void tankDrive(double power) {
-        lf.setPower(power);
-        lr.setPower(power);
-        rf.setPower(power);
-        rr.setPower(power);
+    public void tankDrive(double leftpower, double rightpower) {
+        lf.setPower(leftpower);
+        lr.setPower(leftpower);
+        rf.setPower(rightpower);
+        rr.setPower(rightpower);
+    }
+    // Things that need to happen in the teleop loop to accommodate long-running
+    // tasks like running the flipper one at a time.
+    public void loop() {
+
+        encoderDriveSlowdown();
+        manageEncoderAccelleration(lf, lr, rf, rr);
+    }
+
+    public String getEncoderPosition()
+    {
+        return String.format("%d,%d,%d,%d",
+                lf.getCurrentPosition(),
+                rf.getCurrentPosition(),
+                lr.getCurrentPosition(),
+                rr.getCurrentPosition());
     }
     public void extenderDrive (double power){
         slideMotor.setPower(power);
