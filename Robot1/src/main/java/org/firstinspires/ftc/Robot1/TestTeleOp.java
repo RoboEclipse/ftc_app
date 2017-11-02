@@ -12,7 +12,7 @@ public class TestTeleOp extends OpMode {
     Gamepad g1;
     Gamepad g2;
 
-    final double dpad_speed = 0.3;
+    final double dpad_speed = 1;
     double armPower = 0.0;
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     double servoMinPos = 0.0;
@@ -67,7 +67,7 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(theta, 0.65*v_theta, 0.50*v_rotation); //move robot
+        myRobot.drive(theta, v_theta, 0.50*v_rotation); //move robot
 
         armPower = -gamepad2.left_stick_y*0.2;
         extenderPower = -gamepad2.right_stick_y*0.5;
