@@ -48,10 +48,7 @@ class MecanumBot {
         clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
-        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
-        lf.setDirection(DcMotorSimple.Direction.REVERSE);
-        lr.setDirection(DcMotorSimple.Direction.REVERSE);
-        //rr.setDirection(DcMotorSimple.Direction.REVERSE);
+        resetDirection();
 
         lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -72,6 +69,13 @@ class MecanumBot {
         jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));*/
 
+    }
+
+    private void resetDirection() {
+        rf.setDirection(DcMotorSimple.Direction.FORWARD);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lr.setDirection(DcMotorSimple.Direction.REVERSE);
+        rr.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public double getAngle () {
@@ -183,7 +187,7 @@ class MecanumBot {
         return new Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
     }
     public void drive(double direction, double velocity, double rotationVelocity) {
-        Wheels w = getWheels(direction, velocity, rotationVelocity);
+         Wheels w = getWheels(direction, velocity, rotationVelocity);
         lf.setPower(w.lf);
         rf.setPower(w.rf);
         lr.setPower(w.lr);

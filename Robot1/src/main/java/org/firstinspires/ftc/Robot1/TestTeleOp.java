@@ -12,7 +12,7 @@ public class TestTeleOp extends OpMode {
     Gamepad g1;
     Gamepad g2;
 
-    final double dpad_speed = 1;
+    final double dpad_speed = 0.5;
     double armPower = 0.0;
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     double servoMinPos = 0.0;
@@ -33,6 +33,8 @@ public class TestTeleOp extends OpMode {
         g1 = gamepad1;
         g2 = gamepad2;
         myRobot.initMecanumBot(hardwareMap, telemetry);
+        myRobot.disableEncoders();
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -54,10 +56,10 @@ public class TestTeleOp extends OpMode {
             v_theta = dpad_speed;
         } else if (g1.dpad_left) {
             theta = 3.0 * Math.PI / 2.0;
-            v_theta = dpad_speed;
+            v_theta = dpad_speed * 2;
         } else if (g1.dpad_right) {
             theta = Math.PI / 2.0;
-            v_theta = dpad_speed;
+            v_theta = dpad_speed * 2;
         } else {
             final double lx = g1.left_stick_x;
             final double ly = -g1.left_stick_y;
@@ -67,7 +69,7 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(theta, v_theta, 0.50*v_rotation); //move robot
+        myRobot.drive(theta, 0.8*v_theta, 0.50*v_rotation); //move robot
 
         armPower = -gamepad2.left_stick_y*0.2;
         extenderPower = -gamepad2.right_stick_y*0.5;
