@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled                            // Comment this out to add to the opmode list
 public class RedJewelAutonomousFarSide extends LinearOpMode {
     //region Constants
-    double maxExtension = 0.95;
+    double maxExtension = 1.0;
     double minExtension = 0.4;
     double power = 0.5;
     //endregion
@@ -112,16 +112,16 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time=1750;
+                time=2000;
             }
             //If Blue is detected, center jewel arm and drive forwards
             //Note that the sensor detects red much more intensely than blue, so if blue is only slightly greater than red,
             //we can have reasonable confidence that the object is blue
-            else if (blue>red+20 && !finished) {
+            else if (blue>red+15 && !finished) {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
                 time = 500;
-                myRobot.drive(0, power,0);
+                myRobot.tankDrive(0.2,0.5);
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
@@ -142,7 +142,7 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.tankDrive(0.45, 0.5);
+                myRobot.tankDrive(0.2,0.5);
                 sleep((int)time-100);
                 myRobot.stopDriveMotors();
                 break;

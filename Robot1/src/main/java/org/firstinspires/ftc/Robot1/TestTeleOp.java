@@ -56,10 +56,10 @@ public class TestTeleOp extends OpMode {
             v_theta = dpad_speed;
         } else if (g1.dpad_left) {
             theta = 3.0 * Math.PI / 2.0;
-            v_theta = dpad_speed * 2;
+            v_theta = dpad_speed;
         } else if (g1.dpad_right) {
             theta = Math.PI / 2.0;
-            v_theta = dpad_speed * 2;
+            v_theta = dpad_speed;
         } else {
             final double lx = g1.left_stick_x;
             final double ly = -g1.left_stick_y;
@@ -92,12 +92,12 @@ public class TestTeleOp extends OpMode {
             }
         }
         if(gamepad2.left_bumper){
-            if(clawServoPos>=0.3){
+            if(clawServoPos>=0.0){
                 clawServoPos-=0.01;
             }
         }
         if(gamepad2.right_bumper){
-            if(clawServoPos<=0.7){
+            if(clawServoPos<=0.6){
                 clawServoPos+=0.01;
             }
         }
