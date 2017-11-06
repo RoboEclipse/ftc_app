@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="FTC11138:EncoderTeleOp", group="Test Sensors")
-
+@Disabled
 public class DriveByEncoderTeleOp extends OpMode {
 
     MecanumBot myRobot = new MecanumBot();
@@ -111,7 +112,7 @@ public class DriveByEncoderTeleOp extends OpMode {
                 clawServoPos+=0.01;
             }
         }
-        myRobot.moveClawServo(clawServoPos);
+        myRobot.moveSideBar(clawServoPos);
         myRobot.extenderDrive(extenderPower);
         myRobot.controlArm(armPower);
         /*

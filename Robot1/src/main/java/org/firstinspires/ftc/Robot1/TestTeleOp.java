@@ -101,7 +101,7 @@ public class TestTeleOp extends OpMode {
                 clawServoPos+=0.01;
             }
         }
-        myRobot.moveClawServo(clawServoPos);
+        myRobot.moveSideBar(clawServoPos);
         myRobot.extenderDrive(extenderPower);
         myRobot.controlArm(armPower);
         /*

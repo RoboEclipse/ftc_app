@@ -24,7 +24,7 @@ class MecanumBot {
     private Orientation angles;
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
-    private Servo clawServo, jewelServo;
+    private Servo jewelServo, sidebarleft, sidebarright;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -45,7 +45,8 @@ class MecanumBot {
         jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         //imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
-        clawServo = hardwareMap.servo.get(myRobotConfig.ClawServoName);
+        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
+        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
 
         resetDirection();
@@ -109,12 +110,13 @@ class MecanumBot {
         return (rgb);
     }
 
-    public void moveJewelServo (double position){
-        jewelServo.setPosition( position);
+    public void moveJewelServo (double position) {
+        jewelServo.setPosition(position);
     }
 
-    public void moveClawServo ( double position) {
-        clawServo.setPosition( position);
+    public void moveSideBar ( double position) {
+        sidebarleft.setPosition(position);
+        sidebarright.setPosition(1 - position);
     }
 
     public void onStart() {
@@ -382,7 +384,7 @@ class MecanumBot {
 
     public String getEncoderPosition()
     {
-        return String.format("%d,%d,%d,%d",
+        return String.format("lf: %d,rf: %d, lr:%d, rr:%d",
                 lf.getCurrentPosition(),
                 rf.getCurrentPosition(),
                 lr.getCurrentPosition(),
