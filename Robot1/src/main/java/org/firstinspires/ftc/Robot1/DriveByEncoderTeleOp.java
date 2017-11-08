@@ -68,16 +68,6 @@ public class DriveByEncoderTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        if (g1.left_bumper)
-        {
-            myRobot.encoderDriveCM(theta, 200);
-        }
-
-        if (g1.right_bumper)
-        {
-            myRobot.encoderDriveCM(theta, -200);
-        }
-
         myRobot.loop();
 
         //myRobot.drive(theta, 0.65*v_theta, 0.60*v_rotation); //move robot

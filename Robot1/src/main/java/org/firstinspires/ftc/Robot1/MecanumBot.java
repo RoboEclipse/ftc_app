@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -46,7 +47,7 @@ class MecanumBot {
         slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
         jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
-        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
+        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
         sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
@@ -71,10 +72,13 @@ class MecanumBot {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu.initialize(parameters);
-        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        imu.startAccelerationIntegration(
+                new org.firstinspires.ftc.robotcore.external.navigation.Position(),
+                new Velocity(),
+                1000);
 
         jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
-        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
+        //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
 
@@ -88,8 +92,8 @@ class MecanumBot {
     public double getAngle () {
         double angleX;
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        angleX = angles.thirdAngle;  //ToDo: assume the 3rd angle is the Robot front direction
-        //convert the angle to be within the +/-180 degree range
+        angleX = angles.firstAngle;  //ToDo: assume the 3rd angle is the Robot front dir
+        //convert the angle to be within the +/-180 degree rangeection
         if (angleX > 180)  angleX -= 360;
         if (angleX <= -180) angleX += 360;
         return (angleX);
@@ -254,9 +258,9 @@ class MecanumBot {
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }
 
-    public void encoderDriveCM(double direction, double cm) {
+    public void encoderDriveCM(double direction, double cm, double turningSpeed) {
         direction %= Math.PI * 2.0;
-        final Wheels w = getWheels(direction, 1, 0);
+        final Wheels w = getWheels(direction, 1, turningSpeed);
         final int ticks = (int)(cm * TICKS_PER_CM);
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }

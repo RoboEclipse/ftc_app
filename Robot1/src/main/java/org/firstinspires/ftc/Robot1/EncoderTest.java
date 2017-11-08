@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="EncoderTest", group="Linear Opmode")
 //@Disabled
-public class EncoderTEst extends LinearOpMode {
+public class EncoderTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -57,7 +57,20 @@ public class EncoderTEst extends LinearOpMode {
     @Override
     public void runOpMode() {
         Drivetrain.initMecanumBot(hardwareMap, telemetry);
-        Drivetrain.encoderDriveCM(0,15);
-        Drivetrain.encoderDriveCM(0,-15);
+        Drivetrain.encoderDriveCM(Math.PI/2, 155, 1);
+        while (Drivetrain.driveMotorsBusy())
+        {
+            telemetry.addData("encoderPosition", Drivetrain.getEncoderPosition());
+            telemetry.addData("gyroPosition", Drivetrain.getAngle());
+            telemetry.update();
+        }
+        Drivetrain.encoderDriveCM(Math.PI/2, -155, 1);
+        while (Drivetrain.driveMotorsBusy())
+        {
+            telemetry.addData("encoderPosition", Drivetrain.getEncoderPosition());
+            telemetry.addData("gyroPosition", Drivetrain.getAngle());
+            telemetry.update();
+        }
+
     }
 }

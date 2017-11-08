@@ -44,7 +44,6 @@ class MecanumRobot {
 
         jewelsensor = hardwareMap.get(ColorSensor.class, RobotConfiguration.JewelColorSensorName);
         bottomsensor = hardwareMap.get(ColorSensor.class, RobotConfiguration.BottomColorSensorName);
-        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.GyroSensorName);
 
 
         lr.setDirection(DcMotorSimple.Direction.REVERSE);
