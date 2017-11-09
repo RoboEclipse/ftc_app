@@ -258,14 +258,21 @@ class MecanumBot {
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }
 
-    public void encoderDriveCM(double direction, double cm, double turningSpeed) {
+    public void encoderDriveCM(double direction, double cm) {
         direction %= Math.PI * 2.0;
-        final Wheels w = getWheels(direction, 1, turningSpeed);
+        final Wheels w = getWheels(direction, 1, 0);
         final int ticks = (int)(cm * TICKS_PER_CM);
         encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
     }
 
-    private void encoderDrive(double lft, double rft, double lrt, double rrt) {
+    public void encoderDriveCM(double direction, double cm, double turningSpeed) {
+        direction %= Math.PI * 2.0;
+        final Wheels w = getWheels(direction, 0, turningSpeed);
+        final int ticks = (int)(cm * TICKS_PER_CM);
+        encoderDrive(ticks * w.lf, ticks * w.rf, ticks * w.lr, ticks * w.rr);
+    }
+
+    public void encoderDrive(double lft, double rft, double lrt, double rrt) {
         encoderDrive((int) lft, (int) rft, (int) lrt, (int) rrt);
     }
 
@@ -304,6 +311,17 @@ class MecanumBot {
         setTargetPosition(rft, rf);
         setTargetPosition(lrt, lr);
         setTargetPosition(rrt, rr);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        setPower(encoder_drive_power, lf, lr, rf, rr);
+        slowedDown = false;
+    }
+    public void encoderTankDrive(int leftTicks, int rightTicks) {
+        setPower(0.0, lf, lr, rf, rr);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        setTargetPosition(leftTicks, lf);
+        setTargetPosition(rightTicks, rf);
+        setTargetPosition(leftTicks, lr);
+        setTargetPosition(rightTicks, rr);
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         setPower(encoder_drive_power, lf, lr, rf, rr);
         slowedDown = false;
@@ -402,6 +420,16 @@ class MecanumBot {
     }
     public void extenderDrive (double power){
         slideMotor.setPower(power);
+    }
+    public void br8kMotors(){
+        lf.setPower(0);
+        lr.setPower(0);
+        rf.setPower(0);
+        rr.setPower(0);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
 

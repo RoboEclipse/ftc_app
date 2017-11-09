@@ -50,27 +50,40 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name="EncoderTest", group="Linear Opmode")
 //@Disabled
 public class EncoderTest extends LinearOpMode {
-
+    private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    MecanumBot Drivetrain = new MecanumBot();
+    MecanumBot mecanumBot = new MecanumBot();
     @Override
     public void runOpMode() {
-        Drivetrain.initMecanumBot(hardwareMap, telemetry);
-        Drivetrain.encoderDriveCM(Math.PI/2, 155, 1);
-        while (Drivetrain.driveMotorsBusy())
-        {
-            telemetry.addData("encoderPosition", Drivetrain.getEncoderPosition());
-            telemetry.addData("gyroPosition", Drivetrain.getAngle());
+        mecanumBot.initMecanumBot(hardwareMap, telemetry);
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*24,(int)TICKS_PER_INCH*24);
+        while (mecanumBot.driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+
             telemetry.update();
         }
-        Drivetrain.encoderDriveCM(Math.PI/2, -155, 1);
-        while (Drivetrain.driveMotorsBusy())
-        {
-            telemetry.addData("encoderPosition", Drivetrain.getEncoderPosition());
-            telemetry.addData("gyroPosition", Drivetrain.getAngle());
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*24,(int)TICKS_PER_INCH*-24);
+        while (mecanumBot.driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+            telemetry.update();
+            if(mecanumBot.getAngle()>77){
+                break;
+            }
+        }
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*12,(int)TICKS_PER_INCH*12);
+        while (mecanumBot.driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
         }
+        mecanumBot.tankDrive(0,0);
+        mecanumBot.br8kMotors();
+        telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+        telemetry.addData("gyroPosition", mecanumBot.getAngle());
+        telemetry.update();
 
     }
 }
