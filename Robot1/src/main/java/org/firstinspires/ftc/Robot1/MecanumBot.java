@@ -58,6 +58,9 @@ class MecanumBot {
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // These are the wheel motors
+        // I am here! LOLOLOLOLOLOLOLOL
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
