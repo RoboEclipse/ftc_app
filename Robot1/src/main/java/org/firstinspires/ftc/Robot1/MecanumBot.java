@@ -318,7 +318,7 @@ class MecanumBot {
         setPower(encoder_drive_power, lf, lr, rf, rr);
         slowedDown = false;
     }
-    public void encoderTankDrive(int leftTicks, int rightTicks) {
+    public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
         setPower(0.0, lf, lr, rf, rr);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
         setTargetPosition(leftTicks, lf);
@@ -326,7 +326,7 @@ class MecanumBot {
         setTargetPosition(leftTicks, lr);
         setTargetPosition(rightTicks, rr);
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
-        setPower(encoder_drive_power, lf, lr, rf, rr);
+        setPower(power, lf, lr, rf, rr);
         slowedDown = false;
     }
 
@@ -394,8 +394,8 @@ class MecanumBot {
         return jewelColorSensor.blue();
     }
     public int GetJewelSensorRed(){
-        return jewelColorSensor.red();
-    }
+            return jewelColorSensor.red();
+        }
     public void setJewelArm(double jewelPosition){
         jewelServo.setPosition(jewelPosition);
     }
@@ -404,6 +404,7 @@ class MecanumBot {
         lr.setPower(leftpower);
         rf.setPower(rightpower);
         rr.setPower(rightpower);
+        telemetry.addData("Powers:", "Left: "+leftpower,"Right: "+rightpower);
     }
     // Things that need to happen in the teleop loop to accommodate long-running
     // tasks like running the flipper one at a time.
