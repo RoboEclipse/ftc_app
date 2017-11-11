@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -54,20 +56,85 @@ public class EncoderTest extends LinearOpMode {
     double speed = 0.5; //limit is good and cool
     double close = 25; //Determines when the robot begins slowing down
     double enuff = 2; //Determines margin of error
+    int inches = 27;
+    int blue;
+    int red;
+
+    boolean knocked = false;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     MecanumBot mecanumBot = new MecanumBot();
+    VuMark pattern;
     @Override
     public void runOpMode() {
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*24,(int)TICKS_PER_INCH*24,speed);
+        pattern = new VuMark(telemetry,hardwareMap);
+        pattern.onInit(VuforiaLocalizer.CameraDirection.FRONT);
+        //Getting the motors and servos in the right place
+        mecanumBot.moveSideBar(0.5);
+        mecanumBot.controlArm(-0.1);
+        sleep(1000);
+        mecanumBot.controlArm(0.1);
+        sleep(2000);
+        mecanumBot.controlArm(0.0);
+
+        while (!knocked){
+            //Knock off the jewel
+            blue = mecanumBot.GetJewelSensorBlue();
+            red = mecanumBot.GetJewelSensorRed();
+            if (red>blue*2.2) {
+
+            }
+            if (blue>red+15) {
+
+            }
+        }
+        //Drive forward
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*27,(int)TICKS_PER_INCH*27,speed);
+        if(pattern.isCenterRelicVisable()){
+            telemetry.addData("Pattern ", "Center");
+        }
+        if(pattern.isLeftRelicVisable()){
+            telemetry.addData("Pattern ", "Left");
+            inches += 3;
+        }
+        if(pattern.isRightRelicVisable()){
+            telemetry.addData("Pattern ", "Right");
+            inches -= 3;
+        }
+
         while (mecanumBot.driveMotorsBusy()) {
+
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
 
             telemetry.update();
         }
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*24,(int)TICKS_PER_INCH*-24,speed);
+        //Turn 90 degrees
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*-27,speed);
+        mecanumBot.encoderTurn(-90,close, enuff);
+        //Lower Arm
+        speed = 0.5;
+        mecanumBot.controlArm(0.1);
+        sleep(2000);
+        mecanumBot.controlArm(0.0);
+        //Drive glyph into box
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
+        while (mecanumBot.driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+            telemetry.update();
+        }
+        mecanumBot.tankDrive(0,0);
+        mecanumBot.br8kMotors();
+        mecanumBot.moveSideBar(0.0);
+        telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+        telemetry.addData("gyroPosition", mecanumBot.getAngle());
+        telemetry.update();
+
+    }
+
+    private void EncoderTurn() {
         while (mecanumBot.driveMotorsBusy()) {
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
@@ -82,18 +149,5 @@ public class EncoderTest extends LinearOpMode {
             }
             telemetry.update();
         }
-        speed = 0.5;
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*12,(int)TICKS_PER_INCH*12,speed);
-        while (mecanumBot.driveMotorsBusy()) {
-            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-            telemetry.addData("gyroPosition", mecanumBot.getAngle());
-            telemetry.update();
-        }
-        mecanumBot.tankDrive(0,0);
-        mecanumBot.br8kMotors();
-        telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-        telemetry.addData("gyroPosition", mecanumBot.getAngle());
-        telemetry.update();
-
     }
 }

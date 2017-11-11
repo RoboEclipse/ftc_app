@@ -27,7 +27,7 @@ class MecanumBot {
     private Orientation angles;
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
-    private Servo jewelServo, sidebarleft, sidebarright;
+    private Servo jewelServo, sidebarleft, sidebarright ,flicker;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -51,6 +51,7 @@ class MecanumBot {
         sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
+        flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
 
         resetDirection();
 
@@ -61,6 +62,7 @@ class MecanumBot {
 
         // These are the wheel motors
         // I am here! LOLOLOLOLOLOLOLOL
+        //Catmeow? :3
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -329,6 +331,21 @@ class MecanumBot {
         setPower(power, lf, lr, rf, rr);
         slowedDown = false;
     }
+    public void encoderTurn(double degrees, double close, double enuff){
+        while (driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", getEncoderPosition());
+            telemetry.addData("gyroPosition", getAngle());
+
+            if(getAngle()<degrees+close && getAngle()>degrees-close) {
+                tankDrive(0.1, 0.1);
+                if (getAngle() < degrees + enuff && getAngle() > degrees - enuff) {
+                    telemetry.update();
+                    break;
+                }
+            }
+            telemetry.update();
+        }
+    }
 
 
     // All motors start out at ENCODER_DRIVE_POWER power. Once we get one revolution
@@ -434,6 +451,9 @@ class MecanumBot {
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public void flick (double direction){
+
     }
 }
 
