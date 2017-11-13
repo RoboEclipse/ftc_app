@@ -22,7 +22,7 @@ public class VuMark {
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
 
-    private RelicRecoveryVuMark vuMark = null;
+    public RelicRecoveryVuMark vuMark = null;
 
     public VuMark(Telemetry t, HardwareMap h)
     {
@@ -49,6 +49,7 @@ public class VuMark {
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Vuforia status", "Initialized");
+
     }
 
     public void onLoop() {

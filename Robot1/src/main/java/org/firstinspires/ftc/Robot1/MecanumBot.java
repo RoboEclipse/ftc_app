@@ -330,8 +330,35 @@ class MecanumBot {
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         setPower(power, lf, lr, rf, rr);
         slowedDown = false;
+        while (driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", getEncoderPosition());
+            telemetry.addData("gyroPosition", getAngle());
+            telemetry.update();
+        }
     }
-    public void encoderTurn(double degrees, double close, double enuff){
+    public void encoderTurn(double degrees, double close, double enuff, double speed){
+        //Note: These first two parts are just encoderTankDrive.
+        if(degrees>0){
+            setPower(0.0, lf, lr, rf, rr);
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            setTargetPosition(-10000000, lf);
+            setTargetPosition(1000000, rf);
+            setTargetPosition(-1000000, lr);
+            setTargetPosition(1000000, rr);
+            setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            setPower(speed, lf, lr, rf, rr);
+        }
+        if(degrees<0){
+            setPower(0.0, lf, lr, rf, rr);
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            setTargetPosition(1000000, lf);
+            setTargetPosition(-1000000, rf);
+            setTargetPosition(1000000, lr);
+            setTargetPosition(-1000000, rr);
+            setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            setPower(speed, lf, lr, rf, rr);
+        }
+        //This part needs to be different though
         while (driveMotorsBusy()) {
             telemetry.addData("encoderPosition", getEncoderPosition());
             telemetry.addData("gyroPosition", getAngle());
@@ -452,8 +479,12 @@ class MecanumBot {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public void flick (double direction){
+    public void holdArm(){
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
+    public void flick (double direction){
+        flicker.setPosition(direction);
     }
 }
 

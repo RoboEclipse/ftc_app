@@ -35,25 +35,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @Autonomous(name="EncoderTest", group="Linear Opmode")
 //@Disabled
 public class EncoderTest extends LinearOpMode {
     private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
-    double speed = 0.5; //limit is good and cool
+    double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enuff = 2; //Determines margin of error
     int inches = 27;
@@ -71,60 +57,49 @@ public class EncoderTest extends LinearOpMode {
         pattern = new VuMark(telemetry,hardwareMap);
         pattern.onInit(VuforiaLocalizer.CameraDirection.FRONT);
         //Getting the motors and servos in the right place
+        mecanumBot.flick(0.5);
         mecanumBot.moveSideBar(0.5);
-        mecanumBot.controlArm(-0.1);
+        mecanumBot.controlArm(0.5);
         sleep(1000);
         mecanumBot.controlArm(0.1);
         sleep(2000);
         mecanumBot.controlArm(0.0);
 
+        //Knock off the jewel
         while (!knocked){
-            //Knock off the jewel
+            mecanumBot.setJewelArm(1.0);
             blue = mecanumBot.GetJewelSensorBlue();
             red = mecanumBot.GetJewelSensorRed();
             if (red>blue*2.2) {
-
+                mecanumBot.flick(1.0);
+                knocked = true;
             }
             if (blue>red+15) {
-
+                mecanumBot.flick(0.0);
+                knocked = true;
             }
         }
+        mecanumBot.flick(0.5);
+        mecanumBot.setJewelArm(0.4);
+
+        //Determine Pattern
+        pattern.onLoop();
+        telemetry.addData("Pattern: " , pattern.vuMark);
+
         //Drive forward
         mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*27,(int)TICKS_PER_INCH*27,speed);
-        if(pattern.isCenterRelicVisable()){
-            telemetry.addData("Pattern ", "Center");
-        }
-        if(pattern.isLeftRelicVisable()){
-            telemetry.addData("Pattern ", "Left");
-            inches += 3;
-        }
-        if(pattern.isRightRelicVisable()){
-            telemetry.addData("Pattern ", "Right");
-            inches -= 3;
-        }
 
-        while (mecanumBot.driveMotorsBusy()) {
-
-            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-            telemetry.addData("gyroPosition", mecanumBot.getAngle());
-
-            telemetry.update();
-        }
         //Turn 90 degrees
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*-27,speed);
-        mecanumBot.encoderTurn(-90,close, enuff);
+        mecanumBot.encoderTurn(-90,close, enuff,speed);
+
         //Lower Arm
         speed = 0.5;
         mecanumBot.controlArm(0.1);
         sleep(2000);
         mecanumBot.controlArm(0.0);
+
         //Drive glyph into box
         mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
-        while (mecanumBot.driveMotorsBusy()) {
-            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-            telemetry.addData("gyroPosition", mecanumBot.getAngle());
-            telemetry.update();
-        }
         mecanumBot.tankDrive(0,0);
         mecanumBot.br8kMotors();
         mecanumBot.moveSideBar(0.0);
