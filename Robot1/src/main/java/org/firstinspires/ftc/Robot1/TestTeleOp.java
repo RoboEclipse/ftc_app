@@ -74,7 +74,7 @@ public class TestTeleOp extends OpMode {
         armPower = -gamepad2.left_stick_y*0.1;
         extenderPower = -gamepad2.right_stick_y*0.5;
         if(gamepad1.a){
-            myRobot.setJewelArm(0.3);
+            myRobot.setJewelArm(0.67);
         }
         if(armPower>0){
             armPower=armPower*5;

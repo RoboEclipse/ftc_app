@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,6 +22,7 @@ import java.util.Locale;
 class MecanumBot {
     private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
+    private HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
     private Acceleration gravity;
@@ -36,8 +36,10 @@ class MecanumBot {
     private double encoder_drive_power = ENCODER_DRIVE_POWER;
 
     RobotConfiguration myRobotConfig = new RobotConfiguration();
+    VuMark pattern;
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
+
         telemetry = _telemetry;
         lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
         lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
@@ -82,7 +84,8 @@ class MecanumBot {
                 new Velocity(),
                 1000);
 
-        jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
+        //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
+        pattern = new VuMark(telemetry, HardwareMap);
         //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
@@ -308,7 +311,16 @@ class MecanumBot {
             }
         }
     }
-
+    public void EncoderArm(int ticks, double power){
+        armMotor.setPower(0.0);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setTargetPosition(ticks, armMotor);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setPower(power);
+        while (driveMotorsBusy()) {
+            telemetry.update();
+        }
+    }
     private void encoderDrive(int lft, int rft, int lrt, int rrt) {
         setPower(0.0, lf, lr, rf, rr);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -486,5 +498,65 @@ class MecanumBot {
     public void flick (double direction){
         flicker.setPosition(direction);
     }
+    public void knockoffjewel(double RedPosition, double BluePosition, double StartPosition){
+        double flickerPosition=StartPosition;
+        sleep(500);
+        setJewelArm(0.25);
+        sleep(500);
+        while (true){
+            sleep(500);
+            double blue = GetJewelSensorBlue();
+            double red = GetJewelSensorRed();
+            if (red > blue * 2.2) {
+                flicker.setPosition(RedPosition);
+                sleep(500);
+                break;
+            }
+            else if (blue > red + 15) {
+                flicker.setPosition(BluePosition);
+                sleep(500);
+                break;
+            }
+            else if(flickerPosition>0.7){
+                break;
+            }
+            else{
+                flickerPosition+=0.02;
+            }
+            flick(flickerPosition);
+
+
+        }
+        flick(StartPosition);
+        setJewelArm(0.67);
+        sleep(500);
+    }
+    public String DetectPattern(){
+        pattern.onLoop();
+        telemetry.addData("Pattern: " , pattern.vuMark);
+        telemetry.update();
+
+        if(pattern.isCenterRelicVisable()){
+            return "Center";
+        }
+        if(pattern.isLeftRelicVisable()){
+            return "Left";
+        }
+        if(pattern.isRightRelicVisable()){
+            return "Right";
+        }
+        //If none detected, assume it is center
+        return "Center";
+
+    }
+    private final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+
 }
 
