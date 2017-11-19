@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -85,7 +86,8 @@ class MecanumBot {
                 1000);
 
         //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
-        pattern = new VuMark(telemetry, HardwareMap);
+        pattern = new VuMark(_telemetry, hardwareMap);
+        pattern.onInit(VuforiaLocalizer.CameraDirection.BACK);
         //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
@@ -311,8 +313,10 @@ class MecanumBot {
             }
         }
     }
+    //TODO: Get this to actually work
     public void EncoderArm(int ticks, double power){
         armMotor.setPower(0.0);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setTargetPosition(ticks, armMotor);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -500,13 +504,17 @@ class MecanumBot {
     }
     public void knockoffjewel(double RedPosition, double BluePosition, double StartPosition){
         double flickerPosition=StartPosition;
+        double blue;
+        double red;
         sleep(500);
         setJewelArm(0.25);
         sleep(500);
         while (true){
             sleep(500);
-            double blue = GetJewelSensorBlue();
-            double red = GetJewelSensorRed();
+            blue = GetJewelSensorBlue();
+            red = GetJewelSensorRed();
+            telemetry.addData("Blue: ", blue);
+            telemetry.addData("Red: ", red);
             if (red > blue * 2.2) {
                 flicker.setPosition(RedPosition);
                 sleep(500);
@@ -517,11 +525,11 @@ class MecanumBot {
                 sleep(500);
                 break;
             }
-            else if(flickerPosition>0.7){
+            else if(flickerPosition>0.6){
                 break;
             }
             else{
-                flickerPosition+=0.02;
+                flickerPosition+=0.04;
             }
             flick(flickerPosition);
 
@@ -532,18 +540,23 @@ class MecanumBot {
         sleep(500);
     }
     public String DetectPattern(){
-        pattern.onLoop();
-        telemetry.addData("Pattern: " , pattern.vuMark);
-        telemetry.update();
+        for (int i = 0; i <= 20; i++) {
+            pattern.onLoop();
+            sleep(50);
 
-        if(pattern.isCenterRelicVisable()){
-            return "Center";
-        }
-        if(pattern.isLeftRelicVisable()){
-            return "Left";
-        }
-        if(pattern.isRightRelicVisable()){
-            return "Right";
+
+            telemetry.addData("Pattern: ", pattern.vuMark);
+            telemetry.update();
+
+            if (pattern.isCenterRelicVisable()) {
+                return "Center";
+            }
+            if (pattern.isLeftRelicVisable()) {
+                return "Left";
+            }
+            if (pattern.isRightRelicVisable()) {
+                return "Right";
+            }
         }
         //If none detected, assume it is center
         return "Center";

@@ -33,9 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-
-@Autonomous(name="EncoderTest", group="Linear Opmode")
+@Autonomous(name="RedAutonomous", group="Linear Opmode")
 //@Disabled
 public class EncoderTest extends LinearOpMode {
     private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
@@ -45,20 +43,15 @@ public class EncoderTest extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 27;
-    int blue;
-    int red;
+    int inches = 38;
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     MecanumBot mecanumBot = new MecanumBot();
-    VuMark pattern;
     @Override
     public void runOpMode() {
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
-        pattern = new VuMark(telemetry,hardwareMap);
-        pattern.onInit(VuforiaLocalizer.CameraDirection.FRONT);
-
 
         //Getting the motors and servos in the right place
         mecanumBot.flick(minflickerPosition);
