@@ -15,6 +15,7 @@ public class TestTeleOp extends OpMode {
     final double dpad_speed = 0.5;
     double armPower = 0.0;
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
+
     double servoMinPos = 0.0;
     double servoMaxPos = 0.5; //ToDo need to check with real robot on servo position
     double jewelServoPos = 0.5;
@@ -82,22 +83,22 @@ public class TestTeleOp extends OpMode {
 
 
         if(gamepad2.dpad_up){
-            if(clawServoPos>=0.3){
-                clawServoPos-=0.02;
-            }
-        }
-        if(gamepad2.dpad_down){
-            if(clawServoPos<=0.7){
-                clawServoPos+=0.02;
-            }
-        }
-        if(gamepad2.left_bumper){
             if(clawServoPos>=0.0){
                 clawServoPos-=0.02;
             }
         }
+        if(gamepad2.dpad_down){
+            if(clawServoPos<=1.0){
+                clawServoPos+=0.02;
+            }
+        }
+        if(gamepad2.left_bumper){
+            if(clawServoPos>=0.02){
+                clawServoPos-=0.02;
+            }
+        }
         if(gamepad2.right_bumper){
-            if(clawServoPos<=0.6){
+            if(clawServoPos<=1.0){
                 clawServoPos+=0.02;
             }
         }

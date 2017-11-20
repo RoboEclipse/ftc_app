@@ -43,7 +43,7 @@ public class EncoderTest extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 38;
+    int inches = 40;
 
 
     // Declare OpMode members.
@@ -55,10 +55,10 @@ public class EncoderTest extends LinearOpMode {
 
         //Getting the motors and servos in the right place
         mecanumBot.flick(minflickerPosition);
-        mecanumBot.moveSideBar(0.5);
+        mecanumBot.moveSideBar(0.2);
 
         //Knock off the jewel and return the arms
-        mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
+        mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
         //region JewelUnfactored
         /*
         while (true){
@@ -114,20 +114,28 @@ public class EncoderTest extends LinearOpMode {
         //endregion
 
         //Raise arm
-        mecanumBot.EncoderArm(140,0.3);
+        mecanumBot.controlArm(0.5);
+        sleep(1000);
+        mecanumBot.controlArm(0.0);
+        mecanumBot.holdArm();
         //Drive forward
         mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*inches,speed);
-        //Lower Arm
-        mecanumBot.EncoderArm(-140,-0.1);
+
 
         //Turn 90 degrees
         mecanumBot.encoderTurn(-90,close, enough, speed);
 
+        //Lower Arm
+        mecanumBot.controlArm(-0.1);
+        sleep(1000);
+        mecanumBot.controlArm(0.0);
+
         //Drive glyph into box
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
+        mecanumBot.moveSideBar(0.6);
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
         mecanumBot.tankDrive(0,0);
         mecanumBot.br8kMotors();
-        mecanumBot.moveSideBar(0.8);
+
         telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
         telemetry.addData("gyroPosition", mecanumBot.getAngle());
         telemetry.update();

@@ -87,7 +87,7 @@ class MecanumBot {
 
         //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
         pattern = new VuMark(_telemetry, hardwareMap);
-        pattern.onInit(VuforiaLocalizer.CameraDirection.BACK);
+        pattern.onInit(VuforiaLocalizer.CameraDirection.FRONT);
         //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
@@ -321,7 +321,13 @@ class MecanumBot {
         setTargetPosition(ticks, armMotor);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(power);
+        telemetry.addData("encoderPosition", getEncoderPosition());
+        telemetry.addData("power", power);
+        telemetry.addData("ticks", ticks);
+        telemetry.update();
+        slowedDown = false;
         while (driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", getEncoderPosition());
             telemetry.update();
         }
     }
@@ -444,8 +450,8 @@ class MecanumBot {
 
     public void resetDriveMotorModes() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
-    }
+    setMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
+}
 
     public void disableEncoders() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
@@ -507,7 +513,7 @@ class MecanumBot {
         double blue;
         double red;
         sleep(500);
-        setJewelArm(0.25);
+        setJewelArm(0.20);
         sleep(500);
         while (true){
             sleep(500);
@@ -515,14 +521,15 @@ class MecanumBot {
             red = GetJewelSensorRed();
             telemetry.addData("Blue: ", blue);
             telemetry.addData("Red: ", red);
+            telemetry.update();
             if (red > blue * 2.2) {
                 flicker.setPosition(RedPosition);
-                sleep(500);
+                sleep(1000);
                 break;
             }
-            else if (blue > red + 15) {
+            else if (blue > red) {
                 flicker.setPosition(BluePosition);
-                sleep(500);
+                sleep(1000);
                 break;
             }
             else if(flickerPosition>0.6){
