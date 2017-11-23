@@ -76,6 +76,7 @@ public class TestTeleOp extends OpMode {
         extenderPower = -gamepad2.right_stick_y*0.5;
         if(gamepad1.a){
             myRobot.setJewelArm(0.67);
+            myRobot.flick(0.5);
         }
         if(armPower>0){
             armPower=armPower*5;
@@ -94,12 +95,12 @@ public class TestTeleOp extends OpMode {
         }
         if(gamepad2.left_bumper){
             if(clawServoPos>=0.02){
-                clawServoPos-=0.02;
+                clawServoPos-=0.03;
             }
         }
         if(gamepad2.right_bumper){
             if(clawServoPos<=1.0){
-                clawServoPos+=0.02;
+                clawServoPos+=0.03;
             }
         }
         myRobot.moveSideBar(clawServoPos);

@@ -86,12 +86,62 @@ class MecanumBot {
                 1000);
 
         //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
+        //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
+
+    }
+    //Removed Vuforia from the other wone to remove the delay
+    public void initAutoMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
+
+        telemetry = _telemetry;
+        lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
+        lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
+        rf = hardwareMap.dcMotor.get(myRobotConfig.RightFrontMotorName);
+        rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
+        armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
+        slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
+        jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
+        //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
+        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
+        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
+        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
+        jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
+        flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
+
+        resetDirection();
+
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // These are the wheel motors
+        // I am here! LOLOLOLOLOLOLOLOL
+        //Catmeow? :3
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(
+                new org.firstinspires.ftc.robotcore.external.navigation.Position(),
+                new Velocity(),
+                1000);
+
+        //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
         pattern = new VuMark(_telemetry, hardwareMap);
         pattern.onInit(VuforiaLocalizer.CameraDirection.FRONT);
         //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
-
     private void resetDirection() {
         rf.setDirection(DcMotorSimple.Direction.FORWARD);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -360,6 +410,7 @@ class MecanumBot {
     }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
+
         if(degrees>0){
             setPower(0.0, lf, lr, rf, rr);
             setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -389,6 +440,7 @@ class MecanumBot {
                 tankDrive(0.1, 0.1);
                 if (getAngle() < degrees + enuff && getAngle() > degrees - enuff) {
                     telemetry.update();
+                    br8kMotors();
                     break;
                 }
             }

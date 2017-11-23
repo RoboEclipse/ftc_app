@@ -33,17 +33,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="RedAutonomous", group="Linear Opmode")
+@Autonomous(name="BlueAutonomous", group="Linear Opmode")
 //@Disabled
-public class EncoderTest extends LinearOpMode {
+public class BLueJewelAutonomous2 extends LinearOpMode {
     private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
-    double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 40;
+    double inches = -33.5;
 
 
     // Declare OpMode members.
@@ -51,36 +49,14 @@ public class EncoderTest extends LinearOpMode {
     MecanumBot mecanumBot = new MecanumBot();
     @Override
     public void runOpMode() {
-        mecanumBot.initMecanumBot(hardwareMap, telemetry);
+        mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
 
         //Getting the motors and servos in the right place
         mecanumBot.flick(minflickerPosition);
         mecanumBot.moveSideBar(0.2);
 
         //Knock off the jewel and return the arms
-        mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
-        //region JewelUnfactored
-        /*
-        while (true){
-            mecanumBot.setJewelArm(1.0);
-            blue = mecanumBot.GetJewelSensorBlue();
-            red = mecanumBot.GetJewelSensorRed();
-            if (red > blue * 2.2) {
-                flickerPosition = 1.0;
-                break;
-            }
-            else if (blue > red + 15) {
-                flickerPosition = 0.0;
-                break;
-            }
-            else{
-                flickerPosition-=0.01;
-            }
-            mecanumBot.flick(flickerPosition);
-
-        }
-        */
-        //endregion
+        mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
         //Determine Pattern and change drive distance
         if(mecanumBot.DetectPattern().equals("Left")){
             inches+=7.5;
@@ -89,76 +65,34 @@ public class EncoderTest extends LinearOpMode {
             inches-=7.5;
         }
 
-        //region PatternUnfactored
-        /*
-        while(true){
-            pattern.onLoop();
-            telemetry.addData("Pattern: " , pattern.vuMark);
-            telemetry.update();
-            if(pattern.isCenterRelicVisable()){
-                break;
-            }
-            if(pattern.isLeftRelicVisable()){
-                inches += 7.5;
-                break;
-            }
-            if(pattern.isRightRelicVisable()){
-                inches -= 7.5;
-                break;
-            }
-            else{
-                break;
-            }
-        }
-        */
-        //endregion
+
 
         //Raise arm
         mecanumBot.controlArm(0.5);
-        sleep(1000);
+        sleep(300);
         mecanumBot.controlArm(0.0);
         mecanumBot.holdArm();
         //Drive forward
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*inches,speed);
-
+        mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 
         //Turn 90 degrees
         mecanumBot.encoderTurn(-90,close, enough, speed);
 
-        //Lower Arm
         mecanumBot.controlArm(-0.1);
-        sleep(1000);
+        sleep(300);
         mecanumBot.controlArm(0.0);
+        mecanumBot.holdArm();
 
         //Drive glyph into box
-        mecanumBot.moveSideBar(0.6);
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
-        mecanumBot.tankDrive(0,0);
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
         mecanumBot.br8kMotors();
+        mecanumBot.moveSideBar(0.6);
+        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
+
 
         telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
         telemetry.addData("gyroPosition", mecanumBot.getAngle());
         telemetry.update();
 
     }
-    //region OldEncoderMethod
-    /*
-    private void EncoderTurn() {
-        while (mecanumBot.driveMotorsBusy()) {
-            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-            telemetry.addData("gyroPosition", mecanumBot.getAngle());
-
-            if(mecanumBot.getAngle() < -90 + close && mecanumBot.getAngle() > -90-close) {
-                speed = 0.1;
-                mecanumBot.tankDrive(speed, speed);
-                if (mecanumBot.getAngle() < -90 + enough && mecanumBot.getAngle() > -90 - enough) {
-                    telemetry.update();
-                    break;
-                }
-            }
-            telemetry.update();
-        }
-    }
-    */
-    //endregion
 }
