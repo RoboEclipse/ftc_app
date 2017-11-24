@@ -70,13 +70,12 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
 
-        myRobot.drive(theta, 0.8*v_theta, 0.50*v_rotation); //move robot
+        myRobot.drive(theta, v_theta, 0.50*v_rotation); //move robot
 
         armPower = -gamepad2.left_stick_y*0.1;
-        extenderPower = -gamepad2.right_stick_y*0.5;
         if(gamepad1.a){
             myRobot.setJewelArm(0.67);
-            myRobot.flick(0.5);
+            myRobot.flick(1.0);
         }
         if(armPower>0){
             armPower=armPower*5;
@@ -89,7 +88,7 @@ public class TestTeleOp extends OpMode {
             }
         }
         if(gamepad2.dpad_down){
-            if(clawServoPos<=1.0){
+            if(clawServoPos<=0.6){
                 clawServoPos+=0.02;
             }
         }
@@ -99,12 +98,11 @@ public class TestTeleOp extends OpMode {
             }
         }
         if(gamepad2.right_bumper){
-            if(clawServoPos<=1.0){
+            if(clawServoPos<=0.6){
                 clawServoPos+=0.03;
             }
         }
         myRobot.moveSideBar(clawServoPos);
-        myRobot.extenderDrive(extenderPower);
         myRobot.controlArm(armPower);
         myRobot.holdArm();
         /*

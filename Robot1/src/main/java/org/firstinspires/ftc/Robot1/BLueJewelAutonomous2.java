@@ -49,50 +49,54 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
     MecanumBot mecanumBot = new MecanumBot();
     @Override
     public void runOpMode() {
-        mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
+        waitForStart();
+        while(opModeIsActive()){
+            mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
 
-        //Getting the motors and servos in the right place
-        mecanumBot.flick(minflickerPosition);
-        mecanumBot.moveSideBar(0.2);
+            //Getting the motors and servos in the right place
+            mecanumBot.flick(minflickerPosition);
+            mecanumBot.moveSideBar(0.2);
 
-        //Knock off the jewel and return the arms
-        mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
-        //Determine Pattern and change drive distance
-        if(mecanumBot.DetectPattern().equals("Left")){
-            inches+=7.5;
+            //Knock off the jewel and return the arms
+            mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
+            //Determine Pattern and change drive distance
+            if(mecanumBot.DetectPattern().equals("Left")){
+                inches+=7.5;
+            }
+            else if(mecanumBot.DetectPattern().equals("Right")){
+                inches-=7.5;
+            }
+
+
+
+            //Raise arm
+            mecanumBot.controlArm(0.5);
+            sleep(300);
+            mecanumBot.controlArm(0.0);
+            mecanumBot.holdArm();
+            //Drive forward
+            mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
+
+            //Turn 90 degrees
+            mecanumBot.encoderTurn(-90,close, enough, speed);
+
+            mecanumBot.controlArm(-0.1);
+            sleep(300);
+            mecanumBot.controlArm(0.0);
+            mecanumBot.holdArm();
+
+            //Drive glyph into box
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
+            mecanumBot.br8kMotors();
+            mecanumBot.moveSideBar(0.6);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
+
+
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+            telemetry.update();
         }
-        else if(mecanumBot.DetectPattern().equals("Right")){
-            inches-=7.5;
-        }
 
-
-
-        //Raise arm
-        mecanumBot.controlArm(0.5);
-        sleep(300);
-        mecanumBot.controlArm(0.0);
-        mecanumBot.holdArm();
-        //Drive forward
-        mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
-
-        //Turn 90 degrees
-        mecanumBot.encoderTurn(-90,close, enough, speed);
-
-        mecanumBot.controlArm(-0.1);
-        sleep(300);
-        mecanumBot.controlArm(0.0);
-        mecanumBot.holdArm();
-
-        //Drive glyph into box
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
-        mecanumBot.br8kMotors();
-        mecanumBot.moveSideBar(0.6);
-        mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
-
-
-        telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-        telemetry.addData("gyroPosition", mecanumBot.getAngle());
-        telemetry.update();
 
     }
 }

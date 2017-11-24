@@ -408,6 +408,26 @@ class MecanumBot {
             telemetry.update();
         }
     }
+    public void encoderStrafeDrive(int ticks, double power, String direction) {
+        int multiplier = 1;
+        if (direction.equals("left")){
+            multiplier = -1;
+        }
+        setPower(0.0, lf, lr, rf, rr);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        setTargetPosition(multiplier*ticks, lf);
+        setTargetPosition(-multiplier*ticks, rf);
+        setTargetPosition(-multiplier*ticks, lr);
+        setTargetPosition(multiplier*ticks, rr);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        setPower(power, lf, lr, rf, rr);
+        slowedDown = false;
+        while (driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", getEncoderPosition());
+            telemetry.addData("gyroPosition", getAngle());
+            telemetry.update();
+        }
+    }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
 
