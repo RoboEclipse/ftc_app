@@ -40,10 +40,10 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
-    double minflickerPosition = 0.5;//Retracted flicker
+    double minflickerPosition = 0.6;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 12;
+    int inches = 13;
 
 
     // Declare OpMode members.
@@ -63,21 +63,18 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
             //Determine Pattern and change drive distance
             if(mecanumBot.DetectPattern().equals("Left")){
-                inches+=7.5;
+                inches-=7.5;
             }
             else if(mecanumBot.DetectPattern().equals("Right")){
-                inches-=7.5;
+                inches+=7.5;
             }
 
 
 
             //Raise arm
             mecanumBot.controlArm(0.5);
-            sleep(1000);
-            mecanumBot.controlArm(0.0);
-            mecanumBot.holdArm();
             //Drive forward
-            mecanumBot.encoderTankDrive((int)(-25*TICKS_PER_INCH), (int)(-25*TICKS_PER_INCH), 0.5);
+            mecanumBot.encoderTankDrive((int)(-24*TICKS_PER_INCH), (int)(-24*TICKS_PER_INCH), 0.5);
             //Orang see number 8 ROTATE
             mecanumBot.encoderTurn(180,25, 4, 0.5);
             //Drive sideways
@@ -85,18 +82,24 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
 
             //Lower Arm
             mecanumBot.controlArm(-0.1);
-            sleep(750);
+            sleep(1000);
             mecanumBot.controlArm(0.0);
 
 
             //Drive glyph into box
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*11,(int)TICKS_PER_INCH*11,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
             mecanumBot.tankDrive(0,0);
             mecanumBot.moveSideBar(0.5);
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
+            //Back Up
+            mecanumBot.moveSideBar(0.6);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
+            mecanumBot.br8kMotors();
+
+            break;
         }
 
 

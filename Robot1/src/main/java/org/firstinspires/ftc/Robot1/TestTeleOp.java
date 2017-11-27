@@ -25,6 +25,10 @@ public class TestTeleOp extends OpMode {
     double clawServoPos = 0.5;
     double currentArmPower = 0.2;
     double extenderPower ;
+    double speedMultiplier = 1.0;
+    double rotationMultiplier=0.5;
+
+    boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -69,16 +73,25 @@ public class TestTeleOp extends OpMode {
             v_theta = Math.sqrt(lx * lx + ly * ly);
             v_rotation = g1.right_stick_x;
         }
+        if(gamepad1.left_bumper){
+            speedMultiplier=0.5;
+            rotationMultiplier=0.25;
+        }
+        else{
+            speedMultiplier=1.0;
+            rotationMultiplier = 0.5;
+        }
 
-        myRobot.drive(theta, v_theta, 0.50*v_rotation); //move robot
 
-        armPower = -gamepad2.left_stick_y*0.1;
+        myRobot.drive(theta, speedMultiplier*v_theta, rotationMultiplier*v_rotation); //move robot
+
+        armPower = -gamepad2.left_stick_y*0.08;
         if(gamepad1.a){
-            myRobot.setJewelArm(0.67);
+            myRobot.setJewelArm(1.0);
             myRobot.flick(1.0);
         }
         if(armPower>0){
-            armPower=armPower*5;
+            armPower=armPower*6;
         }
 
 
@@ -101,6 +114,12 @@ public class TestTeleOp extends OpMode {
             if(clawServoPos<=0.6){
                 clawServoPos+=0.03;
             }
+        }
+        if(gamepad2.a){
+            clawServoPos = 0.6;
+        }
+        if(gamepad2.b){
+            clawServoPos = 0.5;
         }
         myRobot.moveSideBar(clawServoPos);
         myRobot.controlArm(armPower);

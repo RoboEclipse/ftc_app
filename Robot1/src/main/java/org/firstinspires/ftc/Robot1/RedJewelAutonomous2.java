@@ -118,15 +118,12 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
             //Raise arm
             mecanumBot.controlArm(0.5);
-            sleep(1000);
-            mecanumBot.controlArm(0.0);
-            mecanumBot.holdArm();
             //Drive forward
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*inches,speed);
 
             //Lower Arm
             mecanumBot.controlArm(-0.1);
-            sleep(750);
+            sleep(1000);
             mecanumBot.controlArm(0.0);
 
             //Turn 90 degrees
@@ -135,12 +132,17 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
             //Drive glyph into box
             mecanumBot.moveSideBar(0.5);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
             mecanumBot.tankDrive(0,0);
+            //Back Up
+            mecanumBot.moveSideBar(0.6);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
+            mecanumBot.br8kMotors();
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
+            break;
         }
 
 

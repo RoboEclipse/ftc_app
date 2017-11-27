@@ -585,7 +585,7 @@ class MecanumBot {
         double blue;
         double red;
         sleep(500);
-        setJewelArm(0.20);
+        setJewelArm(0.5);
         sleep(500);
         while (true){
             sleep(500);
@@ -615,7 +615,7 @@ class MecanumBot {
 
         }
         flick(StartPosition);
-        setJewelArm(0.67);
+        setJewelArm(1.0);
         sleep(500);
     }
     public String DetectPattern(){

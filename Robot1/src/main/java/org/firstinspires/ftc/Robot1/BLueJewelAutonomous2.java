@@ -40,8 +40,8 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
-    double minflickerPosition = 0.5;//Retracted flicker
-    double inches = -33.5;
+    double minflickerPosition = 0.6;//Retracted flicker
+    double inches = -34.5;
 
 
     // Declare OpMode members.
@@ -86,15 +86,22 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.holdArm();
 
             //Drive glyph into box
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*6,(int)TICKS_PER_INCH*6,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
             mecanumBot.br8kMotors();
             mecanumBot.moveSideBar(0.6);
+            /*
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
-
+            mecanumBot.br8kMotors();
+            */
+            //Back Up
+            mecanumBot.moveSideBar(0.6);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
+            mecanumBot.br8kMotors();
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
+            break;
         }
 
 
