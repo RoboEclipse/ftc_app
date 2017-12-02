@@ -43,7 +43,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 12;
+    int inches = 14;
 
 
     // Declare OpMode members.
@@ -75,13 +75,17 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.controlArm(0.5);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(21*TICKS_PER_INCH), (int)(21*TICKS_PER_INCH), 0.5);
+
             //Drive sideways
             mecanumBot.encoderStrafeDrive((int)(inches*TICKS_PER_INCH),0.5,"left");
 
             //Lower Arm
             mecanumBot.controlArm(-0.1);
-            sleep(1000);
+            sleep(500);
             mecanumBot.controlArm(0.0);
+            mecanumBot.holdArm();
+
+
 
 
             //Drive glyph into box

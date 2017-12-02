@@ -71,19 +71,16 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
 
             //Raise arm
             mecanumBot.controlArm(0.5);
-            sleep(300);
-            mecanumBot.controlArm(0.0);
-            mecanumBot.holdArm();
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 
+            //Lower Arm
+            mecanumBot.controlArm(-0.1);
+            sleep(1000);
+            mecanumBot.controlArm(0.0);
+
             //Turn 90 degrees
             mecanumBot.encoderTurn(-90,close, enough, speed);
-
-            mecanumBot.controlArm(-0.1);
-            sleep(300);
-            mecanumBot.controlArm(0.0);
-            mecanumBot.holdArm();
 
             //Drive glyph into box
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
@@ -94,10 +91,10 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.br8kMotors();
             */
             //Back Up
-            mecanumBot.moveSideBar(0.6);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
             mecanumBot.br8kMotors();
 
+            mecanumBot.moveSideBar(0.6);
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();

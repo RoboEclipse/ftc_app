@@ -41,9 +41,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
-    double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 39;
+    double inches = 37;
 
 
     // Declare OpMode members.
@@ -119,7 +117,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             //Raise arm
             mecanumBot.controlArm(0.5);
             //Drive forward
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*inches,(int)TICKS_PER_INCH*inches,speed);
+            mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 
             //Lower Arm
             mecanumBot.controlArm(-0.1);
@@ -132,7 +130,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
             //Drive glyph into box
             mecanumBot.moveSideBar(0.5);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
             mecanumBot.tankDrive(0,0);
             //Back Up
             mecanumBot.moveSideBar(0.6);

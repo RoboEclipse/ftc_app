@@ -116,72 +116,15 @@ public class TestTeleOp extends OpMode {
             }
         }
         if(gamepad2.a){
-            clawServoPos = 0.6;
+            clawServoPos = 0.1;
         }
         if(gamepad2.b){
-            clawServoPos = 0.5;
+            clawServoPos = 0.29;
         }
         myRobot.moveSideBar(clawServoPos);
         myRobot.controlArm(armPower);
         myRobot.holdArm();
-        /*
-        if (g2.a)
-        {
-            currentArmPower += RobotConfiguration.PowerIncrement;
-        }
-        if (g2.b)
-        {
-            currentArmPower -= RobotConfiguration.PowerIncrement;
-        }
 
-        if (g2.left_trigger > 0.0) {
-            armPower = currentArmPower; // Maximum speed of arm motor os 0.2
-        } else if (g2.right_trigger > 0.0)
-            armPower = -currentArmPower / 5;
-        else armPower = 0.0;
-        myRobot.controlArm(armPower); //move arm up and down
-
-       if (g1.a) {
-            // jewel servo go down
-            jewelServoPos -= INCREMENT;
-            if (jewelServoPos <= servoMinPos) {
-                jewelServoPos = servoMinPos;
-            }
-        }
-         if (g1.b) {
-             jewelServoPos += INCREMENT;
-             if (jewelServoPos >= servoMaxPos) {
-
-                 jewelServoPos = servoMaxPos;
-             }
-         }
-        // Set the servo to the new position and pause;
-       myRobot.moveJewelServo(jewelServoPos);
-
-/*
-        if (g2.right_bumper) {
-            clawServoPos -= INCREMENT ;
-            myRobot.moveClawServo(clawServoPos);
-            if (clawServoPos <= clawServoMinPos) {
-                clawServoPos = clawServoMinPos;
-            }
-        }
-        if (g2.left_bumper) {
-            clawServoPos += INCREMENT ;
-            myRobot.moveClawServo(clawServoPos);
-           if (clawServoPos >= clawServoMaxPos){
-                clawServoPos = clawServoMinPos;
-            }
-        }
-        */
-
-
-
-
-        //telemetry.addData("jewel color", myRobot.readJewelColor());
-        //telemetry.addData("bottom color", myRobot.readFloorColor());
-        //telemetry.addData("heading", myRobot.getAngle());
-        //telemetry.addData("Jewel_Servo_Position", "%5.2f", jewelServoPos);
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", currentArmPower);
         telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);

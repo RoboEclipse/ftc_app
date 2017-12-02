@@ -41,9 +41,7 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.6;//Retracted flicker
-    double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
-    double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 13;
+    int inches = 15;
 
 
     // Declare OpMode members.
@@ -73,21 +71,21 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
 
             //Raise arm
             mecanumBot.controlArm(0.5);
-            //Drive forward
-            mecanumBot.encoderTankDrive((int)(-24*TICKS_PER_INCH), (int)(-24*TICKS_PER_INCH), 0.5);
+            //Drive backwards
+            mecanumBot.encoderTankDrive((int)(-21*TICKS_PER_INCH), (int)(-21*TICKS_PER_INCH), 0.5);
             //Orang see number 8 ROTATE
             mecanumBot.encoderTurn(180,25, 4, 0.5);
             //Drive sideways
             mecanumBot.encoderStrafeDrive((int)(-inches*TICKS_PER_INCH),0.5,"left");
-
+            //Back up
+            mecanumBot.encoderTankDrive((int)(-3*TICKS_PER_INCH), (int)(-3*TICKS_PER_INCH), 0.5);
             //Lower Arm
             mecanumBot.controlArm(-0.1);
-            sleep(1000);
+            sleep(500);
             mecanumBot.controlArm(0.0);
 
-
             //Drive glyph into box
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*13,(int)TICKS_PER_INCH*13,speed);
             mecanumBot.tankDrive(0,0);
             mecanumBot.moveSideBar(0.5);
 
