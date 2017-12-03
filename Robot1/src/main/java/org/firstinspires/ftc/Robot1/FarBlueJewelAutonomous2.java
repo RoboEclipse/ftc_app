@@ -78,7 +78,7 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             //Drive sideways
             mecanumBot.encoderStrafeDrive((int)(-inches*TICKS_PER_INCH),0.5,"left");
             //Back up
-            mecanumBot.encoderTankDrive((int)(-3*TICKS_PER_INCH), (int)(-3*TICKS_PER_INCH), 0.5);
+            mecanumBot.encoderTankDrive((int)(-4*TICKS_PER_INCH), (int)(-4*TICKS_PER_INCH), 0.5);
             //Lower Arm
             mecanumBot.controlArm(-0.1);
             sleep(500);

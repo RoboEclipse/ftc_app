@@ -74,12 +74,14 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
         if(gamepad1.left_bumper){
-            speedMultiplier=0.5;
-            rotationMultiplier=0.25;
+            if(clawServoPos>=0.02){
+                clawServoPos-=0.03;
+            }
         }
-        else{
-            speedMultiplier=1.0;
-            rotationMultiplier = 0.5;
+        if(gamepad1.right_bumper){
+            if(clawServoPos<=0.6){
+                clawServoPos+=0.03;
+            }
         }
 
 
