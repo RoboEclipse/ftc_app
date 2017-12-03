@@ -74,13 +74,17 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
         if(gamepad1.left_bumper){
-            if(clawServoPos>=0.02){
-                clawServoPos-=0.03;
-            }
+            speedMultiplier=0.5;
+            rotationMultiplier=0.25;
         }
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_trigger == 1){
             if(clawServoPos<=0.6){
                 clawServoPos+=0.03;
+            }
+        }
+        if(gamepad2.left_trigger == 1){
+            if(clawServoPos>=0.02){
+                clawServoPos-=0.03;
             }
         }
 
@@ -94,6 +98,12 @@ public class TestTeleOp extends OpMode {
         }
         if(armPower>0){
             armPower=armPower*6;
+        }
+        if(gamepad1.x){
+            armPower=-0.48;
+        }
+        if(gamepad1.y){
+            armPower=0.08;
         }
 
 
