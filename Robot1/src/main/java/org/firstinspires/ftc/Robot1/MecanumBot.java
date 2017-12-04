@@ -27,8 +27,8 @@ class MecanumBot {
     private BNO055IMU imu;
     private Orientation angles;
     private Acceleration gravity;
-    private ColorSensor jewelColorSensor, bottomColorSensor;
-    private Servo jewelServo, sidebarleft, sidebarright ,flicker;
+    private ColorSensor jewelColorSensor, bottomColorSensor;;
+    private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -55,6 +55,7 @@ class MecanumBot {
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
+        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
 
         resetDirection();
 
@@ -106,7 +107,7 @@ class MecanumBot {
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
-
+        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
         resetDirection();
 
         lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

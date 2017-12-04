@@ -23,6 +23,7 @@ public class TestTeleOp extends OpMode {
     double clawServoMinPos = 0.0;
     double clawServoMaxPos = 0.5;
     double clawServoPos = 0.5;
+    double TopServoPos = 0.5;
     double currentArmPower = 0.2;
     double extenderPower ;
     double speedMultiplier = 1.0;
@@ -73,38 +74,51 @@ public class TestTeleOp extends OpMode {
             v_theta = Math.sqrt(lx * lx + ly * ly);
             v_rotation = g1.right_stick_x;
         }
-        if(gamepad1.left_bumper){
+        if(gamepad1.x){
             speedMultiplier=0.5;
             rotationMultiplier=0.25;
         }
-        if(gamepad1.right_trigger == 1){
-            if(clawServoPos<=0.6){
+        else
+        {
+            speedMultiplier = 1;
+            rotationMultiplier = 0.5;
+        }
+
+        if(gamepad1.right_trigger >= 0.5){
+            if(clawServoPos<= 0.6){
                 clawServoPos+=0.03;
+            if(TopServoPos<= 0.6);{
+                    TopServoPos+=0.03;
+                }
             }
         }
-        if(gamepad2.left_trigger == 1){
+        if(gamepad1.left_trigger >= 0.5){
             if(clawServoPos>=0.02){
                 clawServoPos-=0.03;
+
             }
         }
 
-
         myRobot.drive(theta, speedMultiplier*v_theta, rotationMultiplier*v_rotation); //move robot
-
         armPower = -gamepad2.left_stick_y*0.08;
+        if (Math.abs(armPower) <= 0.01){
+            if(gamepad1.left_bumper){
+                armPower=0.08;
+            }
+            else if(gamepad1.right_bumper) {
+                armPower = -0.08;
+            }
+        }
+
         if(gamepad1.a){
             myRobot.setJewelArm(1.0);
             myRobot.flick(1.0);
         }
+
         if(armPower>0){
             armPower=armPower*6;
         }
-        if(gamepad1.x){
-            armPower=-0.48;
-        }
-        if(gamepad1.y){
-            armPower=0.08;
-        }
+
 
 
         if(gamepad2.dpad_up){
@@ -120,6 +134,7 @@ public class TestTeleOp extends OpMode {
         if(gamepad2.left_bumper){
             if(clawServoPos>=0.02){
                 clawServoPos-=0.03;
+
             }
         }
         if(gamepad2.right_bumper){
