@@ -19,6 +19,7 @@ public class RobotConfiguration {
     public static final String SideBarRightName = "SideBarRight";
     public static final String JewelServoName= "jewelServo";
     public static final String JewelServo2Name = "SecondJewelServo";
+    public static final String TopServoName = "TopServo";
 
     //Sensors
 
