@@ -28,7 +28,7 @@ class MecanumBot {
     private Orientation angles;
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
-    private Servo jewelServo, sidebarleft, sidebarright ,flicker,topservo;
+    private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -41,88 +41,12 @@ class MecanumBot {
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
 
-        telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
-        lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
-        rf = hardwareMap.dcMotor.get(myRobotConfig.RightFrontMotorName);
-        rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
-        armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
-        slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
-        jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
-        //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
-        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
-        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
-        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
-        jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
-        flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
-        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
-
-        resetDirection();
-
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // These are the wheel motors
-        // I am here! LOLOLOLOLOLOLOLOL
-        //Catmeow? :3
-        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu.initialize(parameters);
-        imu.startAccelerationIntegration(
-                new org.firstinspires.ftc.robotcore.external.navigation.Position(),
-                new Velocity(),
-                1000);
-
-        //jewelColorSensor.setI2cAddress(I2cAddr.create8bit(0x44));
-        //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
-
+        InitializeQuick(hardwareMap, _telemetry);
     }
     //Removed Vuforia from the other wone to remove the delay
     public void initAutoMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
 
-        telemetry = _telemetry;
-        lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
-        lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
-        rf = hardwareMap.dcMotor.get(myRobotConfig.RightFrontMotorName);
-        rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
-        armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
-        slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
-        jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
-        //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
-        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
-        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
-        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
-        jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
-        flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
-        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
-
-        resetDirection();
-
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // These are the wheel motors
-        // I am here! LOLOLOLOLOLOLOLOL
-        //Catmeow? :3
-        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        InitializeQuick(hardwareMap, _telemetry);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -144,6 +68,41 @@ class MecanumBot {
         //bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x42));
 
     }
+
+    private void InitializeQuick(HardwareMap hardwareMap, Telemetry _telemetry) {
+        telemetry = _telemetry;
+        lf = hardwareMap.dcMotor.get(myRobotConfig.LeftFrontMotorName);
+        lr = hardwareMap.dcMotor.get(myRobotConfig.LeftRearMotorName);
+        rf = hardwareMap.dcMotor.get(myRobotConfig.RightFrontMotorName);
+        rr = hardwareMap.dcMotor.get(myRobotConfig.RightRearMotorName);
+        armMotor = hardwareMap.dcMotor.get(myRobotConfig.ArmDriveMotorName);
+        slideMotor = hardwareMap.dcMotor.get(myRobotConfig.LinearSlideMotorName);
+        jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
+        //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
+        imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
+        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
+        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
+        jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
+        flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
+        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
+
+        resetDirection();
+
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // These are the wheel motors
+        // I am here! LOLOLOLOLOLOLOLOL
+        //Catmeow? :3
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
     private void resetDirection() {
         rf.setDirection(DcMotorSimple.Direction.FORWARD);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -177,6 +136,7 @@ class MecanumBot {
         return (rgb);
     }
 
+
     public int[] readFloorColor() {
         int[] rgb = {bottomColorSensor.red(), bottomColorSensor.green(),bottomColorSensor.blue()};
         return (rgb);
@@ -189,6 +149,10 @@ class MecanumBot {
     public void moveSideBar ( double position) {
         sidebarleft.setPosition(position);
         sidebarright.setPosition(1 - position);
+    }
+
+    public void moveTopServo ( double position) {
+        topservo.setPosition(position);
     }
 
     public void onStart() {
@@ -556,12 +520,14 @@ class MecanumBot {
 
     public String getEncoderPosition()
     {
-        return String.format("lf: %d,rf: %d, lr:%d, rr:%d",
+        return String.format("lf: %d,rf: %d, lr:%d, rr:%d, arm: %d",
                 lf.getCurrentPosition(),
                 rf.getCurrentPosition(),
                 lr.getCurrentPosition(),
-                rr.getCurrentPosition());
+                rr.getCurrentPosition(),
+                armMotor.getCurrentPosition());
     }
+
     public void extenderDrive (double power){
         slideMotor.setPower(power);
     }
