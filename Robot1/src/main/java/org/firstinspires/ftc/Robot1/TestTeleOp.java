@@ -23,7 +23,7 @@ public class TestTeleOp extends OpMode {
     double clawServoMinPos = 0.0;
     double clawServoMaxPos = 0.5;
     double clawServoPos = 0.5;
-    double TopServoPos = 0.5;
+    double topservoPos = 0.5;
     double currentArmPower = 0.2;
     double extenderPower ;
     double speedMultiplier = 1.0;
@@ -87,17 +87,21 @@ public class TestTeleOp extends OpMode {
         if(gamepad1.right_trigger >= 0.5){
             if(clawServoPos<= 0.6){
                 clawServoPos+=0.03;
-            if(TopServoPos<= 0.6);{
-                    TopServoPos+=0.03;
+            if(TopServoPos<= 0.6);
+                {
+                    TopServoPos += 0.03;
                 }
             }
         }
         if(gamepad1.left_trigger >= 0.5){
-            if(clawServoPos>=0.02){
-                clawServoPos-=0.03;
-
+            if(clawServoPos>=0.02) {
+                clawServoPos -= 0.03;
+            }
+            if(topservoPos>=0.02){
+                topservoPos-=0.03;
             }
         }
+
 
         myRobot.drive(theta, speedMultiplier*v_theta, rotationMultiplier*v_rotation); //move robot
         armPower = -gamepad2.left_stick_y*0.08;
@@ -118,36 +122,56 @@ public class TestTeleOp extends OpMode {
         if(armPower>0){
             armPower=armPower*6;
         }
-
+        if(gamepad1.right_bumper){
+            armPower=-0.48;
+        }
+        if(gamepad1.left_bumper){
+            armPower=0.08;
+        }
 
 
         if(gamepad2.dpad_up){
             if(clawServoPos>=0.0){
                 clawServoPos-=0.02;
+            if(topservoPos>=0.0){
+                topservoPos-=0.02;
+            }
             }
         }
         if(gamepad2.dpad_down){
-            if(clawServoPos<=0.6){
-                clawServoPos+=0.02;
+            if(clawServoPos<=0.6) {
+                clawServoPos += 0.02;
+            }
+            if(topservoPos<= 0.6) {
+                topservoPos += 0.02;
             }
         }
         if(gamepad2.left_bumper){
-            if(clawServoPos>=0.02){
-                clawServoPos-=0.03;
-
+            if(clawServoPos>=0.02) {
+                clawServoPos -= 0.03;
+            }
+            if(topservoPos>=0.02) {
+                topservoPos -= 0.03;
             }
         }
         if(gamepad2.right_bumper){
-            if(clawServoPos<=0.6){
-                clawServoPos+=0.03;
+            if(clawServoPos<=0.6) {
+                clawServoPos += 0.03;
+            }
+            if(topservoPos<=0.6){
+                topservoPos+=0.03;
             }
         }
+        //ToDo: Test the top servo positions for a and b
         if(gamepad2.a){
             clawServoPos = 0.1;
+            topservoPos = 0.5;
         }
         if(gamepad2.b){
             clawServoPos = 0.29;
+            topservoPos =0.5;
         }
+
         myRobot.moveSideBar(clawServoPos);
         myRobot.controlArm(armPower);
         myRobot.holdArm();
@@ -155,6 +179,7 @@ public class TestTeleOp extends OpMode {
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", currentArmPower);
         telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
+        telemetry.addData("Top_Servo_Position", topservoPos);
         telemetry.update();
 
     }
