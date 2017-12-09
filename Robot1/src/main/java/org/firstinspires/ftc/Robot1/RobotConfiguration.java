@@ -28,6 +28,7 @@ public class RobotConfiguration {
     public static final String BottomColorSensorName= "bottom_sensor";
     //public static final String GyroSensorName= "gyro_sensor";
     public static final String IMUName = "imu";
+    public static final String TouchSensorName="touch_sensor";
 
     public static final double PowerIncrement = 0.01;
 }

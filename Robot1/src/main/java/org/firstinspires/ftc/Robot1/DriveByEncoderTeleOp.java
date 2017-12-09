@@ -116,11 +116,11 @@ public class DriveByEncoderTeleOp extends OpMode {
         }
 
         if (g2.left_trigger > 0.0) {
-            armPower = currentArmPower; // Maximum speed of arm motor os 0.2
+            armPositionGoal = currentArmPower; // Maximum speed of arm motor os 0.2
         } else if (g2.right_trigger > 0.0)
-            armPower = -currentArmPower / 5;
-        else armPower = 0.0;
-        myRobot.controlArm(armPower); //move arm up and down
+            armPositionGoal = -currentArmPower / 5;
+        else armPositionGoal = 0.0;
+        myRobot.controlArm(armPositionGoal); //move arm up and down
 
        if (g1.a) {
             // jewel servo go down

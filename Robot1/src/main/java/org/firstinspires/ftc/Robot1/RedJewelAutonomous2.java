@@ -42,6 +42,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
     double inches = 37;
+    int angle=-90;
 
 
     // Declare OpMode members.
@@ -84,7 +85,8 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             //endregion
             //Determine Pattern and change drive distance
             if(mecanumBot.DetectPattern().equals("Left")){
-                inches+=7.5;
+                inches-=9.5;
+                angle=-45;
             }
             else if(mecanumBot.DetectPattern().equals("Right")){
                 inches-=7.5;
@@ -115,25 +117,22 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             //endregion
 
             //Raise arm
-            mecanumBot.controlArm(0.5);
+            mecanumBot.EncoderArm(300,0.6);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
-
             //Lower Arm
-            mecanumBot.controlArm(-0.1);
-            sleep(1000);
-            mecanumBot.controlArm(0.0);
+            mecanumBot.EncoderArm(-50,0.1);
 
-            //Turn 90 degrees
-            mecanumBot.encoderTurn(-90,close, enough, speed);
+            //Turn 45 degrees
+            mecanumBot.encoderTurn(angle,close, enough, speed);
 
 
             //Drive glyph into box
             mecanumBot.moveSideBar(0.5);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*10,(int)TICKS_PER_INCH*10,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*15,(int)TICKS_PER_INCH*15,speed);
             mecanumBot.tankDrive(0,0);
             //Back Up
-            mecanumBot.moveSideBar(0.6);
+            mecanumBot.moveSideBar(0.5);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
             mecanumBot.br8kMotors();
 

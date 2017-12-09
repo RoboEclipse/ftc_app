@@ -72,7 +72,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
 
 
             //Raise arm
-            mecanumBot.controlArm(0.5);
+            mecanumBot.EncoderArm(300,0.6);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(21*TICKS_PER_INCH), (int)(21*TICKS_PER_INCH), 0.5);
 
@@ -80,9 +80,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.encoderStrafeDrive((int)(inches*TICKS_PER_INCH),0.5,"left");
 
             //Lower Arm
-            mecanumBot.controlArm(-0.1);
-            sleep(500);
-            mecanumBot.controlArm(0.0);
+            mecanumBot.EncoderArm(-50,0.1);
             mecanumBot.holdArm();
 
 

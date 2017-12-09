@@ -69,23 +69,18 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
 
 
 
-            //Raise arm
-            mecanumBot.controlArm(0.5);
             //Drive backwards
             mecanumBot.encoderTankDrive((int)(-21*TICKS_PER_INCH), (int)(-21*TICKS_PER_INCH), 0.5);
+            //Raise arm
+            mecanumBot.EncoderArm(300, 0.5);
             //Orang see number 8 ROTATE
             mecanumBot.encoderTurn(180,25, 4, 0.5);
             //Drive sideways
             mecanumBot.encoderStrafeDrive((int)(-inches*TICKS_PER_INCH),0.5,"left");
-            //Back up
-            mecanumBot.encoderTankDrive((int)(-4*TICKS_PER_INCH), (int)(-4*TICKS_PER_INCH), 0.5);
             //Lower Arm
-            mecanumBot.controlArm(-0.1);
-            sleep(500);
-            mecanumBot.controlArm(0.0);
-
+            mecanumBot.EncoderArm(-50,0.1);
             //Drive glyph into box
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*13,(int)TICKS_PER_INCH*13,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
             mecanumBot.tankDrive(0,0);
             mecanumBot.moveSideBar(0.5);
 

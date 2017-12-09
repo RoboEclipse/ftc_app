@@ -58,7 +58,7 @@ public class ArmTest extends LinearOpMode {
         drivetrain.initMecanumBot(hardwareMap,telemetry);
         drivetrain.EncoderArm(600, 0.5);
         drivetrain.holdArm();
-        sleep(1000);
+        sleep(10000);
         drivetrain.EncoderArm(-600, 0.1);
     }
 }

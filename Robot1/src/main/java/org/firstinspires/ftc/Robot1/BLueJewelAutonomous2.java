@@ -70,14 +70,12 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
 
 
             //Raise arm
-            mecanumBot.controlArm(0.5);
+            mecanumBot.EncoderArm(300,0.6);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 
             //Lower Arm
-            mecanumBot.controlArm(-0.1);
-            sleep(1000);
-            mecanumBot.controlArm(0.0);
+            mecanumBot.EncoderArm(-50,0.1);
 
             //Turn 90 degrees
             mecanumBot.encoderTurn(-90,close, enough, speed);
@@ -86,13 +84,18 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
             mecanumBot.br8kMotors();
             mecanumBot.moveSideBar(0.6);
+            //Back Up
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9,speed);
+            //Do a 180 (Note that the gyro never resets, so your angles have to be relative to the original position)
+            mecanumBot.encoderTurn(90,close-20, enough, speed);
+            //Back Up
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-10,(int)TICKS_PER_INCH*-10,speed);
+            //Drive forward again
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*5,(int)TICKS_PER_INCH*5,speed);
             /*
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
             mecanumBot.br8kMotors();
             */
-            //Back Up
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
-            mecanumBot.br8kMotors();
 
             mecanumBot.moveSideBar(0.6);
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
