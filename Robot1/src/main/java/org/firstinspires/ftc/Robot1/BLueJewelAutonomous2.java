@@ -40,8 +40,8 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
-    double minflickerPosition = 0.6;//Retracted flicker
-    double inches = -34.5;
+    double minflickerPosition = 0.5;//Retracted flicker
+    double inches = -35.5;
 
 
     // Declare OpMode members.
@@ -74,24 +74,23 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 
-            //Lower Arm
-            mecanumBot.EncoderArm(-50,0.1);
-
             //Turn 90 degrees
             mecanumBot.encoderTurn(-90,close, enough, speed);
 
             //Drive glyph into box
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*9,(int)TICKS_PER_INCH*9,speed);
+            mecanumBot.disableDriveEncoders();
+            mecanumBot.tankDrive(0.25,0.25);
+            sleep(1500);
+            mecanumBot.tankDrive(0,0);
             mecanumBot.br8kMotors();
-            mecanumBot.moveSideBar(0.6);
+            mecanumBot.moveSideBar(0.5);
             //Back Up
+            mecanumBot.enableDriveEncoders();
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9,speed);
             //Do a 180 (Note that the gyro never resets, so your angles have to be relative to the original position)
-            mecanumBot.encoderTurn(90,close-20, enough, speed);
+            mecanumBot.encoderTurn(90,close, enough+2, speed);
             //Back Up
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-10,(int)TICKS_PER_INCH*-10,speed);
-            //Drive forward again
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*5,(int)TICKS_PER_INCH*5,speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-4,(int)TICKS_PER_INCH*-4,speed);
             /*
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-6,(int)TICKS_PER_INCH*-6,speed);
             mecanumBot.br8kMotors();

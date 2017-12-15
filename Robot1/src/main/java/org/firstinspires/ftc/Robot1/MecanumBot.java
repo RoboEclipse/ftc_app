@@ -2,10 +2,10 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 class MecanumBot {
-    public static final double DownPowerArm = -0.2;
+    public static final double DownPowerArm = -0.1;
     private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
@@ -30,7 +30,7 @@ class MecanumBot {
     private Orientation angles;
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
-    private DigitalChannel digitalTouch;
+    private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
     private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
@@ -88,12 +88,15 @@ class MecanumBot {
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
         topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
-        digitalTouch = hardwareMap.get(DigitalChannel.class, myRobotConfig.TouchSensorName);
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        modernRoboticsTouchSensor = hardwareMap.get(ModernRoboticsTouchSensor.class, myRobotConfig.TouchSensorName);
 
         resetDirection();
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -338,8 +341,6 @@ class MecanumBot {
     }
 
     public void EncoderArm(int ticks, double power){
-        armMotor.setPower(0.0);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setTargetPosition(ticks, armMotor);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(power);
@@ -353,30 +354,21 @@ class MecanumBot {
             telemetry.addData("encoderPosition", getEncoderPosition());
             telemetry.update();
         }
+
+        armMotor.setPower(0.0);
+        holdArm();
     }
     public void SetArmPosition(int ticks) {
         setTargetPosition(ticks, armMotor);
         int diff = ticks - armMotor.getCurrentPosition();
-        double maxPower = diff > 0 ? 0.6 : DownPowerArm;
 
-        // When the driver move the arm to -100 it start drive toward impossible
-        if(ticks < -100){
-            ticks =0;
-        }
-
-        if (Math.abs(diff) > 10 * ENCODERS_CLOSE_ENOUGH) {
-            armMotor.setPower(maxPower);
-        } else {
-            // Be lazy to save battery
-            if (armMotor.getPower() != 0) {
-                armMotor.setPower((Math.abs(diff) / ENCODERS_CLOSE_ENOUGH) * maxPower / 10);
-            } else {
-                armMotor.setPower(0);
-            }
-        }
+        //if (diff > 0) {
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.6);
 
         telemetry.addData("armPowerReal", armMotor.getPower());
     }
+
     private void encoderDrive(int lft, int rft, int lrt, int rrt) {
         setPower(0.0, lf, lr, rf, rr);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -525,6 +517,9 @@ class MecanumBot {
     public void disableDriveEncoders() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
     }
+    public void enableDriveEncoders(){
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
     public void disableArmEncoders(){
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -653,20 +648,21 @@ class MecanumBot {
     public int GetArmEncoder(){
         return armMotor.getCurrentPosition();
     }
-    public boolean CheckTouchSensor(){
-        if(!digitalTouch.getState()){
+    public boolean CheckTouchSensor() {
+        if (modernRoboticsTouchSensor.isPressed()) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
+
     public void resetArmEncoder(){
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-
-
-
+    public void resetArmEncoderToZero(){
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 }
 

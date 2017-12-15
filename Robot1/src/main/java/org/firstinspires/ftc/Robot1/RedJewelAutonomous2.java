@@ -120,16 +120,15 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.EncoderArm(300,0.6);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
-            //Lower Arm
-            mecanumBot.EncoderArm(-50,0.1);
-
-            //Turn 45 degrees
+            //Turn degrees
             mecanumBot.encoderTurn(angle,close, enough, speed);
 
 
             //Drive glyph into box
-            mecanumBot.moveSideBar(0.5);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*15,(int)TICKS_PER_INCH*15,speed);
+
+            mecanumBot.disableDriveEncoders();
+            mecanumBot.tankDrive(0.25,0.25);
+            sleep(2500);
             mecanumBot.tankDrive(0,0);
             //Back Up
             mecanumBot.moveSideBar(0.5);

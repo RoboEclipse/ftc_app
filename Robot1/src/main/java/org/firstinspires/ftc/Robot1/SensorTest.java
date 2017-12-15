@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
@@ -46,17 +47,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="ArmTest", group="Linear Opmode")
-//@Disabled
-public class ArmTest extends LinearOpMode {
-
-    // Declare OpMode members.
-    private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
-    MecanumBot drivetrain = new MecanumBot();
+@Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
+@Disabled
+public class SensorTest extends LinearOpMode {
+    MecanumBot cat = new MecanumBot();
+    double red;
+    double blue;
     @Override
     public void runOpMode() {
-        drivetrain.initMecanumBot(hardwareMap,telemetry);
-        drivetrain.encoderStrafeDrive((int)(TICKS_PER_INCH*36), 0.25, "left");
-        drivetrain.encoderStrafeDrive((int)(TICKS_PER_INCH*36), 0.25, "right");
+        cat.initMecanumBot(hardwareMap,telemetry);
+        while (opModeIsActive()) {
+            blue = cat.GetJewelSensorBlue();
+            red = cat.GetJewelSensorRed();
+            telemetry.addData("Red: ", red);
+            telemetry.addData("Blue: ", blue);
+            telemetry.update();
+        }
     }
 }
