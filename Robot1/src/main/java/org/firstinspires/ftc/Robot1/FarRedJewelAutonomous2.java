@@ -43,7 +43,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 15;
+    int inches = 12;
 
 
     // Declare OpMode members.
@@ -62,7 +62,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
             //Determine Pattern and change drive distance
             if(mecanumBot.DetectPattern().equals("Left")){
-                inches+=10;
+                inches+=7.5;
             }
             else if(mecanumBot.DetectPattern().equals("Right")){
                 inches-=7.5;
@@ -73,15 +73,19 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             //Raise arm
             mecanumBot.EncoderArm(300,0.6);
             //Drive forward
-            mecanumBot.encoderTankDrive((int)(22*TICKS_PER_INCH), (int)(22*TICKS_PER_INCH), 0.5);
+            mecanumBot.encoderTankDrive((int)(25*TICKS_PER_INCH), (int)(25*TICKS_PER_INCH), 0.5);
 
-            //Drive sideways
-            mecanumBot.encoderStrafeDrive((int)(inches*TICKS_PER_INCH),0.5,"left");
+            //Turn
+            mecanumBot.encoderTurn(90,close,enough,0.5);
+            //Drive forward
+            mecanumBot.encoderTankDrive((int)(inches*TICKS_PER_INCH), (int)(inches*TICKS_PER_INCH),0.5);
+            //Turn
+            mecanumBot.encoderTurn(0,close,enough,0.5);
 
             //Drive glyph into box
             mecanumBot.disableDriveEncoders();
             mecanumBot.tankDrive(0.25,0.25);
-            sleep(2500);
+            sleep(1500);
             mecanumBot.tankDrive(0,0);
             mecanumBot.moveSideBar(0.5);
 

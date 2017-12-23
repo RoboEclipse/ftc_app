@@ -396,6 +396,15 @@ class MecanumBot {
             telemetry.update();
         }
     }
+    public void EncoderHoldArm(){
+        telemetry.addData("Correct Arm Position", "Desired Position: "+ armMotor.getTargetPosition());
+        if (DcMotor.RunMode.RUN_TO_POSITION == armMotor.getMode()){
+            return;
+        }
+
+        armMotor.setTargetPosition(GetArmEncoder());
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void encoderStrafeDrive(int ticks, double power, String direction) {
         int multiplier = 1;
@@ -430,7 +439,7 @@ class MecanumBot {
             setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
             setPower(speed, lf, lr, rf, rr);
         }
-        if(degrees<0){
+        if(degrees<=0){
             setPower(0.0, lf, lr, rf, rr);
             setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             setTargetPosition(1000000, lf);
@@ -591,12 +600,12 @@ class MecanumBot {
             telemetry.addData("Blue: ", blue);
             telemetry.addData("Red: ", red);
             telemetry.update();
-            if (red > blue * 2.2) {
+            if (red > blue * 1.75) {
                 flicker.setPosition(RedPosition);
                 sleep(1000);
                 break;
             }
-            else if (blue > red) {
+            else if (blue > red * 1.75) {
                 flicker.setPosition(BluePosition);
                 sleep(1000);
                 break;

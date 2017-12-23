@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.Robot1;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
+        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
 
@@ -16,22 +16,13 @@ public class TestTeleOp extends OpMode {
     double armPower = 0.0;
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
 
-    double servoMinPos = 0.0;
-    double servoMaxPos = 0.5; //ToDo need to check with real robot on servo position
-    double jewelServoPos = 0.5;
-    double INCREMENT = 0.01;
-    double clawServoMinPos = 0.0;
-    double clawServoMaxPos = 0.5;
     double clawServoPos = 0.5;
     double topServoPos = 0.5;
-    double extenderPower;
     double speedMultiplier = 1.0;
     double rotationMultiplier = 0.5;
-    double ArmAdjust;
     int firstLevel = 450;
     int secondLevel = 750;
     int thirdLevel = 950;
-    int properEncoderPosition;
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     /*
@@ -93,14 +84,14 @@ public class TestTeleOp extends OpMode {
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
 
         //Determine arm power
-        armPower = -gamepad2.left_stick_y * 0.08;
+        armPower = -gamepad2.left_stick_y * 0.1;
 
         //Allow controller 1 to control arm if controller 2 is not
         if (Math.abs(armPower) <= 0.01) {
             if (gamepad1.left_trigger>=0.8) {
-                armPower = 0.08;
+                armPower = 0.1;
             } else if (gamepad1.right_trigger>=0.8) {
-                armPower = -0.08;
+                armPower = -0.1;
             }
         }
         //If arm is going up, multiply power
@@ -111,44 +102,33 @@ public class TestTeleOp extends OpMode {
         if (myRobot.CheckTouchSensor()) {
             myRobot.resetArmEncoder();
         }
-
-        /*no
-        if(armPower!=0){
-            properEncoderPosition=myRobot.GetArmEncoder();
-        }
-        if(Math.abs((properEncoderPosition)-myRobot.GetArmEncoder())>= 100){
-            if(properEncoderPosition>myRobot.GetArmEncoder()){
-                ArmAdjust=0.6;
-            }
-            else{
-                ArmAdjust=-0.1;
-            }
-            myRobot.EncoderArm(properEncoderPosition-myRobot.GetArmEncoder(),ArmAdjust);
-            myRobot.disableArmEncoders();
-            armPower=0.0;
-            properEncoderPosition=myRobot.GetArmEncoder();
-            myRobot.holdArm();
-        }
-        */
         if (gamepad2.y) {
             if (myRobot.GetArmEncoder() < firstLevel - 50) {
                 myRobot.EncoderArm(firstLevel, 0.6);
+                myRobot.disableArmEncoders();
             }
             else if (myRobot.GetArmEncoder() < secondLevel - 50) {
                 myRobot.EncoderArm(secondLevel, 0.6);
+                myRobot.disableArmEncoders();
             }
-            else if (myRobot.GetArmEncoder() < thirdLevel - 50) {
-                myRobot.EncoderArm(thirdLevel, 0.6);
-            }
+        }
+
+        if (Math.abs(armPower) <= 0.01
+                && myRobot.GetArmEncoder() > 30
+                && myRobot.GetArmEncoder() < 1000) {
+            myRobot.EncoderHoldArm();
+        }
+        else {
             myRobot.disableArmEncoders();
+            myRobot.controlArm(armPower);
         }
 
         //Button to set up jewel arm, flicker, top servo and claw
-        if (gamepad1.a) {
-            myRobot.setJewelArm(1.0);
-            myRobot.flick(1.0);
-            topServoPos = .74;
-            clawServoPos = .31;
+        if (gamepad1.a || gamepad2.a) {
+            aButton();
+        }
+        if (gamepad1.b || gamepad2.b) {
+            bButton();
         }
 
         //Allow for dpad to control claw
@@ -179,25 +159,17 @@ public class TestTeleOp extends OpMode {
         if (gamepad1.right_bumper) {
             if (clawServoPos <= 0.55) {
                 clawServoPos += 0.03;
+                topServoPos = 0.5;
             }
 
         }
         if (gamepad1.left_bumper) {
             if (clawServoPos >= 0.02) {
                 clawServoPos -= 0.03;
+                topServoPos = 1.0;
             }
         }
-        //ToDo: Test the top servo positions for a and b
-        if (gamepad2.a) {
-            myRobot.setJewelArm(1);
-            myRobot.flick(1.0);
-            topServoPos = 0.74;
-            clawServoPos = .31;
-        }
-        if (gamepad2.b) {
-            clawServoPos = 0.29;
-            topServoPos = 0.5;
-        }
+
         if(gamepad2.right_stick_y!=0){
             if(gamepad2.right_stick_y<-0.01){
                 //Both are -= because higher values lower the servo
@@ -217,8 +189,6 @@ public class TestTeleOp extends OpMode {
         myRobot.moveSideBar(clawServoPos);
         myRobot.moveTopServo(topServoPos);
 
-        myRobot.controlArm(armPower);
-        // myRobot.holdArm();
 
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", armPower);
@@ -228,4 +198,16 @@ public class TestTeleOp extends OpMode {
         telemetry.update();
 
     }
+    public void aButton(){
+        myRobot.setJewelArm(1.0);
+        myRobot.flick(1.0);
+        topServoPos = 0.75;
+        clawServoPos = .4;
+    }
+    public void bButton(){
+        clawServoPos = 0.28;
+        topServoPos = 0.75;
+    }
+
 }
+

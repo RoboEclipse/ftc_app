@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
@@ -48,7 +47,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 @Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class SensorTest extends LinearOpMode {
     MecanumBot cat = new MecanumBot();
     double red;
@@ -56,6 +55,7 @@ public class SensorTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         cat.initMecanumBot(hardwareMap,telemetry);
+        waitForStart();
         while (opModeIsActive()) {
             blue = cat.GetJewelSensorBlue();
             red = cat.GetJewelSensorRed();

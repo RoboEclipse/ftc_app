@@ -40,8 +40,8 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
-    double minflickerPosition = 0.6;//Retracted flicker
-    int inches = 15;
+    double minflickerPosition = 0.5;//Retracted flicker
+    int inches = 12;
 
 
     // Declare OpMode members.
@@ -73,9 +73,11 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             //Drive backwards
             mecanumBot.encoderTankDrive((int)(-21*TICKS_PER_INCH), (int)(-21*TICKS_PER_INCH), 0.5);
             //Orang see number 8 ROTATE
+            mecanumBot.encoderTurn(90,25, 4, 0.5);
+            //Drive forward
+            mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),0.5);
+            //Orang see number 8 ROTATE
             mecanumBot.encoderTurn(180,25, 4, 0.5);
-            //Drive sideways
-            mecanumBot.encoderStrafeDrive((int)(-inches*TICKS_PER_INCH),0.5,"left");
             //Drive glyph into box
             mecanumBot.disableDriveEncoders();
             mecanumBot.tankDrive(0.25,0.25);
@@ -88,12 +90,8 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             telemetry.update();
             //Back Up
             mecanumBot.moveSideBar(0.6);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
-            //Forward again
-            mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*9),(int)(TICKS_PER_INCH*9),speed);
-            //Back Up
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-8,(int)TICKS_PER_INCH*-8, -speed);
             //Turn Around
             mecanumBot.encoderTurn(0,close,enough,speed);
             break;

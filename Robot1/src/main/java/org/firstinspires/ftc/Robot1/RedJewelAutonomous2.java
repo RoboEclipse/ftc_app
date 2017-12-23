@@ -61,28 +61,6 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
-            //region JewelUnfactored
-        /*
-        while (true){
-            mecanumBot.setJewelArm(1.0);
-            blue = mecanumBot.GetJewelSensorBlue();
-            red = mecanumBot.GetJewelSensorRed();
-            if (red > blue * 2.2) {
-                flickerPosition = 1.0;
-                break;
-            }
-            else if (blue > red + 15) {
-                flickerPosition = 0.0;
-                break;
-            }
-            else{
-                flickerPosition-=0.01;
-            }
-            mecanumBot.flick(flickerPosition);
-
-        }
-        */
-            //endregion
             //Determine Pattern and change drive distance
             if(mecanumBot.DetectPattern().equals("Left")){
                 inches-=9.5;
@@ -91,30 +69,6 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             else if(mecanumBot.DetectPattern().equals("Right")){
                 inches-=7.5;
             }
-
-            //region PatternUnfactored
-        /*
-        while(true){
-            pattern.onLoop();
-            telemetry.addData("Pattern: " , pattern.vuMark);
-            telemetry.update();
-            if(pattern.isCenterRelicVisable()){
-                break;
-            }
-            if(pattern.isLeftRelicVisable()){
-                inches += 7.5;
-                break;
-            }
-            if(pattern.isRightRelicVisable()){
-                inches -= 7.5;
-                break;
-            }
-            else{
-                break;
-            }
-        }
-        */
-            //endregion
 
             //Raise arm
             mecanumBot.EncoderArm(300,0.6);
@@ -132,7 +86,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.tankDrive(0,0);
             //Back Up
             mecanumBot.moveSideBar(0.5);
-            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
@@ -143,24 +97,4 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
 
     }
-    //region OldEncoderMethod
-    /*
-    private void EncoderTurn() {
-        while (mecanumBot.driveMotorsBusy()) {
-            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
-            telemetry.addData("gyroPosition", mecanumBot.getAngle());
-
-            if(mecanumBot.getAngle() < -90 + close && mecanumBot.getAngle() > -90-close) {
-                speed = 0.1;
-                mecanumBot.tankDrive(speed, speed);
-                if (mecanumBot.getAngle() < -90 + enough && mecanumBot.getAngle() > -90 - enough) {
-                    telemetry.update();
-                    break;
-                }
-            }
-            telemetry.update();
-        }
-    }
-    */
-    //endregion
 }
