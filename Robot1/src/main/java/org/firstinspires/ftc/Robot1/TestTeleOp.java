@@ -20,6 +20,8 @@ public class TestTeleOp extends OpMode {
     double topServoPos = 0.5;
     double speedMultiplier = 1.0;
     double rotationMultiplier = 0.5;
+    double relicArmServoPos=0.5;
+    double relicHandServoPos=0.5;
     int firstLevel = 450;
     int secondLevel = 750;
     int thirdLevel = 950;
@@ -122,6 +124,21 @@ public class TestTeleOp extends OpMode {
             myRobot.disableArmEncoders();
             myRobot.controlArm(armPower);
         }
+        if (gamepad2.dpad_up) {
+            myRobot.moveLinearSlide(0.5);
+        }
+        else if (gamepad2.dpad_down) {
+            myRobot.moveLinearSlide(-0.5);
+        }
+        else{
+            myRobot.moveLinearSlide(0.0);
+        }
+        if (relicArmServoPos+gamepad2.right_stick_y*0.03 > 0 && relicArmServoPos+gamepad2.right_stick_y*0.03 < 1)   {
+            relicArmServoPos += gamepad2.right_stick_y * 0.03;
+        }
+        if (relicHandServoPos+gamepad2.right_trigger*0.03 > 0 && relicHandServoPos+gamepad2.right_trigger*0.03 < 1) {
+            relicHandServoPos += gamepad2.right_trigger * 0.03;
+        }
 
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
@@ -188,6 +205,8 @@ public class TestTeleOp extends OpMode {
 
         myRobot.moveSideBar(clawServoPos);
         myRobot.moveTopServo(topServoPos);
+        myRobot.moveRelicArmServo(relicArmServoPos);
+        myRobot.moveRelicHandServo(relicHandServoPos);
 
 
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());

@@ -31,7 +31,7 @@ class MecanumBot {
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
     private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
-    private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo;
+    private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo, RelicArmServo, RelicHandServo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -86,6 +86,8 @@ class MecanumBot {
         sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
+        RelicArmServo = hardwareMap.servo.get(myRobotConfig.RelicArmServoName);
+        RelicHandServo = hardwareMap.servo.get(myRobotConfig.RelicHandServoName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
         topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
         modernRoboticsTouchSensor = hardwareMap.get(ModernRoboticsTouchSensor.class, myRobotConfig.TouchSensorName);
@@ -104,8 +106,6 @@ class MecanumBot {
         rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // These are the wheel motors
-        // I am here! LOLOLOLOLOLOLOLOL
-        //Catmeow? :3
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -154,6 +154,17 @@ class MecanumBot {
 
     public void moveJewelServo (double position) {
         jewelServo.setPosition(position);
+    }
+
+    public void moveRelicArmServo(double position) {
+        RelicArmServo.setPosition(position);
+    }
+
+    public void moveRelicHandServo(double position) {
+        RelicHandServo.setPosition(position);
+    }
+    public void moveLinearSlide(double power){
+        slideMotor.setPower(power);
     }
 
     public void moveSideBar ( double position) {
