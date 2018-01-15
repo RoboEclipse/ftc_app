@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.Robot1;
 
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
 
@@ -127,14 +127,23 @@ public class TestTeleOp extends OpMode {
         //Control for linear slide
         myRobot.moveLinearSlide(0.5*gamepad2.right_stick_y);
         //Control for glyph arm servos
-        if (gamepad2.dpad_up && relicArmServoPos < 1){
-            relicArmServoPos+=0.03;
+        if (gamepad2.dpad_up && relicHandServoPos >0){
+            relicHandServoPos-=0.04;
         }
-        else if (gamepad2.dpad_down && relicArmServoPos > 0){
-            relicArmServoPos-=0.03;
+        else if (gamepad2.dpad_down && relicHandServoPos < 1){
+            relicHandServoPos+=0.04;
         }
-        if (relicHandServoPos+gamepad2.right_trigger*0.03 > 0 && relicHandServoPos+gamepad2.right_trigger*0.03 < 0.7) {
-            relicHandServoPos += gamepad2.right_trigger * 0.03;
+        if(gamepad2.left_trigger>0){
+            relicArmServoPos+=gamepad2.left_trigger*0.03;
+            if(relicArmServoPos>1){
+                relicArmServoPos=1;
+            }
+        }
+        else if (gamepad2.right_trigger>0){
+            relicArmServoPos-=gamepad2.right_trigger*0.04;
+            if(relicArmServoPos<0){
+                relicArmServoPos=0;
+            }
         }
 
         //Button to set up jewel arm, flicker, top servo and claw
@@ -144,19 +153,7 @@ public class TestTeleOp extends OpMode {
         if (gamepad1.b || gamepad2.b) {
             bButton();
         }
-
-        //Allow for dpad to control claw
-        if (gamepad2.dpad_up) {
-            if (clawServoPos >= 0.0) {
-                clawServoPos -= 0.02;
-            }
-        }
-        if (gamepad2.dpad_down) {
-            if (clawServoPos <= 0.6) {
-                clawServoPos += 0.02;
-            }
-        }
-        //Give bumpers control of claw as well
+        //Give bumpers control of claw
         if (gamepad2.left_bumper) {
             if (clawServoPos >= 0.02) {
                 clawServoPos -= 0.03;
