@@ -124,19 +124,16 @@ public class TestTeleOp extends OpMode {
             myRobot.disableArmEncoders();
             myRobot.controlArm(armPower);
         }
-        if (gamepad2.dpad_up) {
-            myRobot.moveLinearSlide(0.5);
+        //Control for linear slide
+        myRobot.moveLinearSlide(0.5*gamepad2.right_stick_y);
+        //Control for glyph arm servos
+        if (gamepad2.dpad_up && relicArmServoPos < 1){
+            relicArmServoPos+=0.03;
         }
-        else if (gamepad2.dpad_down) {
-            myRobot.moveLinearSlide(-0.5);
+        else if (gamepad2.dpad_down && relicArmServoPos > 0){
+            relicArmServoPos-=0.03;
         }
-        else{
-            myRobot.moveLinearSlide(0.0);
-        }
-        if (relicArmServoPos+gamepad2.right_stick_y*0.03 > 0 && relicArmServoPos+gamepad2.right_stick_y*0.03 < 1)   {
-            relicArmServoPos += gamepad2.right_stick_y * 0.03;
-        }
-        if (relicHandServoPos+gamepad2.right_trigger*0.03 > 0 && relicHandServoPos+gamepad2.right_trigger*0.03 < 1) {
+        if (relicHandServoPos+gamepad2.right_trigger*0.03 > 0 && relicHandServoPos+gamepad2.right_trigger*0.03 < 0.7) {
             relicHandServoPos += gamepad2.right_trigger * 0.03;
         }
 
@@ -187,21 +184,6 @@ public class TestTeleOp extends OpMode {
             }
         }
 
-        if(gamepad2.right_stick_y!=0){
-            if(gamepad2.right_stick_y<-0.01){
-                //Both are -= because higher values lower the servo
-                topServoPos-=gamepad2.right_stick_y*0.03;
-                if(topServoPos<=0){
-                    topServoPos=0;
-                }
-            }
-            if(gamepad2.right_stick_y>0.01){
-                topServoPos-=0.03*gamepad2.right_stick_y;
-                if(topServoPos>=1.0){
-                    topServoPos=1.0;
-                }
-            }
-        }
 
         myRobot.moveSideBar(clawServoPos);
         myRobot.moveTopServo(topServoPos);
