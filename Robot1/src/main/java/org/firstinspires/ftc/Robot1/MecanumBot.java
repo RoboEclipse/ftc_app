@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 class MecanumBot {
-    public static final double DownPowerArm = -0.1;
+    public static final double DownPowerArm = -0.2;
     private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
@@ -111,6 +111,8 @@ class MecanumBot {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //LinearSlide motor needs it as well.
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private void resetDirection() {
@@ -589,6 +591,8 @@ class MecanumBot {
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
     }
     public void holdArm(){
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -41,7 +41,7 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    int inches = 12;
+    int inches = 11;
 
 
     // Declare OpMode members.

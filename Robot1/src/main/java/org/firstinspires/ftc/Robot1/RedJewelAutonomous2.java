@@ -41,7 +41,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    double inches = 37;
+    double inches = 38;
     int angle=-90;
 
 
