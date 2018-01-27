@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.Robot1;
 
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
 
@@ -124,37 +124,36 @@ public class TestTeleOp extends OpMode {
             myRobot.disableArmEncoders();
             myRobot.controlArm(armPower);
         }
-        if (gamepad2.dpad_up) {
-            myRobot.moveLinearSlide(0.5);
+        //Control for linear slide
+        myRobot.moveLinearSlide(0.5*gamepad2.right_stick_y);
+        //Control for glyph arm servos
+        if (gamepad2.dpad_up && relicHandServoPos >0){
+            relicHandServoPos-=0.04;
         }
-        else if (gamepad2.dpad_down) {
-            myRobot.moveLinearSlide(-0.5);
+        else if (gamepad2.dpad_down && relicHandServoPos < 1){
+            relicHandServoPos+=0.04;
         }
-        else{
-            myRobot.moveLinearSlide(0.0);
-        }
-        if (relicArmServoPos+gamepad2.right_stick_y*0.03 > 0 && relicArmServoPos+gamepad2.right_stick_y*0.03 < 1)   {
-            relicArmServoPos += gamepad2.right_stick_y * 0.03;
-        }
-        if(gamepad2.right_trigger!=0) {
-            if (relicHandServoPos + gamepad2.right_trigger * 0.03 > 0 && relicHandServoPos + gamepad2.right_trigger * 0.03 < 1) {
-                relicHandServoPos += gamepad2.right_trigger * 0.03;
+        if(gamepad2.left_trigger>0){
+            relicArmServoPos+=gamepad2.left_trigger*0.03;
+            if(relicArmServoPos>1){
+                relicArmServoPos=1;
             }
         }
-        else if(gamepad2.left_trigger!=0) {
-            if (relicHandServoPos - gamepad2.left_trigger * 0.03 > 0 && relicHandServoPos - gamepad2.left_trigger * 0.03 < 1) {
-                relicHandServoPos -= gamepad2.left_trigger * 0.03;
+        else if (gamepad2.right_trigger>0){
+            relicArmServoPos-=gamepad2.right_trigger*0.04;
+            if(relicArmServoPos<0){
+                relicArmServoPos=0;
             }
         }
+
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
             aButton();
         }
         if (gamepad1.b || gamepad2.b) {
             bButton();
-
-    }
-        //Give bumpers control of claw as well
+        }
+        //Give bumpers control of claw
         if (gamepad2.left_bumper) {
             if (clawServoPos >= 0.02) {
                 clawServoPos -= 0.03;
@@ -183,7 +182,6 @@ public class TestTeleOp extends OpMode {
         }
 
 
-
         myRobot.moveSideBar(clawServoPos);
         myRobot.moveTopServo(topServoPos);
         myRobot.moveRelicArmServo(relicArmServoPos);
@@ -195,8 +193,6 @@ public class TestTeleOp extends OpMode {
         telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
         telemetry.addData("Top_Servo_Position", topServoPos);
         telemetry.addData("Touched", myRobot.CheckTouchSensor());
-        telemetry.addData("GlyphArmPosition: ", relicArmServoPos);
-        telemetry.addData("GlyphHandPosition: ", relicHandServoPos);
         telemetry.update();
 
     }
