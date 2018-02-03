@@ -70,7 +70,12 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
 
 
             //Raise arm
+            /*
             mecanumBot.EncoderArm(300,0.6);
+            */
+            mecanumBot.controlArm(0.5);
+            sleep(300);
+            mecanumBot.controlArm(0);
             //Drive forward
             mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),speed);
 

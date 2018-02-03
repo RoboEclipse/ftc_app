@@ -86,7 +86,7 @@ public class TestTeleOp extends OpMode {
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
 
         //Determine arm power
-        armPower = -gamepad2.left_stick_y * 0.1;
+        armPower = -gamepad2.left_stick_y * 0.08;
 
         //Allow controller 1 to control arm if controller 2 is not
         if (Math.abs(armPower) <= 0.01) {
@@ -108,6 +108,7 @@ public class TestTeleOp extends OpMode {
             if (myRobot.GetArmEncoder() < firstLevel - 50) {
                 myRobot.EncoderArm(firstLevel, 0.6);
                 myRobot.disableArmEncoders();
+
             }
             else if (myRobot.GetArmEncoder() < secondLevel - 50) {
                 myRobot.EncoderArm(secondLevel, 0.6);
@@ -135,7 +136,7 @@ public class TestTeleOp extends OpMode {
         }
         if(gamepad2.left_trigger>0){
             relicArmServoPos+=gamepad2.left_trigger*0.03;
-            if(relicArmServoPos>1){
+            if(relicArmServoPos>0.6){
                 relicArmServoPos=1;
             }
         }
@@ -191,6 +192,7 @@ public class TestTeleOp extends OpMode {
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", armPower);
         telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
+        telemetry.addData("Relic_Claw_Servo_Position", "%5.2f", relicHandServoPos);
         telemetry.addData("Top_Servo_Position", topServoPos);
         telemetry.addData("Touched", myRobot.CheckTouchSensor());
         telemetry.update();

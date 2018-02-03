@@ -69,7 +69,12 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
 
 
             //Raise arm
-            mecanumBot.EncoderArm(300, 0.5);
+            /*
+            mecanumBot.EncoderArm(300,0.6);
+            */
+            mecanumBot.controlArm(0.5);
+            sleep(300);
+            mecanumBot.controlArm(0);
             //Drive backwards
             mecanumBot.encoderTankDrive((int)(-21*TICKS_PER_INCH), (int)(-21*TICKS_PER_INCH), 0.5);
             //Orang see number 8 ROTATE
