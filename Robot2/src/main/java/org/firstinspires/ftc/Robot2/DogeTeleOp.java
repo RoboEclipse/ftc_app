@@ -103,18 +103,27 @@ public class DogeTeleOp extends OpMode
         if(tailPosition<0.35){
             tailPosition=0.35;
         }
-        if(gamepad1.dpad_up && mouthPosition<0.5){
-            mouthPosition+=0.01;
+        //If the dpad is pressed, move the mouth
+        if(gamepad1.dpad_up){
+            mouthPosition+=0.005;
         }
-        if(gamepad1.dpad_down && mouthPosition>0.5){
-            mouthPosition-=0.01;
+        if(gamepad1.dpad_down){
+            mouthPosition-=0.005;
+        }
+        if(mouthPosition<0.55){
+            mouthPosition=0.55;
+        }
+        if(mouthPosition>0.7){
+            mouthPosition=0.7;
         }
         //Move motors and servos
         functions.MoveMainMotor(motorPower);
         functions.SetTailPosition(tailPosition);
+        functions.SetMouthPosition(mouthPosition);
         //Add telemetry information
         telemetry.addData("Motor Power: ", motorPower);
         telemetry.addData("Tail Position: ", tailPosition);
+        telemetry.addData("Mouth Position: ", mouthPosition);
         telemetry.update();
     }
 
