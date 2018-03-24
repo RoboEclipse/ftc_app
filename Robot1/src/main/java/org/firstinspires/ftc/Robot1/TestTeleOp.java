@@ -20,7 +20,7 @@ public class TestTeleOp extends OpMode {
     double topServoPos = 0.5;
     double speedMultiplier = 1.2;
     double rotationMultiplier = 0.6;
-    double relicArmServoPos=0.5;
+    double relicArmServoPos=0.0;
     double relicHandServoPos=0.5;
     int firstLevel = 450;
     int secondLevel = 750;
@@ -82,8 +82,8 @@ public class TestTeleOp extends OpMode {
             speedMultiplier = 0.5;
             rotationMultiplier = 0.25;
         } else {
-            speedMultiplier = 1;
-            rotationMultiplier = 0.5;
+            speedMultiplier = 1.2;
+            rotationMultiplier = 0.6;
         }
 
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
@@ -193,12 +193,12 @@ public class TestTeleOp extends OpMode {
             }
         }
 
-        if(!gamepad1.atRest() || !gamepad2.atRest()){
-            myRobot.moveSideBar(clawServoPos);
-            myRobot.moveTopServo(topServoPos);
-            myRobot.moveRelicArmServo(relicArmServoPos);
-            myRobot.moveRelicHandServo(relicHandServoPos);
-        }
+        //if(!gamepad1.atRest() || !gamepad2.atRest()){
+        myRobot.moveSideBar(clawServoPos);
+        myRobot.moveTopServo(topServoPos);
+        myRobot.moveRelicArmServo(relicArmServoPos);
+        myRobot.moveRelicHandServo(relicHandServoPos);
+        //}
 
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", armPower);
