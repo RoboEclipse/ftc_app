@@ -688,5 +688,24 @@ class MecanumBot {
     public void resetArmEncoderToZero(){
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+    public void tryYourBest(){
+        //Drive forward & try and grab a glyph
+        moveSideBar(0.5);
+        encoderTankDrive((int)TICKS_PER_INCH*25,(int)TICKS_PER_INCH*25, 0.5);
+        moveSideBar(0.25);
+        //Back Up
+        encoderTankDrive((int)TICKS_PER_INCH*-10, (int)TICKS_PER_INCH*-10, 0.5);
+        //Turn around
+        encoderTurn(-90, 25, 4, 0.5);
+        //Raise arm
+        EncoderArm(-1000,-0.5);
+        //Drive forward
+        encoderTankDrive((int)TICKS_PER_INCH*25,(int)TICKS_PER_INCH*25, 0.5);
+        //Release
+        moveSideBar(0.5);
+        //Back up
+        encoderTankDrive((int)TICKS_PER_INCH*-5, (int)TICKS_PER_INCH*-5, 0.5);
+
+    }
 }
 
