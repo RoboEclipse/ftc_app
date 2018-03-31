@@ -41,7 +41,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    double inches = 38;
+    double inches = 39;
     int angle=-90;
 
 
@@ -90,11 +90,18 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
 
+            //Turn towards glyph pile
+            mecanumBot.encoderTurn(-angle, close, enough, speed);
+            //Try and grab a glyph
+            /*
+            mecanumBot.tryYourBest();
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
             break;
+            */
         }
+
 
 
     }

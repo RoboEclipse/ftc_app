@@ -707,5 +707,12 @@ class MecanumBot {
         encoderTankDrive((int)TICKS_PER_INCH*-5, (int)TICKS_PER_INCH*-5, 0.5);
 
     }
+    public void setRelicArmVertical(){
+        moveRelicArmServo(0.41);
+    }
+    public void openRelicClaw(){
+        moveRelicHandServo(0.29);
+    }
+
 }
 
