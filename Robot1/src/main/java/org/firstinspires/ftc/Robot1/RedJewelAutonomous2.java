@@ -98,8 +98,9 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
-            break;
             */
+            break;
+
         }
 
 

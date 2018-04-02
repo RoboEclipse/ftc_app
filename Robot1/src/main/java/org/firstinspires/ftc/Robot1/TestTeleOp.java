@@ -141,29 +141,39 @@ public class TestTeleOp extends OpMode {
             myRobot.controlArm(-armPower);
         }
         //Control for linear slide
-        myRobot.moveLinearSlide(0.5*gamepad2.right_stick_y);
+        myRobot.moveLinearSlide(0.7*gamepad2.right_stick_y);
+        if (gamepad1.x) {
+            myRobot.moveLinearSlide(0.7);
+        }
+        if(gamepad1.y){
+            myRobot.moveLinearSlide(-0.7);
+        }
         //Control for glyph arm servos
-        if (gamepad2.dpad_down && relicHandServoPos >0.05){
-            relicHandServoPos-=0.04;
-        }
-        else if (gamepad2.dpad_up && relicHandServoPos <0.25){
-            relicHandServoPos+=0.04;
-        }
-        //0.42: Vertical point
-        if(gamepad2.right_trigger>0){
-            relicArmServoPos+=gamepad2.right_trigger*0.02;
-            if(relicArmServoPos>1.0){
-                relicArmServoPos=1.0;
-            }
-        }
-        else if (gamepad2.left_trigger>0){
-            relicArmServoPos-=gamepad2.left_trigger*0.02;
+        if (gamepad2.dpad_down){
+            relicArmServoPos-=0.03;
             if(relicArmServoPos<0.25){
                 relicArmServoPos=0.25;
             }
         }
+        else if (gamepad2.dpad_up){
+            relicArmServoPos+=0.03;
+            if(relicArmServoPos>1.0){
+                relicArmServoPos=1.0;
+            }
+        }
+        //0.42: Vertical point
+        if(gamepad2.right_trigger>0 && relicHandServoPos <0.25){
+            relicHandServoPos+=0.04;
+            topServoPos=0.5;
+        }
+        else if (gamepad2.left_trigger>0  && relicHandServoPos >0.05){
+            relicHandServoPos-=0.04;
+            topServoPos=0.5;
+        }
         if(gamepad2.x){
             myRobot.setRelicArmVertical();
+            clawServoPos=0.02;
+            topServoPos=0.5;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {

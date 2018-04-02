@@ -708,7 +708,7 @@ class MecanumBot {
 
     }
     public void setRelicArmVertical(){
-        moveRelicArmServo(0.41);
+        moveRelicArmServo(0.43);
     }
     public void openRelicClaw(){
         moveRelicHandServo(0.29);

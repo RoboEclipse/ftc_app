@@ -90,16 +90,16 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9,speed);
             //Do a 180 (Note that the gyro never resets, so your angles have to be relative to the original position)
             mecanumBot.encoderTurn(90,close, enough+2, speed);
+            /*
             //Attempt to grab another glyph
             mecanumBot.tryYourBest();
-
+            */
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
             break;
         }
-
 
     }
 }
