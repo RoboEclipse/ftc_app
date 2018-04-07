@@ -151,15 +151,19 @@ public class TestTeleOp extends OpMode {
         //Control for glyph arm servos
         if (gamepad2.dpad_down){
             relicArmServoPos-=0.03;
+            /*
             if(relicArmServoPos<0.25){
                 relicArmServoPos=0.25;
             }
+            */
         }
         else if (gamepad2.dpad_up){
             relicArmServoPos+=0.03;
+            /*
             if(relicArmServoPos>1.0){
                 relicArmServoPos=1.0;
             }
+            */
         }
         //0.42: Vertical point
         if(gamepad2.right_trigger>0 && relicHandServoPos <0.25){

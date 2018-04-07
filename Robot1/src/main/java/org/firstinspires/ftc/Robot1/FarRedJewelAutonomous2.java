@@ -51,9 +51,10 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     MecanumBot mecanumBot = new MecanumBot();
     @Override
     public void runOpMode() {
+        mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
         waitForStart();
         while (opModeIsActive()){
-            mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
+
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);

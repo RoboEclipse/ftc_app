@@ -639,6 +639,44 @@ class MecanumBot {
         setJewelArm(1.0);
         sleep(500);
     }
+    public void knockoffjewelspotlight(double RedPosition, double BluePosition, double StartPosition){
+        double flickerPosition=StartPosition;
+        double blue;
+        double red;
+        sleep(500);
+        setJewelArm(0.5);
+        sleep(500);
+        while (true){
+            sleep(500);
+            blue = GetJewelSensorBlue();
+            red = GetJewelSensorRed();
+            telemetry.addData("Blue: ", blue);
+            telemetry.addData("Red: ", red);
+            telemetry.update();
+            if (red > blue+6) {
+                flicker.setPosition(RedPosition);
+                sleep(1000);
+                break;
+            }
+            else if (blue > red+6) {
+                flicker.setPosition(BluePosition);
+                sleep(1000);
+                break;
+            }
+            else if(flickerPosition>0.6){
+                break;
+            }
+            else{
+                flickerPosition+=0.04;
+            }
+            flick(flickerPosition);
+
+
+        }
+        flick(StartPosition);
+        setJewelArm(1.0);
+        sleep(500);
+    }
     public String DetectPattern(){
         for (int i = 0; i <= 20; i++) {
             pattern.onLoop();

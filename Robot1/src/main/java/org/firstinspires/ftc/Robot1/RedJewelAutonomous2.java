@@ -41,7 +41,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double close = 25; //Determines when the robot begins slowing down
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
-    double inches = 39;
+    double inches = 38;
     int angle=-90;
 
 
@@ -51,9 +51,10 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
         waitForStart();
         while(opModeIsActive()){
-            mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
+
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
