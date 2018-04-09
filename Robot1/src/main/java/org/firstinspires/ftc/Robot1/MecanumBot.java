@@ -2,6 +2,7 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -31,6 +33,7 @@ class MecanumBot {
     private Acceleration gravity;
     private ColorSensor jewelColorSensor, bottomColorSensor;
     private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
+    private ModernRoboticsI2cRangeSensor rangesensor;
     private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo, RelicArmServo, RelicHandServo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
@@ -83,6 +86,7 @@ class MecanumBot {
         jewelColorSensor = hardwareMap.get(ColorSensor.class, (RobotConfiguration.JewelColorSensorName));
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
+        rangesensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, myRobotConfig.RangeSensorName);
         sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
         sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
@@ -751,6 +755,14 @@ class MecanumBot {
     public void openRelicClaw(){
         moveRelicHandServo(0.29);
     }
+    public void readRangeSensor(){
+        telemetry.addData("raw ultrasonic", rangesensor.rawUltrasonic());
+        telemetry.addData("raw optical", rangesensor.rawOptical());
+        telemetry.addData("cm optical", "%.2f cm", rangesensor.cmOptical());
+        telemetry.addData("cm", "%.2f cm", rangesensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
+    }
+
 
 }
 

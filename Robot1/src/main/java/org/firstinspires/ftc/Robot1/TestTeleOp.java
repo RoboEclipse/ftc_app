@@ -79,11 +79,11 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
         if (gamepad1.x || gamepad1.x) {
-            speedMultiplier = 0.5;
-            rotationMultiplier = 0.25;
+            speedMultiplier = 1.0;
+            rotationMultiplier = 0.4;
         } else {
-            speedMultiplier = 1.2;
-            rotationMultiplier = 0.6;
+            speedMultiplier = 1.35;
+            rotationMultiplier = 0.75;
         }
 
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
@@ -166,11 +166,11 @@ public class TestTeleOp extends OpMode {
             */
         }
         //0.42: Vertical point
-        if(gamepad2.right_trigger>0 && relicHandServoPos <0.25){
+        if(gamepad2.right_trigger>0 && relicHandServoPos <1.0){
             relicHandServoPos+=0.04;
             topServoPos=0.5;
         }
-        else if (gamepad2.left_trigger>0  && relicHandServoPos >0.05){
+        else if (gamepad2.left_trigger>0 && relicHandServoPos > 0){
             relicHandServoPos-=0.04;
             topServoPos=0.5;
         }

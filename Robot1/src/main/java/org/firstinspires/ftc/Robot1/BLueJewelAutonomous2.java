@@ -50,6 +50,7 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
+        mecanumBot.readRangeSensor();
         waitForStart();
         while(opModeIsActive()){
 
