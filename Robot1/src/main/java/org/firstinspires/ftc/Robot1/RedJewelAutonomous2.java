@@ -59,7 +59,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
-            mecanumBot.moveSideBar(0.2);
+            mecanumBot.controlBottonClaws(0.2);
 
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
@@ -88,7 +88,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             sleep(2500);
             mecanumBot.tankDrive(0,0);
             //Back Up
-            mecanumBot.moveSideBar(0.5);
+            mecanumBot.controlBottonClaws(0.5);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
 

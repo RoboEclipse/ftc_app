@@ -22,6 +22,8 @@ public class TestTeleOp extends OpMode {
     double rotationMultiplier = 0.6;
     double relicArmServoPos=0.0;
     double relicHandServoPos=0.5;
+    double topSidebarPosition=0.0;
+    double bottomSidebarPosition=0.0;
     int firstLevel = 450;
     int secondLevel = 750;
     int thirdLevel = 950;
@@ -89,7 +91,7 @@ public class TestTeleOp extends OpMode {
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
 
         //Determine arm power
-        armPower = -gamepad2.left_stick_y * 0.06;
+        armPower = -gamepad2.left_stick_y * 0.07;
 
         //Allow controller 1 to control arm if controller 2 is not
         if (Math.abs(armPower) <= 0.01) {
@@ -101,13 +103,15 @@ public class TestTeleOp extends OpMode {
         }
         //If arm is going up, multiply power
         if (armPower > 0) {
-            armPower = armPower * 8;
+            armPower = armPower * 7;
         }
 
         if (myRobot.CheckTouchSensor()) {
             myRobot.resetArmEncoder();
         }
         if (gamepad2.y) {
+            topSidebarPosition+=0.03;
+            bottomSidebarPosition-=0.03;
  /*           if (myRobot.GetArmEncoder() < firstLevel - 50) {
                 myRobot.EncoderArm(firstLevel, 0.6);
                 myRobot.disableArmEncoders();
@@ -116,7 +120,7 @@ public class TestTeleOp extends OpMode {
             else if (myRobot.GetArmEncoder() < secondLevel - 50) {
                 myRobot.EncoderArm(secondLevel, 0.6);
                 myRobot.disableArmEncoders();
-            }*/
+            }
             myRobot.moveTopServo(0.5);
             Sleep(100);
             myRobot.disableArmEncoders();
@@ -128,6 +132,7 @@ public class TestTeleOp extends OpMode {
             myRobot.moveSideBar(0.1);
             myRobot.moveTopServo(0.55);
             myRobot.controlArm(0);
+            */
         }
 
         if (Math.abs(armPower) <= 0.01
@@ -165,12 +170,12 @@ public class TestTeleOp extends OpMode {
             }
             */
         }
-        //0.42: Vertical point
+        //0.6: Vertical point
         if(gamepad2.right_trigger>0 && relicHandServoPos <1.0){
             relicHandServoPos+=0.04;
             topServoPos=0.5;
         }
-        else if (gamepad2.left_trigger>0 && relicHandServoPos > 0){
+        else if (gamepad2.left_trigger>0 && relicHandServoPos > 0.54){
             relicHandServoPos-=0.04;
             topServoPos=0.5;
         }
@@ -189,14 +194,14 @@ public class TestTeleOp extends OpMode {
         //Give bumpers control of claw
         if (gamepad2.left_bumper) {
             if (clawServoPos >= 0.02) {
-                clawServoPos -= 0.05;
+                topSidebarPosition -= 0.05;
                 topServoPos = 1.0;
             }
 
         }
         if (gamepad2.right_bumper) {
             if (clawServoPos <= 0.55) {
-                clawServoPos += 0.05;
+                bottomSidebarPosition += 0.05;
                 topServoPos = 0.5;
             }
         }
@@ -213,20 +218,31 @@ public class TestTeleOp extends OpMode {
                 topServoPos = 1.0;
             }
         }
-
+        if(topSidebarPosition> 1){
+            topSidebarPosition=1;
+        }
+        if(topSidebarPosition< 0){
+            topSidebarPosition = 0;
+        }
+        if(bottomSidebarPosition > 1){
+            bottomSidebarPosition = 1;
+        }
+        if(bottomSidebarPosition < 0){
+            bottomSidebarPosition = 0;
+        }
         //if(!gamepad1.atRest() || !gamepad2.atRest()){
-        myRobot.moveSideBar(clawServoPos);
-        myRobot.moveTopServo(topServoPos);
+        myRobot.controlBottonClaws(bottomSidebarPosition);
+        myRobot.controlTopClaws(topSidebarPosition);
         myRobot.moveRelicArmServo(relicArmServoPos);
         myRobot.moveRelicHandServo(relicHandServoPos);
         //}
 
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
         telemetry.addData("currentArmPower", armPower);
-        telemetry.addData("Claw_Servo_Position", "%5.2f", clawServoPos);
         telemetry.addData("Relic_Claw_Servo_Position", "%5.2f", relicHandServoPos);
         telemetry.addData("Relic Arm Servo Position", relicArmServoPos);
-        telemetry.addData("Top_Servo_Position", topServoPos);
+        telemetry.addData("TopClawPosition", topSidebarPosition);
+        telemetry.addData("BottomClawPosition", bottomSidebarPosition);
         telemetry.addData("Touched", myRobot.CheckTouchSensor());
         telemetry.update();
 

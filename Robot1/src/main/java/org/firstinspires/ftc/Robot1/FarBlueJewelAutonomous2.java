@@ -56,7 +56,7 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
-            mecanumBot.moveSideBar(0.2);
+            mecanumBot.controlBottonClaws(0.2);
 
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
@@ -85,13 +85,13 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             mecanumBot.tankDrive(0.25,0.25);
             sleep(1500);
             mecanumBot.tankDrive(0,0);
-            mecanumBot.moveSideBar(0.5);
+            mecanumBot.controlBottonClaws(0.5);
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
             //Back Up
-            mecanumBot.moveSideBar(0.6);
+            mecanumBot.controlBottonClaws(0.6);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
             //Turn Around

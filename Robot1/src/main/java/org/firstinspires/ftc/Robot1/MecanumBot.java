@@ -34,7 +34,7 @@ class MecanumBot {
     private ColorSensor jewelColorSensor, bottomColorSensor;
     private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
     private ModernRoboticsI2cRangeSensor rangesensor;
-    private Servo jewelServo, sidebarleft, sidebarright ,flicker, topservo, RelicArmServo, RelicHandServo;
+    private Servo jewelServo, flicker, RelicArmServo, RelicHandServo, topLeftServo, topRightServo, bottomLeftServo, bottomRightServo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -87,13 +87,14 @@ class MecanumBot {
         //bottomColorSensor = hardwareMap.colorSensor.get(myRobotConfig.BottomColorSensorName);
         imu = hardwareMap.get(BNO055IMU.class, myRobotConfig.IMUName);
         rangesensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, myRobotConfig.RangeSensorName);
-        sidebarleft = hardwareMap.servo.get(myRobotConfig.SideBarLeftName);
-        sidebarright = hardwareMap.servo.get(myRobotConfig.SideBarRightName);
         jewelServo = hardwareMap.servo.get(myRobotConfig.JewelServoName);
         RelicArmServo = hardwareMap.servo.get(myRobotConfig.RelicArmServoName);
         RelicHandServo = hardwareMap.servo.get(myRobotConfig.RelicHandServoName);
+        topLeftServo = hardwareMap.servo.get(myRobotConfig.UpperSideBarLeftName);
+        topRightServo = hardwareMap.servo.get(myRobotConfig.UpperSideBarRightName);
+        bottomLeftServo = hardwareMap.servo.get(myRobotConfig.LowerSideBarLeftName);
+        bottomRightServo = hardwareMap.servo.get(myRobotConfig.LowerSideBarRightName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
-        topservo = hardwareMap.servo.get(myRobotConfig.TopServoName);
         modernRoboticsTouchSensor = hardwareMap.get(ModernRoboticsTouchSensor.class, myRobotConfig.TouchSensorName);
 
         resetDirection();
@@ -173,14 +174,8 @@ class MecanumBot {
         slideMotor.setPower(power);
     }
 
-    public void moveSideBar ( double position) {
-        sidebarleft.setPosition(position);
-        sidebarright.setPosition(1 - position);
-    }
 
-    public void moveTopServo ( double position) {
-        topservo.setPosition(position);
-    }
+
 
     public void onStart() {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rr, rf);
@@ -730,6 +725,7 @@ class MecanumBot {
     public void resetArmEncoderToZero(){
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+    /*
     public void tryYourBest(){
         //Drive forward & try and grab a glyph
         moveSideBar(0.5);
@@ -749,8 +745,9 @@ class MecanumBot {
         encoderTankDrive((int)TICKS_PER_INCH*-5, (int)TICKS_PER_INCH*-5, 0.5);
 
     }
+    */
     public void setRelicArmVertical(){
-        moveRelicArmServo(0.43);
+        moveRelicArmServo(0.6);
     }
     public void openRelicClaw(){
         moveRelicHandServo(0.29);
@@ -762,6 +759,15 @@ class MecanumBot {
         telemetry.addData("cm", "%.2f cm", rangesensor.getDistance(DistanceUnit.CM));
         telemetry.update();
     }
+    public void controlTopClaws(double position){
+        topRightServo.setPosition(position);
+        topLeftServo.setPosition(1-position);
+    }
+    public void controlBottonClaws(double position){
+        bottomRightServo.setPosition(position);
+        bottomLeftServo.setPosition(1-position);
+    }
+
 
 
 }

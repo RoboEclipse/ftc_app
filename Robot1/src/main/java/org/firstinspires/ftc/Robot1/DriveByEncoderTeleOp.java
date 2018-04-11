@@ -102,7 +102,7 @@ public class DriveByEncoderTeleOp extends OpMode {
                 clawServoPos+=0.01;
             }
         }
-        myRobot.moveSideBar(clawServoPos);
+        myRobot.controlBottonClaws(clawServoPos);
         myRobot.extenderDrive(extenderPower);
         myRobot.controlArm(armPower);
         /*

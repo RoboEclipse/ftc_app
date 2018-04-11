@@ -57,7 +57,7 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
-            mecanumBot.moveSideBar(0.2);
+            mecanumBot.controlBottonClaws(0.2);
 
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
@@ -86,7 +86,7 @@ public class BLueJewelAutonomous2 extends LinearOpMode {
             sleep(1500);
             mecanumBot.tankDrive(0,0);
             mecanumBot.br8kMotors();
-            mecanumBot.moveSideBar(0.5);
+            mecanumBot.controlBottonClaws(0.5);
             //Back Up
             mecanumBot.enableDriveEncoders();
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9,speed);
