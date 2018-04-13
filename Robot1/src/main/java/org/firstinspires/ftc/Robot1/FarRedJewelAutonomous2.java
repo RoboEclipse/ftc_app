@@ -43,7 +43,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 11;
+    int inches = 13;
 
 
     // Declare OpMode members.
@@ -59,7 +59,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
 
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
-            mecanumBot.controlBottonClaws(0.2);
+            mecanumBot.controlBottonClaws(mecanumBot.SidebarsClosed);
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
             //Determine Pattern and change drive distance
@@ -73,7 +73,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
 
 
             //Raise arm
-            mecanumBot.EncoderArm(-300,-0.6);
+            mecanumBot.EncoderArm(mecanumBot.VerticalSlideRaised,-0.6);
 
             //Drive forward
             mecanumBot.encoderTankDrive((int)(25*TICKS_PER_INCH), (int)(25*TICKS_PER_INCH), 0.5);
@@ -90,14 +90,13 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.tankDrive(0.25,0.25);
             sleep(1500);
             mecanumBot.tankDrive(0,0);
-            mecanumBot.controlBottonClaws(0.5);
+            mecanumBot.controlBottonClaws(mecanumBot.SidebarsOpened);
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
             telemetry.update();
 
             //Back Up
-            mecanumBot.controlBottonClaws(0.6);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-9,(int)TICKS_PER_INCH*-9, -speed);
             mecanumBot.br8kMotors();
 

@@ -17,16 +17,12 @@ public class TestTeleOp extends OpMode {
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
 
     double clawServoPos = 0.1;
-    double topServoPos = 0.5;
     double speedMultiplier = 1.2;
     double rotationMultiplier = 0.6;
     double relicArmServoPos=0.0;
     double relicHandServoPos=0.5;
-    double topSidebarPosition=0.0;
-    double bottomSidebarPosition=0.0;
-    int firstLevel = 450;
-    int secondLevel = 750;
-    int thirdLevel = 950;
+    double topSidebarPosition= .6;
+    double bottomSidebarPosition = .25;
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     boolean started = false;
@@ -91,19 +87,19 @@ public class TestTeleOp extends OpMode {
         myRobot.drive(theta, speedMultiplier * v_theta, rotationMultiplier * v_rotation); //move robot
 
         //Determine arm power
-        armPower = -gamepad2.left_stick_y * 0.07;
+        armPower = -gamepad2.left_stick_y * 0.25;
 
         //Allow controller 1 to control arm if controller 2 is not
         if (Math.abs(armPower) <= 0.01) {
             if (gamepad1.left_trigger>=0.8) {
-                armPower = 0.05;
+                armPower = 0.25;
             } else if (gamepad1.right_trigger>=0.8) {
-                armPower = -0.05;
+                armPower = -0.25;
             }
         }
         //If arm is going up, multiply power
         if (armPower > 0) {
-            armPower = armPower * 7;
+            armPower = armPower * 3;
         }
 
         if (myRobot.CheckTouchSensor()) {
@@ -135,9 +131,7 @@ public class TestTeleOp extends OpMode {
             */
         }
 
-        if (Math.abs(armPower) <= 0.01
-                && myRobot.GetArmEncoder() > 30
-                && myRobot.GetArmEncoder() < 1000) {
+        if (Math.abs(armPower) <= 0.01) {
             myRobot.EncoderHoldArm();
         }
         else {
@@ -156,33 +150,35 @@ public class TestTeleOp extends OpMode {
         //Control for glyph arm servos
         if (gamepad2.dpad_down){
             relicArmServoPos-=0.03;
-            /*
+
             if(relicArmServoPos<0.25){
                 relicArmServoPos=0.25;
             }
-            */
+
         }
         else if (gamepad2.dpad_up){
             relicArmServoPos+=0.03;
-            /*
+
             if(relicArmServoPos>1.0){
                 relicArmServoPos=1.0;
             }
-            */
+
+        }
+        if(gamepad2.dpad_right){
+            relicHandServoPos+=0.04;
+            if(relicHandServoPos>1){
+                relicHandServoPos=1;
+            }
+        }
+        if(gamepad2.dpad_left){
+            relicHandServoPos-=0.04;
+            if(relicHandServoPos<0){
+                relicHandServoPos=0;
+            }
         }
         //0.6: Vertical point
-        if(gamepad2.right_trigger>0 && relicHandServoPos <1.0){
-            relicHandServoPos+=0.04;
-            topServoPos=0.5;
-        }
-        else if (gamepad2.left_trigger>0 && relicHandServoPos > 0.54){
-            relicHandServoPos-=0.04;
-            topServoPos=0.5;
-        }
         if(gamepad2.x){
             myRobot.setRelicArmVertical();
-            clawServoPos=0.02;
-            topServoPos=0.5;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
@@ -192,30 +188,28 @@ public class TestTeleOp extends OpMode {
             bButton();
         }
         //Give bumpers control of claw
-        if (gamepad2.left_bumper) {
-            if (clawServoPos >= 0.02) {
-                topSidebarPosition -= 0.05;
-                topServoPos = 1.0;
-            }
-
-        }
         if (gamepad2.right_bumper) {
+                topSidebarPosition += 0.05;
+        }
+        if (gamepad2.left_bumper) {
             if (clawServoPos <= 0.55) {
-                bottomSidebarPosition += 0.05;
-                topServoPos = 0.5;
+                topSidebarPosition -= 0.05;
             }
+        }
+        if(gamepad2.left_trigger>0.01){
+            bottomSidebarPosition += 0.05*gamepad2.left_trigger;
+        }
+        if(gamepad2.right_trigger>0.01){
+            bottomSidebarPosition -= 0.05*gamepad2.right_trigger;
         }
         if (gamepad1.right_bumper) {
-            if (clawServoPos <= 0.55) {
-                clawServoPos += 0.04;
-                topServoPos = 0.5;
-            }
-
+            bottomSidebarPosition -= 0.05;
+            topSidebarPosition += 0.05;
         }
         if (gamepad1.left_bumper) {
-            if (clawServoPos >= 0.02) {
-                clawServoPos -= 0.04;
-                topServoPos = 1.0;
+            if (clawServoPos <= 0.55) {
+                bottomSidebarPosition += 0.05;
+                topSidebarPosition -= 0.05;
             }
         }
         if(topSidebarPosition> 1){
@@ -230,6 +224,7 @@ public class TestTeleOp extends OpMode {
         if(bottomSidebarPosition < 0){
             bottomSidebarPosition = 0;
         }
+
         //if(!gamepad1.atRest() || !gamepad2.atRest()){
         myRobot.controlBottonClaws(bottomSidebarPosition);
         myRobot.controlTopClaws(topSidebarPosition);
@@ -259,12 +254,12 @@ public class TestTeleOp extends OpMode {
     public void aButton(){
         myRobot.setJewelArm(1.0);
         myRobot.flick(1.0);
-        topServoPos = 0.75;
-        clawServoPos = .35;
+        topSidebarPosition= .65;
+        bottomSidebarPosition = .2;
     }
     public void bButton(){
-        clawServoPos = 0.28;
-        topServoPos = 0.75;
+        topSidebarPosition = 0.55;
+        bottomSidebarPosition = .32;
     }
 
 }

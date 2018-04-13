@@ -25,6 +25,11 @@ import java.util.Locale;
 
 class MecanumBot {
     public static final double DownPowerArm = -0.2;
+    //Autonomous constants
+    public static final double SidebarsOpened = 0.25;
+    public static final double SidebarsClosed = 0.8;
+    public static final int VerticalSlideRaised = -2500;
+
     private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
