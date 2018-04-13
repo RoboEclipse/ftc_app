@@ -176,9 +176,9 @@ public class TestTeleOp extends OpMode {
                 relicHandServoPos=0;
             }
         }
-        //0.6: Vertical point
+        //0.48: Vertical point
         if(gamepad2.x){
-            myRobot.setRelicArmVertical();
+            relicArmServoPos = 0.48;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
