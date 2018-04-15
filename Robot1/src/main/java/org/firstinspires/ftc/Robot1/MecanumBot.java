@@ -39,7 +39,7 @@ class MecanumBot {
     private ColorSensor jewelColorSensor, bottomColorSensor;
     private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
     private ModernRoboticsI2cRangeSensor rangesensor;
-    private Servo jewelServo, flicker, RelicArmServo, RelicHandServo, topLeftServo, topRightServo, bottomLeftServo, bottomRightServo;
+    private Servo jewelServo, flicker, RelicArmServo, RelicHandServo, topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, topMiddleServo;
 
     private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
@@ -101,6 +101,7 @@ class MecanumBot {
         bottomRightServo = hardwareMap.servo.get(myRobotConfig.LowerSideBarRightName);
         flicker = hardwareMap.servo.get(myRobotConfig.JewelServo2Name);
         modernRoboticsTouchSensor = hardwareMap.get(ModernRoboticsTouchSensor.class, myRobotConfig.TouchSensorName);
+        topMiddleServo = hardwareMap.servo.get(myRobotConfig.TopMiddleServoName);
 
         resetDirection();
 
@@ -771,6 +772,9 @@ class MecanumBot {
     public void controlBottonClaws(double position){
         bottomRightServo.setPosition(position);
         bottomLeftServo.setPosition(1-position);
+    }
+    public void controlRotatingClaws(double position){
+        topMiddleServo.setPosition(position);
     }
 
 

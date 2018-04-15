@@ -23,6 +23,7 @@ public class TestTeleOp extends OpMode {
     double relicHandServoPos=0.5;
     double topSidebarPosition= .6;
     double bottomSidebarPosition = .25;
+    double topRotatingPosition = 0.5;
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     boolean started = false;
@@ -188,12 +189,17 @@ public class TestTeleOp extends OpMode {
             bButton();
         }
         //Give bumpers control of claw
+        if (gamepad2.a || gamepad2.b){
+                topRotatingPosition = 0.5;
+        }
         if (gamepad2.right_bumper) {
                 topSidebarPosition += 0.05;
+                topRotatingPosition += 0.08;
         }
         if (gamepad2.left_bumper) {
             if (clawServoPos <= 0.55) {
                 topSidebarPosition -= 0.05;
+                topRotatingPosition -= 0.08;
             }
         }
         if(gamepad2.left_trigger>0.01){
@@ -230,6 +236,7 @@ public class TestTeleOp extends OpMode {
         myRobot.controlTopClaws(topSidebarPosition);
         myRobot.moveRelicArmServo(relicArmServoPos);
         myRobot.moveRelicHandServo(relicHandServoPos);
+        myRobot.controlRotatingClaws(topRotatingPosition);
         //}
 
         telemetry.addData("encoderPosition", myRobot.getEncoderPosition());
