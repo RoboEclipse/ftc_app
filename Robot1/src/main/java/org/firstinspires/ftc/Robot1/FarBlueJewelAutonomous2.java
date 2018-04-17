@@ -57,6 +57,7 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
             mecanumBot.controlBottonClaws(mecanumBot.SidebarsClosed);
+            mecanumBot.controlTopClaws(0.5);
 
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);

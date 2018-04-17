@@ -43,7 +43,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 11;
+    int inches = 13;
 
 
     // Declare OpMode members.
@@ -60,6 +60,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
             //Getting the motors and servos in the right place
             mecanumBot.flick(minflickerPosition);
             mecanumBot.controlBottonClaws(mecanumBot.SidebarsClosed);
+            mecanumBot.controlTopClaws(0.5);
             //Knock off the jewel and return the arms
             mecanumBot.knockoffjewel(0.0,1.0,minflickerPosition);
             //Determine Pattern and change drive distance

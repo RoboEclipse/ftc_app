@@ -24,6 +24,7 @@ public class TestTeleOp extends OpMode {
     double topSidebarPosition= .6;
     double bottomSidebarPosition = .25;
     double topRotatingPosition = 0.5;
+    double relicArmSlideSpeed = 0.9;
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     boolean started = false;
@@ -77,9 +78,9 @@ public class TestTeleOp extends OpMode {
             v_theta = Math.sqrt(lx * lx + ly * ly);
             v_rotation = g1.right_stick_x;
         }
-        if (gamepad1.x || gamepad1.x) {
-            speedMultiplier = 1.0;
-            rotationMultiplier = 0.4;
+        if (gamepad1.b) {
+            speedMultiplier = 0.675;
+            rotationMultiplier = 0.375;
         } else {
             speedMultiplier = 1.35;
             rotationMultiplier = 0.75;
@@ -141,22 +142,24 @@ public class TestTeleOp extends OpMode {
             myRobot.controlArm(-armPower);
         }
         //Control for linear slide
-        myRobot.moveLinearSlide(0.7*gamepad2.right_stick_y);
+        myRobot.moveLinearSlide(relicArmSlideSpeed*gamepad2.right_stick_y);
         if (gamepad1.x) {
-            myRobot.moveLinearSlide(0.7);
+            myRobot.moveLinearSlide(relicArmSlideSpeed);
         }
         if(gamepad1.y){
-            myRobot.moveLinearSlide(-0.7);
+            myRobot.moveLinearSlide(-relicArmSlideSpeed);
         }
         //Control for glyph arm servos
         if (gamepad2.dpad_down){
-            relicArmServoPos-=0.02;
-
+            relicArmServoPos-=0.015;
+            if(relicArmServoPos<0){
+                relicArmServoPos=0;
+            }
 
 
         }
         else if (gamepad2.dpad_up){
-            relicArmServoPos+=0.02;
+            relicArmServoPos+=0.015;
 
             if(relicArmServoPos>1.0){
                 relicArmServoPos=1.0;
@@ -164,26 +167,29 @@ public class TestTeleOp extends OpMode {
 
         }
         if(gamepad2.dpad_right){
-            relicHandServoPos+=0.04;
+            relicHandServoPos+=0.06;
             if(relicHandServoPos>1){
                 relicHandServoPos=1;
             }
         }
         if(gamepad2.dpad_left){
-            relicHandServoPos-=0.04;
+            relicHandServoPos-=0.06;
             if(relicHandServoPos<0){
                 relicHandServoPos=0;
             }
         }
-        //0.26: Vertical point
+        //0.34: Vertical point
         if(gamepad2.x){
-            relicArmServoPos = 0.26;
+            relicArmServoPos = 0.34;
+        }
+        if(gamepad2.y){
+            relicArmServoPos = 0.39;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
             aButton();
         }
-        if (gamepad1.b || gamepad2.b) {
+        if (gamepad2.b) {
             bButton();
         }
         //Give bumpers control of claw
