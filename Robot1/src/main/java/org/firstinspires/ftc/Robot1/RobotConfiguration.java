@@ -26,6 +26,7 @@ public class RobotConfiguration {
     public static final String TopServoName = "TopServo";
     public static final String RelicArmServoName = "RelicArmServo";
     public static final String RelicHandServoName = "RelicHandServo";
+    public static final String TopMiddleServoName = "TopMiddleServo";
 
 
     //Sensors
