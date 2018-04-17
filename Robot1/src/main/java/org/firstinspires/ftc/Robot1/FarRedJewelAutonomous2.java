@@ -43,7 +43,7 @@ public class FarRedJewelAutonomous2 extends LinearOpMode {
     double minflickerPosition = 0.5;//Retracted flicker
     double minjewelarmPosition = 0.67;//Retracted jewelArmPosition
     double maxjewelarmPosition = 0.25;//Extended jewelArmPosition
-    int inches = 13;
+    int inches = 11;
 
 
     // Declare OpMode members.

@@ -149,15 +149,13 @@ public class TestTeleOp extends OpMode {
         }
         //Control for glyph arm servos
         if (gamepad2.dpad_down){
-            relicArmServoPos-=0.03;
+            relicArmServoPos-=0.02;
 
-            if(relicArmServoPos<0.25){
-                relicArmServoPos=0.25;
-            }
+
 
         }
         else if (gamepad2.dpad_up){
-            relicArmServoPos+=0.03;
+            relicArmServoPos+=0.02;
 
             if(relicArmServoPos>1.0){
                 relicArmServoPos=1.0;
@@ -176,9 +174,9 @@ public class TestTeleOp extends OpMode {
                 relicHandServoPos=0;
             }
         }
-        //0.48: Vertical point
+        //0.26: Vertical point
         if(gamepad2.x){
-            relicArmServoPos = 0.48;
+            relicArmServoPos = 0.26;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
