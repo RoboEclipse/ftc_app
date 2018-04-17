@@ -28,7 +28,7 @@ class MecanumBot {
     //Autonomous constants
     public static final double SidebarsOpened = 0.25;
     public static final double SidebarsClosed = 0.8;
-    public static final int VerticalSlideRaised = -2500;
+    public static final int VerticalSlideRaised = -2200;
 
     private DcMotor lf, lr, rf, rr, armMotor, slideMotor;
     private Telemetry telemetry;
