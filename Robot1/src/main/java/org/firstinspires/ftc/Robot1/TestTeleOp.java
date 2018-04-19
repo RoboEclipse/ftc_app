@@ -79,8 +79,8 @@ public class TestTeleOp extends OpMode {
             v_rotation = g1.right_stick_x;
         }
         if (gamepad1.b) {
-            speedMultiplier = 0.675;
-            rotationMultiplier = 0.375;
+            speedMultiplier = 0.25;
+            rotationMultiplier = 0.25;
         } else {
             speedMultiplier = 1.35;
             rotationMultiplier = 0.75;
@@ -107,9 +107,7 @@ public class TestTeleOp extends OpMode {
         if (myRobot.CheckTouchSensor()) {
             myRobot.resetArmEncoder();
         }
-        if (gamepad2.y) {
-            topSidebarPosition+=0.03;
-            bottomSidebarPosition-=0.03;
+
  /*           if (myRobot.GetArmEncoder() < firstLevel - 50) {
                 myRobot.EncoderArm(firstLevel, 0.6);
                 myRobot.disableArmEncoders();
@@ -131,7 +129,6 @@ public class TestTeleOp extends OpMode {
             myRobot.moveTopServo(0.55);
             myRobot.controlArm(0);
             */
-        }
 
         if (Math.abs(armPower) <= 0.01) {
             myRobot.EncoderHoldArm();
@@ -180,22 +177,25 @@ public class TestTeleOp extends OpMode {
         }
         //0.34: Vertical point
         if(gamepad2.x){
-            relicArmServoPos = 0.34;
+            relicArmServoPos = 0.37;
+            topSidebarPosition = 0.5;
+            bottomSidebarPosition = 0.5;
         }
         if(gamepad2.y){
-            relicArmServoPos = 0.39;
+            relicArmServoPos = 0.4;
+            topSidebarPosition = 0.5;
+            bottomSidebarPosition = 0.5;
         }
         //Button to set up jewel arm, flicker, top servo and claw
         if (gamepad1.a || gamepad2.a) {
             aButton();
         }
         if (gamepad2.b) {
+
             bButton();
         }
         //Give bumpers control of claw
-        if (gamepad2.a || gamepad2.b){
-                topRotatingPosition = 0.5;
-        }
+
         if (gamepad2.right_bumper) {
                 topSidebarPosition += 0.05;
                 topRotatingPosition += 0.08;
@@ -265,12 +265,14 @@ public class TestTeleOp extends OpMode {
     public void aButton(){
         myRobot.setJewelArm(1.0);
         myRobot.flick(1.0);
+        topRotatingPosition = 0.5;
         topSidebarPosition= .65;
         bottomSidebarPosition = .2;
     }
     public void bButton(){
         topSidebarPosition = 0.55;
-        bottomSidebarPosition = .32;
+        bottomSidebarPosition = .27;
+        topRotatingPosition = 0.5;
     }
 
 }

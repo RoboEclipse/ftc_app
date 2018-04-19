@@ -90,6 +90,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
             mecanumBot.tankDrive(0,0);
             //Back Up
             mecanumBot.controlBottonClaws(mecanumBot.SidebarsOpened);
+            mecanumBot.controlTopClaws(0.6);
             mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
             mecanumBot.br8kMotors();
 

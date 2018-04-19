@@ -87,6 +87,8 @@ public class FarBlueJewelAutonomous2 extends LinearOpMode {
             sleep(1500);
             mecanumBot.tankDrive(0,0);
             mecanumBot.controlBottonClaws(mecanumBot.SidebarsOpened);
+            mecanumBot.controlTopClaws(0.6);
+
 
             telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
             telemetry.addData("gyroPosition", mecanumBot.getAngle());
