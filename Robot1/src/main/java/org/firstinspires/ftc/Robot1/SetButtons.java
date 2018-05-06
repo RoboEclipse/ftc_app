@@ -33,12 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
-
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@TeleOp(name="SetButtonsPositions", group="Iterative Opmode")
 //@Disabled
 public class SetButtons extends OpMode
 {
@@ -47,6 +43,7 @@ public class SetButtons extends OpMode
     double position=0.5;
     double relicHandServoPos=0.5;
     MecanumBot mecanumBot = new MecanumBot();
+    ButtonPositions buttonPositions = new ButtonPositions();
 
 
     /*
@@ -56,6 +53,7 @@ public class SetButtons extends OpMode
     public void init() {
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
+        buttonPositions.xposition=0.5;
     }
 
     /*
@@ -79,10 +77,10 @@ public class SetButtons extends OpMode
     @Override
     public void loop() {
         if(gamepad2.dpad_up){
-            position+=0.02;
+            buttonPositions.xposition+=0.02;
         }
         else if(gamepad2.dpad_down){
-            position-=0.02;
+            buttonPositions.xposition-=0.02;
         }
         if(gamepad2.dpad_right){
             relicHandServoPos+=0.06;
@@ -96,15 +94,20 @@ public class SetButtons extends OpMode
                 relicHandServoPos=0;
             }
         }
-        if(position>1.0){
-            position=1.0;
+        if(buttonPositions.xposition>1.0){
+            buttonPositions.xposition=1.0;
         }
-        if(position<0.0){
-            position=0.0;
+        if(buttonPositions.xposition<0.0){
+            buttonPositions.xposition=0.0;
         }
-        mecanumBot.moveRelicArmServo(position);
+        mecanumBot.moveRelicArmServo(buttonPositions.xposition);
         mecanumBot.moveRelicHandServo(relicHandServoPos);
         if(gamepad2.x){
+
+            buttonPositions.WritePositions(buttonPositions);
+            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().toString());
+            telemetry.update();
+            /*
             File file = new File("xButtonPosition.txt");
             try {
                 FileWriter output= new FileWriter(file);
@@ -113,8 +116,10 @@ public class SetButtons extends OpMode
             catch (IOException e){
 
             }
+            */
 
         }
+
     }
 
     /*
