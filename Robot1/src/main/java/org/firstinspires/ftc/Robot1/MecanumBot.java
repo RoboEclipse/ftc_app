@@ -620,12 +620,12 @@ class MecanumBot {
             telemetry.addData("Blue: ", blue);
             telemetry.addData("Red: ", red);
             telemetry.update();
-            if (red > blue * 1.75) {
+            if (red > blue * 1.5) {
                 flicker.setPosition(RedPosition);
                 sleep(1000);
                 break;
             }
-            else if (blue > red * 1.75) {
+            else if (blue > red * 1.5) {
                 flicker.setPosition(BluePosition);
                 sleep(1000);
                 break;

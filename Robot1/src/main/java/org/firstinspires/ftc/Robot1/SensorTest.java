@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Basic: Linear OpMode", group="Linear Opmode")
+@Autonomous(name="ColorSensorTest", group="Linear Opmode")
 //@Disabled
 public class SensorTest extends LinearOpMode {
     MecanumBot cat = new MecanumBot();
