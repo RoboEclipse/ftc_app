@@ -49,6 +49,7 @@ class MecanumBot {
 
     RobotConfiguration myRobotConfig = new RobotConfiguration();
     VuMark pattern;
+    ButtonPositions buttonPositions = new ButtonPositions();
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
 
@@ -620,6 +621,7 @@ class MecanumBot {
             telemetry.addData("Blue: ", blue);
             telemetry.addData("Red: ", red);
             telemetry.update();
+            //May want to change
             if (red > blue * 1.5) {
                 flicker.setPosition(RedPosition);
                 sleep(1000);
@@ -775,6 +777,9 @@ class MecanumBot {
     }
     public void controlRotatingClaws(double position){
         topMiddleServo.setPosition(position);
+    }
+    public void xButton(){
+        moveRelicArmServo(Double.parseDouble(ButtonPositions.ReadPositions().xPositiontoString()));
     }
 
 

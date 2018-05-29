@@ -51,6 +51,7 @@ public class SetButtons extends OpMode
      */
     @Override
     public void init() {
+
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         buttonPositions.xposition=0.5;
@@ -77,19 +78,19 @@ public class SetButtons extends OpMode
     @Override
     public void loop() {
         if(gamepad2.dpad_up){
-            buttonPositions.xposition+=0.02;
+            buttonPositions.xposition+=0.01;
         }
         else if(gamepad2.dpad_down){
-            buttonPositions.xposition-=0.02;
+            buttonPositions.xposition-=0.01;
         }
         if(gamepad2.dpad_right){
-            relicHandServoPos+=0.06;
+            relicHandServoPos+=0.03;
             if(relicHandServoPos>1){
                 relicHandServoPos=1;
             }
         }
         if(gamepad2.dpad_left){
-            relicHandServoPos-=0.06;
+            relicHandServoPos-=0.03;
             if(relicHandServoPos<0){
                 relicHandServoPos=0;
             }

@@ -38,7 +38,6 @@ public class ButtonPositions implements Serializable{
 
             return object1;
         }
-
         catch(IOException ex) {
 
         }
@@ -65,9 +64,12 @@ public class ButtonPositions implements Serializable{
         catch (IOException ex) {
         }
     }
-
+    //Converts information from ¬í sr ,org.firstinspires.ftc.Robot1.ButtonPositionsdÇ]Ö5ZIW to actually useful stuff
     public String toString(){
         return  String.format("xposition=%f,yposition=%f", xposition,yposition);
+    }
+    public String xPositiontoString(){
+        return String.format("%f", xposition);
     }
 
 }

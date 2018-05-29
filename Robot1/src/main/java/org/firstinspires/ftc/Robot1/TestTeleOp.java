@@ -177,7 +177,8 @@ public class TestTeleOp extends OpMode {
         }
         //0.34: Vertical point
         if(gamepad2.x){
-            relicArmServoPos = 0.34;
+            //relicArmServoPos = 0.34;
+            myRobot.xButton();
             relicHandServoPos = 1.0;
             topSidebarPosition = 0.36;
             bottomSidebarPosition = 0.5;
