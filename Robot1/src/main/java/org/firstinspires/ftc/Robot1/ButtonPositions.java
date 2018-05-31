@@ -15,7 +15,7 @@ public class ButtonPositions implements Serializable{
 
     static String filename = "/storage/emulated/0/FIRST/buttonPositions.txt";
 
-    public double xposition;
+    public double xposition = 0.34;
     public double yposition;
 
     public static ButtonPositions ReadPositions()

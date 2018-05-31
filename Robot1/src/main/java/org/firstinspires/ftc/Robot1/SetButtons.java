@@ -53,9 +53,10 @@ public class SetButtons extends OpMode
     public void init() {
 
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
+        buttonPositions.xposition=mecanumBot.ReadxButton();
         telemetry.addData("Status", "Initialized");
-        buttonPositions.xposition=0.5;
-    }
+        telemetry.addData("xPosition", buttonPositions.xposition);
+     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -78,10 +79,10 @@ public class SetButtons extends OpMode
     @Override
     public void loop() {
         if(gamepad2.dpad_up){
-            buttonPositions.xposition+=0.01;
+            buttonPositions.xposition+=0.005;
         }
         else if(gamepad2.dpad_down){
-            buttonPositions.xposition-=0.01;
+            buttonPositions.xposition-=0.005;
         }
         if(gamepad2.dpad_right){
             relicHandServoPos+=0.03;
@@ -104,21 +105,9 @@ public class SetButtons extends OpMode
         mecanumBot.moveRelicArmServo(buttonPositions.xposition);
         mecanumBot.moveRelicHandServo(relicHandServoPos);
         if(gamepad2.x){
-
             buttonPositions.WritePositions(buttonPositions);
             telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().toString());
             telemetry.update();
-            /*
-            File file = new File("xButtonPosition.txt");
-            try {
-                FileWriter output= new FileWriter(file);
-                output.write("cat");
-            }
-            catch (IOException e){
-
-            }
-            */
-
         }
 
     }

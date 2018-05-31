@@ -778,8 +778,15 @@ class MecanumBot {
     public void controlRotatingClaws(double position){
         topMiddleServo.setPosition(position);
     }
-    public void xButton(){
-        moveRelicArmServo(Double.parseDouble(ButtonPositions.ReadPositions().xPositiontoString()));
+
+    public double ReadxButton(){
+        ButtonPositions xPosition = ButtonPositions.ReadPositions();
+        if(xPosition != null) {
+            return Double.parseDouble(xPosition.xPositiontoString());
+        }
+        else{
+            return 0.34;
+        }
     }
 
 

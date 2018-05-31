@@ -25,6 +25,8 @@ public class TestTeleOp extends OpMode {
     double bottomSidebarPosition = .25;
     double topRotatingPosition = 0.5;
     double relicArmSlideSpeed = 0.9;
+    double xButtonPosition;
+
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
     boolean started = false;
@@ -39,7 +41,8 @@ public class TestTeleOp extends OpMode {
         myRobot.initMecanumBot(hardwareMap, telemetry);
         myRobot.disableDriveEncoders();
         myRobot.disableArmEncoders();
-
+        xButtonPosition = myRobot.ReadxButton();
+        telemetry.addData("Test", xButtonPosition);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -178,7 +181,7 @@ public class TestTeleOp extends OpMode {
         //0.34: Vertical point
         if(gamepad2.x){
             //relicArmServoPos = 0.34;
-            myRobot.xButton();
+            relicArmServoPos = xButtonPosition;
             relicHandServoPos = 1.0;
             topSidebarPosition = 0.36;
             bottomSidebarPosition = 0.5;
