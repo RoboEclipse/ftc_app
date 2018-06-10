@@ -26,6 +26,7 @@ public class TestTeleOp extends OpMode {
     double topRotatingPosition = 0.5;
     double relicArmSlideSpeed = 0.9;
     double xButtonPosition;
+    double yButtonPosition;
 
 
     boolean reset = true; //Boolean determining if the precision sidebar movement has been done yet
@@ -42,7 +43,8 @@ public class TestTeleOp extends OpMode {
         myRobot.disableDriveEncoders();
         myRobot.disableArmEncoders();
         xButtonPosition = myRobot.ReadxButton();
-        telemetry.addData("Test", xButtonPosition);
+        yButtonPosition = myRobot.ReadyButton();
+        telemetry.addData("ButtonPositions", "xButtonPosition: " + xButtonPosition+ ", yButtonPosition: " + yButtonPosition);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -187,7 +189,7 @@ public class TestTeleOp extends OpMode {
             bottomSidebarPosition = 0.5;
         }
         if(gamepad2.y){
-            relicArmServoPos = 0.46;
+            relicArmServoPos = yButtonPosition;
             topSidebarPosition = 0.36;
             bottomSidebarPosition = 0.5;
         }

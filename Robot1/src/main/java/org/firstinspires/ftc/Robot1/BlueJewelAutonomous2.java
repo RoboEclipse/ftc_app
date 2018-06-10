@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="BlueAutonomous", group="Linear Opmode")
 //@Disabled
-public class BLueJewelAutonomous2 extends LinearOpMode {
+public class BlueJewelAutonomous2 extends LinearOpMode {
     private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
     double speed = 0.5; //limit is cool and good
     double close = 25; //Determines when the robot begins slowing down

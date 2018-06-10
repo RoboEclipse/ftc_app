@@ -788,6 +788,15 @@ class MecanumBot {
             return 0.34;
         }
     }
+    public double ReadyButton(){
+        ButtonPositions yPosition =ButtonPositions.ReadPositions();
+        if(yPosition != null) {
+            return Double.parseDouble(yPosition.yPositiontoString());
+        }
+        else{
+            return 0.46;
+        }
+    }
 
 
 

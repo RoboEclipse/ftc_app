@@ -16,7 +16,7 @@ public class ButtonPositions implements Serializable{
     static String filename = "/storage/emulated/0/FIRST/buttonPositions.txt";
 
     public double xposition = 0.34;
-    public double yposition;
+    public double yposition = 0.46;
 
     public static ButtonPositions ReadPositions()
     {
@@ -66,10 +66,13 @@ public class ButtonPositions implements Serializable{
     }
     //Converts information from ¬í sr ,org.firstinspires.ftc.Robot1.ButtonPositionsdÇ]Ö5ZIW to actually useful stuff
     public String toString(){
-        return  String.format("xposition=%f,yposition=%f", xposition,yposition);
+        return  String.format("xposition=%f, yposition=%f", xposition,yposition);
     }
     public String xPositiontoString(){
         return String.format("%f", xposition);
+    }
+    public String yPositiontoString(){
+        return String.format("%f", yposition);
     }
 
 }

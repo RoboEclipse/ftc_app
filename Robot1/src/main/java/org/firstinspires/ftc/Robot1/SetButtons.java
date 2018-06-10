@@ -54,8 +54,10 @@ public class SetButtons extends OpMode
 
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
         buttonPositions.xposition=mecanumBot.ReadxButton();
+        buttonPositions.yposition=mecanumBot.ReadyButton();
         telemetry.addData("Status", "Initialized");
         telemetry.addData("xPosition", buttonPositions.xposition);
+        telemetry.addData("yPosition", buttonPositions.yposition);
      }
 
     /*
@@ -79,10 +81,10 @@ public class SetButtons extends OpMode
     @Override
     public void loop() {
         if(gamepad2.dpad_up){
-            buttonPositions.xposition+=0.005;
+            position+=0.002;
         }
         else if(gamepad2.dpad_down){
-            buttonPositions.xposition-=0.005;
+            position-=0.002;
         }
         if(gamepad2.dpad_right){
             relicHandServoPos+=0.03;
@@ -96,18 +98,28 @@ public class SetButtons extends OpMode
                 relicHandServoPos=0;
             }
         }
-        if(buttonPositions.xposition>1.0){
-            buttonPositions.xposition=1.0;
+        if(position>1.0){
+            position=1.0;
         }
-        if(buttonPositions.xposition<0.0){
-            buttonPositions.xposition=0.0;
+        if(position<0.0){
+            position=0.0;
         }
-        mecanumBot.moveRelicArmServo(buttonPositions.xposition);
+        mecanumBot.moveRelicArmServo(position);
         mecanumBot.moveRelicHandServo(relicHandServoPos);
         if(gamepad2.x){
+            buttonPositions.xposition=position;
             buttonPositions.WritePositions(buttonPositions);
-            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().toString());
+            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
+            telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
             telemetry.update();
+        }
+        if(gamepad2.y){
+            buttonPositions.yposition=position;
+            buttonPositions.WritePositions(buttonPositions);
+            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
+            telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
+            telemetry.update();
+
         }
 
     }
