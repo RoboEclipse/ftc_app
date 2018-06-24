@@ -42,7 +42,7 @@ public class RedJewelAutonomous2 extends LinearOpMode {
     double enough = 2; //Determines margin of error
     double minflickerPosition = 0.5;//Retracted flicker
     double inches = 37;
-    int angle=-90;
+    int angle = -   90;
 
 
     // Declare OpMode members.
