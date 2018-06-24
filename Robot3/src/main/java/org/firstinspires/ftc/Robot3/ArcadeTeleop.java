@@ -1,8 +1,17 @@
 package org.firstinspires.ftc.Robot3;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Disabled
 @TeleOp(name = "Arcade Teleop", group = "Test")
@@ -264,5 +273,117 @@ public class ArcadeTeleop extends OpMode {
             telemetry.update();
 
         }
+    }
+
+    /**
+     * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+     * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+     * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
+     * class is instantiated on the Robot Controller and executed.
+     * <p>
+     * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+     * It includes all the skeletal structure that all linear OpModes contain.
+     * <p>
+     * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+     * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+     */
+
+    @Autonomous(name = "RedJewelAutonomous", group = "Linear Opmode")
+    @Disabled
+    public static class RedJewelAutonomous extends LinearOpMode {
+
+        // Declare OpMode members.
+        ElapsedTime runtime = new ElapsedTime();
+        DcMotor lf;
+        DcMotor lb;
+        DcMotor rf;
+        DcMotor rb;
+        Servo arm;
+        byte[] colorCcache;
+        I2cDevice colorC;
+        I2cDeviceSynch colorCreader;
+        MecanumBot myRobot= new MecanumBot();
+
+        private float armPosition = 1.0f;
+        private boolean finished = false;
+
+        @Override
+        public void runOpMode() {
+            telemetry.addData("Status", "Initialized");
+            telemetry.update();
+
+            lf = hardwareMap.get(DcMotor.class, "leftf_motor");
+            lb = hardwareMap.get(DcMotor.class, "leftb_motor");
+            rf = hardwareMap.get(DcMotor.class, "rightf_motor");
+            rb = hardwareMap.get(DcMotor.class, "rightb_motor");
+            arm = hardwareMap.get(Servo.class, "jewel_arm");
+
+            colorC = hardwareMap.i2cDevice.get("jewel_sensor");
+            colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
+            colorCreader.engage();
+            colorCreader.write8(3, 0);
+
+            // Most robots need the motor on one side to be reversed to drive forward
+            // Reverse the motor that runs backwards when connected directly to the battery
+            lf.setDirection(DcMotor.Direction.REVERSE);
+            lb.setDirection(DcMotor.Direction.REVERSE);
+
+            // Wait for the game to start (driver presses PLAY)
+            waitForStart();
+            runtime.reset();
+
+            // run until the end of the match (driver presses STOP)
+            while (opModeIsActive()) {
+
+                arm.setPosition(armPosition);
+                //display values
+                telemetry.addData("2 #C", colorCcache[0] & 0xFF);
+                if (colorCcache[0] >= 9) {
+                    arm.setPosition(0.5);
+                    tankDrive(-1.0, 1000);
+                    finished = true;
+                }
+                if (colorCcache[0] <= 3 && colorCcache[0] != 0) {
+                    arm.setPosition(0.5);
+                    tankDrive(1.0, 1000);
+                    finished = true;
+                }
+                if (colorCcache[0] == 0) {
+                    armPosition -= 0.05;
+                    if (armPosition < 0.8) {
+                        arm.setPosition(0.5);
+                        finished = true;
+                    }
+                }
+                if (finished) {
+                    arm.setPosition(0.3);
+                    tankDrive(1.0, 5000);
+                    break;
+                }
+                // Show the elapsed game time and wheel power.
+                telemetry.addData("Status", "Run Time: " + runtime.toString());
+                telemetry.update();
+            }
+
+            // run until the end of the match (driver presses STOP)
+            while (opModeIsActive()) {
+                // Show the elapsed game time and wheel power.
+                telemetry.addData("Status", "Running Time: " + runtime.toString());
+                telemetry.update();
+            }
+        }
+
+        private void tankDrive(double power, int milliseconds) {
+            lf.setPower(power);
+            lb.setPower(power);
+            rf.setPower(power);
+            rb.setPower(power);
+            sleep(milliseconds);
+            lf.setPower(0);
+            lb.setPower(0);
+            rf.setPower(0);
+            rb.setPower(0);
+        }
+
     }
 }
