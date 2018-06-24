@@ -53,11 +53,15 @@ public class SetButtons extends OpMode
     public void init() {
 
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
-        buttonPositions.xposition=mecanumBot.ReadxButton();
-        buttonPositions.yposition=mecanumBot.ReadyButton();
+        buttonPositions.setXPosition (mecanumBot.ReadxButton());
+        buttonPositions.setYPosition (mecanumBot.ReadyButton());
+        // set the telemetry reference so that ButtonPositions can display
+        // error during reading/writing if any
+        ButtonPositions.setTelemetry(telemetry);
+
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("xPosition", buttonPositions.xposition);
-        telemetry.addData("yPosition", buttonPositions.yposition);
+        telemetry.addData("xPosition: ", buttonPositions.getXPosition());
+        telemetry.addData("yPosition: ", buttonPositions.getYPosition());
      }
 
     /*
@@ -107,14 +111,14 @@ public class SetButtons extends OpMode
         mecanumBot.moveRelicArmServo(position);
         mecanumBot.moveRelicHandServo(relicHandServoPos);
         if(gamepad2.x){
-            buttonPositions.xposition=position;
+            buttonPositions.setXPosition(position);
             buttonPositions.WritePositions(buttonPositions);
             telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
             telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
             telemetry.update();
         }
         if(gamepad2.y){
-            buttonPositions.yposition=position;
+            buttonPositions.setYPosition(position);
             buttonPositions.WritePositions(buttonPositions);
             telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
             telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
