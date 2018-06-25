@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.Robot1;
+package org.firstinspires.ftc.Robot3;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -44,9 +44,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "FTC11138:FarRedJewelAutonomous", group = "Sensor")
+@Autonomous(name = "FTC11138:FarBlueJewelAutonomous", group = "Sensor")
 @Disabled                            // Comment this out to add to the opmode list
-public class RedJewelAutonomousFarSide extends LinearOpMode {
+public class BlueJewelAutonomousFarSide extends LinearOpMode {
     //region Constants
     double maxExtension = 1.0;
     double minExtension = 0.4;
@@ -98,7 +98,7 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Read Red and Blue Values
-            sleep(1000);
+
             blue = myRobot.GetJewelSensorBlue();
             red = myRobot.GetJewelSensorRed();
             //Todo: Increase consistency of movement through encoders or gyro
@@ -109,11 +109,11 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
                 myRobot.setJewelArm(maxExtension);
                 time = 400;
                 sleep(1000);
-                myRobot.drive(0,-power,0);
+                myRobot.drive(0,power,0);
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time=2000;
+                time=1750;
             }
             //If Blue is detected, center jewel arm and drive forwards
             //Note that the sensor detects red much more intensely than blue, so if blue is only slightly greater than red,
@@ -122,11 +122,11 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
                 myRobot.setJewelArm(maxExtension);
                 sleep(1000);
                 time = 500;
-                myRobot.tankDrive(0.2,0.5);
+                myRobot.drive(0, -power,0);
                 sleep((int)time);
                 myRobot.stopDriveMotors();
                 finished = true;
-                time = 850;
+                time = 1000;
             }
             /*
             //If no color is detected, adjust arm
@@ -143,8 +143,8 @@ public class RedJewelAutonomousFarSide extends LinearOpMode {
             if (finished) {
                 myRobot.setJewelArm(minExtension);
                 sleep(1000);
-                myRobot.tankDrive(0.2,0.5);
-                sleep((int)time-100);
+                myRobot.tankDrive(-0.4, -0.5);
+                sleep((int)time+100);
                 myRobot.stopDriveMotors();
                 break;
             }
