@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
 
 class MecanumBot {
     public static final double DownPowerArm = -0.2;
@@ -41,7 +42,7 @@ class MecanumBot {
     private ModernRoboticsI2cRangeSensor rangesensor;
     private Servo jewelServo, flicker, RelicArmServo, RelicHandServo, topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, topMiddleServo;
 
-    private static final double TICKS_PER_INCH = 1120 * (16./24.) / (Math.PI * 4.0);
+    private static final double TICKS_PER_INCH = 1120 * (16. / 24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
     private static final double ENCODER_DRIVE_POWER = 0.3;
 
@@ -55,17 +56,18 @@ class MecanumBot {
 
         InitializeQuick(hardwareMap, _telemetry);
     }
+
     //Removed Vuforia from the other wone to remove the delay
     public void initAutoMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
 
         InitializeQuick(hardwareMap, _telemetry);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu.initialize(parameters);
@@ -450,7 +452,7 @@ class MecanumBot {
 
         if(degrees>0){
             setPower(0.0, lf, lr, rf, rr);
-            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             setTargetPosition(-10000000, lf);
             setTargetPosition(1000000, rf);
             setTargetPosition(-1000000, lr);
@@ -484,8 +486,28 @@ class MecanumBot {
             telemetry.update();
         }
     }
+    // This is a possible new set of code for the MecanumBot. The method will create allow the robot
+    // to run on encoders and it will use distance sensors to produce an accurate position.
+    public void testFunction(double distance )
+    {
+        double tolerance =2;
+        double desired = 21;
+        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
 
-
+        while (Math.abs(rangesensor.getDistance(DistanceUnit.CM)- desired) > tolerance)
+        {
+            if(distance > desired)
+            {
+                encoderStrafeDrive(10000000, 0.5, "left");
+            }
+            if(distance <= desired)
+            {
+                encoderStrafeDrive(10000000, 0.5, "right");
+            }
+        }
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br8kMotors();
+    }
     // All motors start out at ENCODER_DRIVE_POWER power. Once we get one revolution
     // in, go ahead and speed up. When we get within a revolution of the end of our
     // run, start slowing down. The idea here is to avoid slip.
