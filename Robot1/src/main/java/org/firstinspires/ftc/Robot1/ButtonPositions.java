@@ -3,75 +3,102 @@ package org.firstinspires.ftc.Robot1;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * Created by Nathan on 4/19/2018.
  */
 
 public class ButtonPositions implements Serializable{
-
     static String filename = "/storage/emulated/0/FIRST/buttonPositions.txt";
 
-    public double xposition = 0.34;
-    public double yposition = 0.46;
+    static private Telemetry telemetry;
+    private double xposition = 0.34;
+    private double yposition = 0.46;
+
+    public static void setTelemetry(Telemetry val) {
+        telemetry = val;
+    }
+
+    public double getXPosition () {
+        return xposition;
+    }
+
+    public void setXPosition(double val) {
+        xposition = val;
+    }
+
+    public double getYPosition() {
+        return yposition;
+    }
+
+    public void setYPosition(double val) {
+        yposition = val;
+    }
 
     public static ButtonPositions ReadPositions()
     {
 
-        ButtonPositions object1 = null;
+        ButtonPositions bp = null;
 
-        // Deserialization
-        try
-        {
+           // Deserialization
+        try {
             // Reading the object from a file
             FileInputStream file = new FileInputStream(filename);
-            ObjectInputStream in = new ObjectInputStream(file);
+            Reader reader = new InputStreamReader(file);
 
             // Method for deserialization of object
-            object1 = (ButtonPositions)in.readObject();
+            Gson gson = new GsonBuilder().create();
+            bp = gson.fromJson(reader, ButtonPositions.class);
 
-            in.close();
+            reader.close();
             file.close();
-
-            return object1;
         }
         catch(IOException ex) {
-
+            telemetry.addData("Failed to read: ", ex.toString());
         }
 
-        catch(ClassNotFoundException ex) {
-        }
-
-        return null;
-    }
+        return bp;
+}
 
     public static void WritePositions(ButtonPositions obj) {
         // Serialization
         try {
             //Saving of object in a file
             FileOutputStream file = new FileOutputStream(filename);
-            ObjectOutputStream out = new ObjectOutputStream(file);
+            Writer writer = new OutputStreamWriter(file);
 
             // Method for serialization of object
-            out.writeObject(obj);
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(obj, writer);
 
-            out.close();
+            writer.close();
             file.close();
         }
         catch (IOException ex) {
+            telemetry.addData("Failed to write: ", ex.toString());
         }
     }
     //Converts information from ¬í sr ,org.firstinspires.ftc.Robot1.ButtonPositionsdÇ]Ö5ZIW to actually useful stuff
+    @Override
     public String toString(){
         return  String.format("xposition=%f, yposition=%f", xposition,yposition);
     }
-    public String xPositiontoString(){
+
+    public String xPositiontoString() {
         return String.format("%f", xposition);
     }
-    public String yPositiontoString(){
+
+    public String yPositiontoString() {
         return String.format("%f", yposition);
     }
 
