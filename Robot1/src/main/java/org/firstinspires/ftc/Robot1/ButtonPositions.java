@@ -3,7 +3,6 @@ package org.firstinspires.ftc.Robot1;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
@@ -12,6 +11,7 @@ import java.io.Serializable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
@@ -19,7 +19,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 public class ButtonPositions implements Serializable{
-
     static String filename = "/storage/emulated/0/FIRST/buttonPositions.txt";
 
     static private Telemetry telemetry;
@@ -49,30 +48,27 @@ public class ButtonPositions implements Serializable{
     public static ButtonPositions ReadPositions()
     {
 
-        ButtonPositions object1 = null;
+        ButtonPositions bp = null;
 
-        // Deserialization
-        try
-        {
+           // Deserialization
+        try {
             // Reading the object from a file
             FileInputStream file = new FileInputStream(filename);
             Reader reader = new InputStreamReader(file);
 
             // Method for deserialization of object
             Gson gson = new GsonBuilder().create();
-            ButtonPositions bp = gson.fromJson(reader, ButtonPositions.class);
+            bp = gson.fromJson(reader, ButtonPositions.class);
 
             reader.close();
             file.close();
-
-            return object1;
         }
         catch(IOException ex) {
             telemetry.addData("Failed to read: ", ex.toString());
         }
 
-        return null;
-    }
+        return bp;
+}
 
     public static void WritePositions(ButtonPositions obj) {
         // Serialization

@@ -53,11 +53,12 @@ public class SetButtons extends OpMode
     public void init() {
 
         mecanumBot.initMecanumBot(hardwareMap, telemetry);
-        buttonPositions.setXPosition (mecanumBot.ReadxButton());
-        buttonPositions.setYPosition (mecanumBot.ReadyButton());
         // set the telemetry reference so that ButtonPositions can display
         // error during reading/writing if any
         ButtonPositions.setTelemetry(telemetry);
+
+        buttonPositions.setXPosition (mecanumBot.ReadxButton());
+        buttonPositions.setYPosition (mecanumBot.ReadyButton());
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData("xPosition: ", buttonPositions.getXPosition());
@@ -110,22 +111,26 @@ public class SetButtons extends OpMode
         }
         mecanumBot.moveRelicArmServo(position);
         mecanumBot.moveRelicHandServo(relicHandServoPos);
-        if(gamepad2.x){
+        if(gamepad2.x) {
             buttonPositions.setXPosition(position);
             buttonPositions.WritePositions(buttonPositions);
-            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
-            telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
-            telemetry.update();
         }
         if(gamepad2.y){
             buttonPositions.setYPosition(position);
             buttonPositions.WritePositions(buttonPositions);
-            telemetry.addData("xPresetPos:", ButtonPositions.ReadPositions().xPositiontoString());
-            telemetry.addData("yPresetPos:", ButtonPositions.ReadPositions().yPositiontoString());
-            telemetry.update();
-
         }
 
+        if (gamepad2.x || gamepad2.y) {
+            ButtonPositions bp = ButtonPositions.ReadPositions();
+            if (bp != null) {
+                telemetry.addData("xPresetPos:", bp.xPositiontoString());
+                telemetry.addData("yPresetPos:", bp.yPositiontoString());
+            } else {
+                telemetry.addData("xPresetPos:", "failed to read");
+                telemetry.addData("yPresetPos:", "failed to read");
+            }
+            telemetry.update();
+        }
     }
 
     /*
