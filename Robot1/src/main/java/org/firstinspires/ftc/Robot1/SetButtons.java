@@ -58,7 +58,7 @@ public class SetButtons extends OpMode
         ButtonPositions.setTelemetry(telemetry);
 
         buttonPositions.setXPosition (mecanumBot.ReadxButton());
-        buttonPositions.setYPosition (mecanumBot.ReadyButton());
+        buttonPositions.setYPosition (mecanumBot.ReadYButton());
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData("xPosition: ", buttonPositions.getXPosition());

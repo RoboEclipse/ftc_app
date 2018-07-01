@@ -43,7 +43,7 @@ public class TestTeleOp extends OpMode {
         myRobot.disableDriveEncoders();
         myRobot.disableArmEncoders();
         xButtonPosition = myRobot.ReadxButton();
-        yButtonPosition = myRobot.ReadyButton();
+        yButtonPosition = myRobot.ReadYButton();
         telemetry.addData("ButtonPositions", "xButtonPosition: " + xButtonPosition+ ", yButtonPosition: " + yButtonPosition);
         telemetry.addData("Status", "Initialized");
         telemetry.update();

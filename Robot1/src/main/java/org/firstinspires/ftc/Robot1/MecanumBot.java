@@ -788,7 +788,7 @@ class MecanumBot {
             return 0.34;
         }
     }
-    public double ReadyButton(){
+    public double ReadYButton(){
         ButtonPositions yPosition =ButtonPositions.ReadPositions();
         if(yPosition != null) {
             return Double.parseDouble(yPosition.yPositiontoString());
@@ -797,8 +797,5 @@ class MecanumBot {
             return 0.46;
         }
     }
-
-
-
 }
 
