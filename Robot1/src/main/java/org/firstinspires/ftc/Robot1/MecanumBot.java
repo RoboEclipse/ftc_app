@@ -488,21 +488,21 @@ class MecanumBot {
     }
     // This is a possible new set of code for the MecanumBot. The method will create allow the robot
     // to run on encoders and it will use distance sensors to produce an accurate position.
-    public void testFunction(double distance )
+    public void testFunction(double distance, double margin)
     {
-        double tolerance =2;
-        double desired = 21;
+        double tolerance = margin;
+        double desired = distance;
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
 
         while (Math.abs(rangesensor.getDistance(DistanceUnit.CM)- desired) > tolerance)
         {
             if(distance > desired)
             {
-                encoderStrafeDrive(10000000, 0.5, "left");
+                encoderStrafeDrive(10000000, 0.5, "right");
             }
             if(distance <= desired)
             {
-                encoderStrafeDrive(10000000, 0.5, "right");
+                encoderStrafeDrive(10000000, 0.5, "left");
             }
         }
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
