@@ -441,11 +441,13 @@ class MecanumBot {
         setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         setPower(power, lf, lr, rf, rr);
         slowedDown = false;
+
         while (driveMotorsBusy()) {
             telemetry.addData("encoderPosition", getEncoderPosition());
             telemetry.addData("gyroPosition", getAngle());
             telemetry.update();
         }
+
     }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
@@ -492,21 +494,38 @@ class MecanumBot {
     {
         double tolerance = margin;
         double desired = distance;
-        setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
 
-        while (Math.abs(rangesensor.getDistance(DistanceUnit.CM)- desired) > tolerance)
+        if(rangesensor.cmUltrasonic() > desired)
         {
-            if(distance > desired)
-            {
-                encoderStrafeDrive(10000000, 0.5, "right");
-            }
-            if(distance <= desired)
-            {
-                encoderStrafeDrive(10000000, 0.5, "left");
+            setPower(0.0, lf, lr, rf, rr);
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            setTargetPosition(1000000, lf);
+            setTargetPosition(-1000000, rf);
+            setTargetPosition(-1000000, lr);
+            setTargetPosition(1000000, rr);
+            setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            setPower(0.1, lf, lr, rf, rr);
+            //encoderStrafeDrive(10000000, 0.1, "right");
+        }
+        if(rangesensor.cmUltrasonic() <= desired)
+        {
+            setPower(0.0, lf, lr, rf, rr);
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            setTargetPosition(-1000000, lf);
+            setTargetPosition(1000000, rf);
+            setTargetPosition(1000000, lr);
+            setTargetPosition(-1000000, rr);
+            setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            setPower(0.1, lf, lr, rf, rr);
+            //encoderStrafeDrive(10000000, 0.1, "left");
+        }
+        while(driveMotorsBusy()){
+            if(Math.abs(rangesensor.cmUltrasonic()- desired) < tolerance){
+                setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                br8kMotors();
+                break;
             }
         }
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        br8kMotors();
     }
     // All motors start out at ENCODER_DRIVE_POWER power. Once we get one revolution
     // in, go ahead and speed up. When we get within a revolution of the end of our

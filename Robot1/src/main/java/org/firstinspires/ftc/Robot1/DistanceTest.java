@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="RangeSensorTest", group="Linear Opmode")
+@Autonomous(name="RangeSensorTest", group="Linear Opmode")
 //@Disabled
 public class DistanceTest extends LinearOpMode {
 
@@ -59,9 +60,11 @@ public class DistanceTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        MecanumBot mecanumBot = new MecanumBot();
+        mecanumBot.initAutoMecanumBot(hardwareMap,telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        mecanumBot.readRangeSensor();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -69,8 +72,8 @@ public class DistanceTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            MecanumBot mecanumBot = new MecanumBot();
-            mecanumBot.testFunction(21,2);
+
+            mecanumBot.testFunction(21,5);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
