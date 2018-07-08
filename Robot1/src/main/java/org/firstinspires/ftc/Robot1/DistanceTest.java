@@ -72,13 +72,15 @@ public class DistanceTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            if(mecanumBot.ultrasonicRange()<40 || mecanumBot.ultrasonicRange()>60){
+                mecanumBot.testFunction(50,5);
+            }
 
-            mecanumBot.testFunction(50,5);
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
-            break;
         }
     }
 }
