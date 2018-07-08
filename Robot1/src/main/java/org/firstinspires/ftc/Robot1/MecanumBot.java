@@ -504,12 +504,12 @@ class MecanumBot {
             setTargetPosition(-1000000, lr);
             setTargetPosition(1000000, rr);
             setMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
-            setPower(0.1, lf, lr, rf, rr);
+            setPower(0.5, lf, lr, rf, rr);
             //encoderStrafeDrive(10000000, 0.1, "right");
         }
         if(rangesensor.cmUltrasonic() <= desired)
         {
-            setPower(0.0, lf, lr, rf, rr);
+            setPower(0.5, lf, lr, rf, rr);
             setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             setTargetPosition(-1000000, lf);
             setTargetPosition(1000000, rf);

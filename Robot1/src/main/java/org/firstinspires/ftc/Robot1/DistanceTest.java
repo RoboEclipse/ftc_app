@@ -73,11 +73,12 @@ public class DistanceTest extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            mecanumBot.testFunction(21,5);
+            mecanumBot.testFunction(50,5);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
+            break;
         }
     }
 }
