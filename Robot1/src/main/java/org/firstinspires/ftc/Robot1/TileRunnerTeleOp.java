@@ -105,10 +105,17 @@ public class TileRunnerTeleOp extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
         double rightPower;
+        double power;
+        double turn;
 
-        leftPower  = -gamepad1.left_stick_y ;
-        rightPower = -gamepad1.right_stick_y ;
+        power = gamepad1.left_stick_y;
+        turn = gamepad1.right_stick_x;
 
+        //leftPower  = -gamepad1.left_stick_y ;
+        //rightPower = -gamepad1.right_stick_y ;
+
+        leftPower = Range.clip(power+turn, -1, 1);
+        rightPower = Range.clip(power-turn, -1,1);
         // Send calculated power to wheels
         frontLeftDrive.setPower(leftPower);
         backLeftDrive.setPower(leftPower);
