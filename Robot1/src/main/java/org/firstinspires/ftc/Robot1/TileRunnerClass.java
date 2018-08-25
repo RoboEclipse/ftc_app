@@ -47,5 +47,9 @@ public class TileRunnerClass {
 
         }
         smartSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backLeftDrive);
+        frontLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        backRightDrive.setPower(0);
     }
 }
