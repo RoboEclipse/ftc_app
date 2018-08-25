@@ -72,8 +72,8 @@ public class DistanceTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if(mecanumBot.ultrasonicRange()<40 || mecanumBot.ultrasonicRange()>60){
-                mecanumBot.testFunction(50,5);
+            if(mecanumBot.ultrasonicRange()<34 || mecanumBot.ultrasonicRange()>46){
+                mecanumBot.testFunction(40,5);
             }
 
 
