@@ -51,9 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TileRunnerTeleOp", group="Iterative Opmode")
+@TeleOp(name="TileRunnerTeleOp2", group="Iterative Opmode")
 //@Disabled
-public class TileRunnerTeleOp extends OpMode
+public class TileRunnerTeleOp2 extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -67,7 +67,10 @@ public class TileRunnerTeleOp extends OpMode
         telemetry.addData("Status", "Initialized");
         TileRunnerClass tileRunnerClass = new TileRunnerClass();
         tileRunnerClass.init(hardwareMap);
-
+        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
+        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -113,7 +116,12 @@ public class TileRunnerTeleOp extends OpMode
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("encoderPositionFrontLeft", frontLeftDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionFrontRight", frontRightDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionBackLeft", backLeftDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionBackRight", backRightDrive.getCurrentPosition());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.update();
     }
 
     /*

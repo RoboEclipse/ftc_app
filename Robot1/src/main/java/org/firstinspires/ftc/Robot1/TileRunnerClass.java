@@ -18,13 +18,13 @@ public class TileRunnerClass {
 
     public void init (HardwareMap hardwareMap){
         //Assigning motors in the program to motors on the robot
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        frontLeftDrive  = hardwareMap.dcMotor.get("front_left_drive");
+        frontRightDrive = hardwareMap.dcMotor.get("front_right_drive");
+        backLeftDrive = hardwareMap.dcMotor.get("back_left_drive");
+        backRightDrive = hardwareMap.dcMotor.get("back_right_drive");
         //Preparing encoders for use
-        smartSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backLeftDrive);
-        smartSetMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backLeftDrive);
+        smartSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backRightDrive);
+        smartSetMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backRightDrive);
         frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,7 +36,7 @@ public class TileRunnerClass {
     }
 
     public void encoderDrive(int leftTicks, int rightTicks, int power){
-        smartSetMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backLeftDrive);
+        smartSetMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backRightDrive);
         smartSetTargetPosition(leftTicks, frontLeftDrive, backLeftDrive);
         smartSetTargetPosition(rightTicks,frontRightDrive,backRightDrive);
         frontLeftDrive.setPower(power);
@@ -46,7 +46,7 @@ public class TileRunnerClass {
         while(frontRightDrive.isBusy() && frontLeftDrive.isBusy() && backRightDrive.isBusy() && backLeftDrive.isBusy()){
 
         }
-        smartSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backLeftDrive);
+        smartSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive,frontRightDrive,backLeftDrive,backRightDrive);
         frontLeftDrive.setPower(0);
         frontRightDrive.setPower(0);
         backLeftDrive.setPower(0);
