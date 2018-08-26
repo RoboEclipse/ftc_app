@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -58,6 +56,7 @@ public class TileRunnerTeleOp2 extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
+    private TileRunnerClass myRobot = new TileRunnerClass();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -65,12 +64,13 @@ public class TileRunnerTeleOp2 extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        TileRunnerClass tileRunnerClass = new TileRunnerClass();
-        tileRunnerClass.init(hardwareMap);
+        myRobot.init(hardwareMap);
+        /*
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
         backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        */
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -103,23 +103,20 @@ public class TileRunnerTeleOp2 extends OpMode
         power = gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
 
-        //leftPower  = -gamepad1.left_stick_y ;
-        //rightPower = -gamepad1.right_stick_y ;
+        //leftPower  = -gamepad1.left_stick_y;
+        //rightPower = -gamepad1.right_stick_y;
 
         leftPower = Range.clip(power+turn, -1, 1);
         rightPower = Range.clip(power-turn, -1,1);
         // Send calculated power to wheels
-        frontLeftDrive.setPower(leftPower);
-        backLeftDrive.setPower(leftPower);
-        frontRightDrive.setPower(rightPower);
-        backRightDrive.setPower(rightPower);
+        myRobot.drive(leftPower, rightPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("encoderPositionFrontLeft", frontLeftDrive.getCurrentPosition());
-        telemetry.addData("encoderPositionFrontRight", frontRightDrive.getCurrentPosition());
-        telemetry.addData("encoderPositionBackLeft", backLeftDrive.getCurrentPosition());
-        telemetry.addData("encoderPositionBackRight", backRightDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionFrontLeft", myRobot.frontLeftDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionFrontRight", myRobot.frontRightDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionBackLeft", myRobot.backLeftDrive.getCurrentPosition());
+        telemetry.addData("encoderPositionBackRight", myRobot.backRightDrive.getCurrentPosition());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         telemetry.update();
     }
