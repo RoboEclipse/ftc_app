@@ -1,0 +1,126 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package org.firstinspires.ftc.Robot3.RelicRecoveryArchive;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous(name="FarBlueAutonomous", group="Linear Opmode")
+//@Disabled
+public class FarBlueJewelAutonomous2 extends LinearOpMode {
+    private static final double TICKS_PER_INCH = 1120 / (Math.PI * 4.0);
+    double speed = 0.5; //limit is cool and good
+    double close = 25; //Determines when the robot begins slowing down
+    double enough = 2; //Determines margin of error
+    double minflickerPosition = 0.5;//Retracted flicker
+    int inches = 11;
+
+
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    MecanumBot mecanumBot = new MecanumBot();
+    @Override
+    public void runOpMode() {
+        mecanumBot.initAutoMecanumBot(hardwareMap, telemetry);
+        mecanumBot.readRangeSensor();
+        waitForStart();
+        while (opModeIsActive()){
+
+            //Getting the motors and servos in the right place
+            mecanumBot.flick(minflickerPosition);
+            mecanumBot.controlBottonClaws(mecanumBot.SidebarsClosed);
+            mecanumBot.controlTopClaws(0.5);
+
+            //Knock off the jewel and return the arms
+            mecanumBot.knockoffjewel(1.0,0.0,minflickerPosition);
+            //Determine Pattern and change drive distance
+            if(mecanumBot.DetectPattern().equals("Left")){
+                inches-=7.5;
+            }
+            else if(mecanumBot.DetectPattern().equals("Right")){
+                inches+=7.5;
+            }
+
+
+            //Raise arm
+            mecanumBot.EncoderArm(mecanumBot.VerticalSlideRaised,-0.6);
+
+            //Drive backwards
+            mecanumBot.encoderTankDrive((int)(-21*TICKS_PER_INCH), (int)(-21*TICKS_PER_INCH), 0.5);
+            //Orang see number 8 ROTATE
+            mecanumBot.encoderTurn(90,25, 4, 0.5);
+            //Drive forward
+            mecanumBot.encoderTankDrive((int)(TICKS_PER_INCH*inches),(int)(TICKS_PER_INCH*inches),0.5);
+            //Orang see number 8 ROTATE
+            mecanumBot.encoderTurn(180,25, 4, 0.5);
+            //Drive glyph into box
+            mecanumBot.disableDriveEncoders();
+            mecanumBot.tankDrive(0.25,0.25);
+            sleep(1500);
+            mecanumBot.tankDrive(0,0);
+            mecanumBot.controlBottonClaws(mecanumBot.SidebarsOpened);
+            mecanumBot.controlTopClaws(0.6);
+
+
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+            telemetry.update();
+            //Back Up
+            mecanumBot.encoderTankDrive((int)TICKS_PER_INCH*-5,(int)TICKS_PER_INCH*-5, -speed);
+            mecanumBot.br8kMotors();
+            //Turn Around
+            mecanumBot.encoderTurn(0,close,enough,speed);
+            break;
+        }
+
+
+    }
+    //region OldEncoderMethod
+    /*
+    private void EncoderTurn() {
+        while (mecanumBot.driveMotorsBusy()) {
+            telemetry.addData("encoderPosition", mecanumBot.getEncoderPosition());
+            telemetry.addData("gyroPosition", mecanumBot.getAngle());
+
+            if(mecanumBot.getAngle() < -90 + close && mecanumBot.getAngle() > -90-close) {
+                speed = 0.1;
+                mecanumBot.tankDrive(speed, speed);
+                if (mecanumBot.getAngle() < -90 + enough && mecanumBot.getAngle() > -90 - enough) {
+                    telemetry.update();
+                    break;
+                }
+            }
+            telemetry.update();
+        }
+    }
+    */
+    //endregion
+}
