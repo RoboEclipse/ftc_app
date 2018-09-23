@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="FTC11138:TeleOp", group="Test Sensors")
-
+@Disabled
 public class TestTeleOp extends OpMode {
 
     MecanumBot myRobot = new MecanumBot();

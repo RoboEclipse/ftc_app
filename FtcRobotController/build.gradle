@@ -2,29 +2,30 @@
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
-
 android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 19
+        targetSdkVersion 27
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 27
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 repositories {
 
-        google()
-        jcenter()
+    google()
+    jcenter()
     flatDir {
         dirs '../libs'
     }
 }
-
 apply from: 'build.release.gradle'
+
+dependencies {
+    implementation project(':openCVLibrary343')
+}

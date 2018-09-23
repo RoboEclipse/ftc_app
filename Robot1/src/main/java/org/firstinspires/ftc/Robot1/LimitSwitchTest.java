@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="LimitSwitchTest", group="Linear Opmode")
-//@Disabled
+@Disabled
 public class LimitSwitchTest extends LinearOpMode {
 
     // Declare OpMode members.

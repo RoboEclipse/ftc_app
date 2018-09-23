@@ -256,7 +256,7 @@ class MecanumBot {
         return new Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
     }
     public void drive(double direction, double velocity, double rotationVelocity) {
-         Wheels w = getWheels(direction, velocity, rotationVelocity);
+        Wheels w = getWheels(direction, velocity, rotationVelocity);
         lf.setPower(w.lf);
         rf.setPower(w.rf);
         lr.setPower(w.lr);
