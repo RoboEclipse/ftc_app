@@ -3,3 +3,6 @@ include ':Robot1'
 include ':Robot2'
 include ':Robot3'
 include ':openCVLibrary343'
+include ':openCVLibrary3'
+include ':endercv'
+
