@@ -2,6 +2,7 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    private DcMotor lf, lr, rf, rr;
+    private DcMotor lf, lr, rf, rr, leadScrew;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
     private BNO055IMU imu;
@@ -22,8 +23,31 @@ public class RoverRuckusClass {
         lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
-    }
+        leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rr.setDirection(DcMotor.Direction.REVERSE);
+        rf.setDirection(DcMotor.Direction.REVERSE);
 
+    }
+    public void tankDrive(double leftPower, double rightPower){
+        lf.setPower(leftPower);
+        lr.setPower(leftPower);
+        rr.setPower(rightPower);
+        rf.setPower(rightPower);
+    }
+    public void leadScrewDrive(double power){
+        leadScrew.setPower(power);
+    }
+    public void singleDrive(double power, DcMotor motor){
+        motor.setPower(power);
+    }
+    public void readEncoders(){
+        telemetry.addData("Encoders", "lf: " + lf.getCurrentPosition() + " lr: " + lr.getCurrentPosition() + " rf: " +rf.getCurrentPosition() + " rr: "+ rr.getCurrentPosition());
+    }
+    //public void
 
 
 
@@ -37,6 +61,7 @@ public class RoverRuckusClass {
         rr.setPower(w.rr);
         telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
     }
+
     private static class Wheels {
         public double lf, lr, rf, rr;
 

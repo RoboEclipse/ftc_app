@@ -47,7 +47,7 @@ import java.util.Locale;
  * Additionally, the centers of the bounding rectangles of the contours are sent to telemetry.
  */
 @TeleOp(name="Example: Blue Vision Demo")
-@Disabled
+//@Disabled
 public class ExampleBlueVisionDemo extends OpMode {
     private ExampleBlueVision blueVision;
     @Override
