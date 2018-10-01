@@ -98,8 +98,18 @@ public class RoverRuckusTeleOp extends OpMode
         v_theta = Math.sqrt(lx * lx + ly * ly);
         v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  v_theta, -v_rotation); //move robot
+        myRobot.drive(theta,  0.5*v_theta, -v_rotation); //move robot
 
+        //Lead Screw Controls
+        if(gamepad1.dpad_up){
+            myRobot.leadScrewDrive(1);
+        }
+        else if(gamepad1.dpad_down){
+            myRobot.leadScrewDrive(-1);
+        }
+        else{
+            myRobot.leadScrewDrive(0);
+        }
         /*
         double leftPower = gamepad1.left_stick_y;
         double rightPower =gamepad1.right_stick_y;

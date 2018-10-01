@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
 
@@ -14,6 +18,8 @@ public class RoverRuckusClass {
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
     private BNO055IMU imu;
+    private Orientation angles;
+    public static final int ENCODERS_CLOSE_ENOUGH = 10;
 
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
@@ -24,10 +30,7 @@ public class RoverRuckusClass {
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         rr.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.REVERSE);
 
@@ -47,7 +50,80 @@ public class RoverRuckusClass {
     public void readEncoders(){
         telemetry.addData("Encoders", "lf: " + lf.getCurrentPosition() + " lr: " + lr.getCurrentPosition() + " rf: " +rf.getCurrentPosition() + " rr: "+ rr.getCurrentPosition());
     }
-    //public void
+
+    //Encoder stuff
+    public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(leftTicks);
+        rf.setTargetPosition(rightTicks);
+        lr.setTargetPosition(leftTicks);
+        rr.setTargetPosition(rightTicks);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy()) {
+            readEncoders();
+            telemetry.addData("gyroPosition", getAngle());
+            telemetry.update();
+        }
+    }
+    public void encoderStrafeDrive(int ticks, double power, String direction) {
+        int multiplier = 1;
+        if (direction.equals("left")){
+            multiplier = -1;
+        }
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(multiplier*ticks);
+        rf.setTargetPosition(-multiplier*ticks);
+        lr.setTargetPosition(-multiplier*ticks);
+        rr.setTargetPosition(multiplier*ticks);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy()) {
+            readEncoders();
+            telemetry.addData("gyroPosition", getAngle());
+            telemetry.update();
+        }
+    }
+
+    //Sensor Stuff
+    public double getAngle () {
+        double angleX;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angleX = angles.firstAngle;  //ToDo: assume the 3rd angle is the Robot front dir
+        //convert the angle to be within the +/-180 degree rangeection
+        if (angleX > 180)  angleX -= 360;
+        if (angleX <= -180) angleX += 360;
+        return (angleX);
+    }
+
+    //Space savers
+    private void multiSetMode (DcMotor.RunMode mode, DcMotor... ms){
+        for(DcMotor m : ms){
+            m.setMode(mode);
+        }
+    }
+    private void multiSetPower (double power, DcMotor...motors){
+        for(DcMotor m : motors){
+            m.setPower(power);
+        }
+    }
+    private boolean anyBusy(){
+        return busy(lf, lr, rf, rr);
+    }
+    private boolean busy(DcMotor... ms) {
+        int total = 0;
+        for (DcMotor m : ms) {
+            if (m.isBusy()) {
+                final int c = Math.abs(m.getCurrentPosition());
+                final int t = Math.abs(m.getTargetPosition());
+                total += Math.max(0, t - c);
+            }
+        }
+        return total > ENCODERS_CLOSE_ENOUGH;
+    }
+
 
 
 

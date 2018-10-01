@@ -37,10 +37,11 @@ public class DetectGoldMineral extends OpenCVPipeline {
         // is the blues listed in the specified range of values
         // you can use a program like WPILib GRIP to find these values, or just play around.
         Core.inRange(hsv, new Scalar(11.3, 137.6, 135.3), new Scalar(25.5, 242.1, 255.0), thresholded);
+        //Core.inRange(hsv, new Scalar(0, 0, 0), new Scalar(255, 255, 255), thresholded);
 
         // we blur the thresholded image to remove noise
         // there are other types of blur like box blur or gaussian which can be explored.
-        Imgproc.blur(thresholded, thresholded, new Size(3, 3));
+        Imgproc.blur(thresholded, thresholded, new Size(25, 25));
 
         // create a list to hold our contours.
         // Conceptually, there is going to be a single contour for the outline of every blue object

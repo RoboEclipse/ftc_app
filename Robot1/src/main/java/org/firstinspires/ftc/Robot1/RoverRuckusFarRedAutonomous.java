@@ -37,6 +37,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.List;
+import java.util.Locale;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -57,11 +65,19 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
 
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    DetectGoldMineral goldVision;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        RoverRuckusClass myRobot = new RoverRuckusClass();
+        goldVision = new DetectGoldMineral();
+        // can replace with ActivityViewDisplay.getInstance() for fullscreen
+        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        goldVision.setShowCountours(true);
+        // start the vision system
+        goldVision.enable();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -69,13 +85,44 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            //Initialize
+            myRobot.initialize(hardwareMap, telemetry);
             //Lower the robot onto the field 5 seconds
-            //Launch the marker 2 seconds
+            myRobot.leadScrewDrive(-1);
+            sleep(3000);
+            myRobot.leadScrewDrive(0);
+            //Move sideways to detach from the hook
+            myRobot.encoderStrafeDrive(200, 0.1, "right");
+            myRobot.encoderStrafeDrive(200, 0.1, "left");
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
+            // get a list of contours from the vision system
+            List<MatOfPoint> contours = goldVision.getContours();
+            for (int i = 0; i < contours.size(); i++) {
+                // get the bounding rectangle of a single contour, we use it to get the x/y center
+                // yes there's a mass center using Imgproc.moments but w/e
+                Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+                telemetry.addData("contour" + Integer.toString(i),
+                        String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
+            }
+            //Size of rectangle: (240,320)
+            if(contours.isEmpty()){
+                telemetry.addData("Position", "Right");
+            }
+            else{
+                Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
+                if((presumedParticle.y+presumedParticle.height)/2>=160){
+                    telemetry.addData("Position", "Center");
+                }
+                else{
+                    telemetry.addData("Position", "Left");
+                }
+            }
+
+
             //Drive sideways to line up with the gold particle 5 seconds
             //Drive forward to knock off the gold particle 2 seconds
-            //Back up 2 seconds
+            //Move to get inside the depot zone 2 seconds
             //Move sideways until the touch sensor detects the wall 5 seconds
             //Back up a centimeter or two from the wall 2 seconds
             //Drive into the crater 5 seconds
