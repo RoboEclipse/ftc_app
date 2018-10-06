@@ -33,6 +33,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         rr.setDirection(DcMotor.Direction.REVERSE);
         rf.setDirection(DcMotor.Direction.REVERSE);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
     public void tankDrive(double leftPower, double rightPower){

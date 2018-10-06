@@ -30,12 +30,8 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
@@ -61,7 +57,7 @@ import java.util.Locale;
 
 @Autonomous(name="FarRedAutonomous", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusFarRedAutonomous extends LinearOpMode {
+public class RoverRuckusCloseRedAutonomous extends LinearOpMode {
 
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -124,24 +120,11 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             }
 
 
+
             //Drive sideways to line up with the gold particle 5 seconds
-            if(position = "Left"){
-                myRobot.encoderStrafeDrive(1000, 0.5, "Left");
-            }
-            if(position = "Right"){
-                myRobot.encoderStrafeDrive(1000,0.5,"Right");
-            }
+
             //Drive forward to knock off the gold particle 2 seconds
-            myRobot.encoderTankDrive(1000,1000,0.5);
-            if(position = "Left"){
-                myRobot.encoderStrafeDrive(1000, 0.5, "Right");
-            }
-            if(position = "Right"){
-                myRobot.encoderStrafeDrive(1000,0.5,"Left");
-            }
             //Move to get inside the depot zone 2 seconds
-            myRobot.encoderTankDrive(100,100,0.5);
-            //TODO: Drop the thing
             //Move sideways until the touch sensor detects the wall 5 seconds
             //Back up a centimeter or two from the wall 2 seconds
             //Drive into the crater 5 seconds
