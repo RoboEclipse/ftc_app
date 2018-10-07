@@ -31,8 +31,13 @@ public class RoverRuckusClass {
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
-        rr.setDirection(DcMotor.Direction.REVERSE);
-        rf.setDirection(DcMotor.Direction.REVERSE);
+        lr.setDirection(DcMotor.Direction.REVERSE);
+        lf.setDirection(DcMotor.Direction.REVERSE);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
     }
     public void tankDrive(double leftPower, double rightPower){

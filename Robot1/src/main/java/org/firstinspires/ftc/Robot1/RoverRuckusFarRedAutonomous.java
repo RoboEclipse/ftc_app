@@ -92,8 +92,9 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             sleep(3000);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
-            myRobot.encoderStrafeDrive(200, 0.1, "right");
-            myRobot.encoderStrafeDrive(200, 0.1, "left");
+            myRobot.encoderStrafeDrive(200, 0.5, "left");
+            myRobot.encoderTankDrive(200,200, 0.5);
+            myRobot.encoderStrafeDrive(200, 0.5, "right");
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
@@ -107,7 +108,7 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             }
             //Size of rectangle: (240,320)
             if(contours.isEmpty()){
-                telemetry.addData("Position", "Right");
+                telemetry.addData("Position", "Left");
             }
             else{
                 Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
@@ -115,9 +116,10 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
                     telemetry.addData("Position", "Center");
                 }
                 else{
-                    telemetry.addData("Position", "Left");
+                    telemetry.addData("Position", "Right");
                 }
             }
+            goldVision.disable();
 
 
             //Drive sideways to line up with the gold particle 5 seconds
