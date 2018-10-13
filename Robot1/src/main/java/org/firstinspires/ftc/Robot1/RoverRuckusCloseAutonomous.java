@@ -30,14 +30,19 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,13 +60,12 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedAutonomous", group="Linear Opmode")
+@Autonomous(name="CloseRedAutonomous", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusCloseRedAutonomous extends LinearOpMode {
+public class RoverRuckusCloseAutonomous extends LinearOpMode {
 
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    String position = "";
     DetectGoldMineral goldVision;
 
     @Override
@@ -72,7 +76,6 @@ public class RoverRuckusCloseRedAutonomous extends LinearOpMode {
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        goldVision.setShowCountours(true);
         // start the vision system
         goldVision.enable();
 
@@ -83,56 +86,92 @@ public class RoverRuckusCloseRedAutonomous extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             //Initialize
+
             myRobot.initialize(hardwareMap, telemetry);
+            /*
             //Lower the robot onto the field 5 seconds
             myRobot.leadScrewDrive(-1);
             sleep(3000);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
-            myRobot.encoderStrafeDrive(200, 0.1, "right");
-            myRobot.encoderStrafeDrive(200, 0.1, "left");
+            myRobot.encoderStrafeDrive(200, 0.5, "left");
+            myRobot.encoderTankDrive(200,200, 0.5);
+            myRobot.encoderStrafeDrive(200, 0.5, "right");
+            */
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
             List<MatOfPoint> contours = goldVision.getContours();
+            List<Rect> readContours;
+            readContours = new ArrayList<Rect>();
             for (int i = 0; i < contours.size(); i++) {
                 // get the bounding rectangle of a single contour, we use it to get the x/y center
                 // yes there's a mass center using Imgproc.moments but w/e
                 Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+                if((boundingRect.y + boundingRect.width)/2>=200){
+                    readContours.add(boundingRect);
+                }
+            }
+            for(int i = 0; i<readContours.size();i++){
+                // get the bounding rectangle of a single contour, we use it to get the x/y center
+                // yes there's a mass center using Imgproc.moments but w/e
+                Rect boundingRect = readContours.get(i);
                 telemetry.addData("contour" + Integer.toString(i),
                         String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
             }
+            String position = "Left";
             //Size of rectangle: (240,320)
-            if(contours.isEmpty()){
-                position = "Right";
+            if(readContours.isEmpty()){
                 telemetry.addData("Position", position);
             }
             else{
-                Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
-                if((presumedParticle.y+presumedParticle.height)/2>=160){
-                    position = "Center";
+                Rect presumedParticle = readContours.get(0);
+                if((presumedParticle.x+presumedParticle.width)/2>=180){
+                    position = "Right";
                     telemetry.addData("Position", position);
                 }
                 else{
-                    position = "Left";
+                    position = "Center";
                     telemetry.addData("Position", position);
                 }
             }
-
-
+            telemetry.update();
+            goldVision.disable();
+            /*
 
             //Drive sideways to line up with the gold particle 5 seconds
+            myRobot.encoderTankDrive(400,400,0.3);
+            if(position == "Left"){
+                myRobot.encoderStrafeDrive(300, 0.3, "Left");
+            }
+            if(position == "Right"){
+                myRobot.encoderStrafeDrive(300,0.3,"Right");
+            }
 
             //Drive forward to knock off the gold particle 2 seconds
+            myRobot.encoderTankDrive(300,300,0.3);
+            sleep(100);
+            myRobot.encoderTankDrive(-200, -200, 0.3);
+            sleep(100);
+
             //Move to get inside the depot zone 2 seconds
+            myRobot.encoderTurn(180,60,10,0.2);
             //Move sideways until the touch sensor detects the wall 5 seconds
+            /*
+            myRobot.allDrive(0.3,-0.3, -0.3,0.3);
+            sleep(1000);
+            myRobot.allDrive(0.1,-0.1, -0.1,0.1);
+            sleep(1000);
+            myRobot.encoderStrafeDrive(300,0.5,"right");
+            */
             //Back up a centimeter or two from the wall 2 seconds
             //Drive into the crater 5 seconds
 
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.update();
+            //break;
         }
     }
 }

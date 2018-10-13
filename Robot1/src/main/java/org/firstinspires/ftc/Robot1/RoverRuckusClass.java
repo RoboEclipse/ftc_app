@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -10,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
@@ -19,6 +23,7 @@ public class RoverRuckusClass {
     private HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
+    private DigitalChannel touchSensor;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
 
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
@@ -29,6 +34,8 @@ public class RoverRuckusClass {
         lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
+        imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
+        //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
@@ -39,6 +46,23 @@ public class RoverRuckusClass {
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
+        BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
+        imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        imuSettings.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuSettings.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        imuSettings.loggingEnabled      = true;
+        imuSettings.loggingTag          = "IMU";
+        imuSettings.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(imuSettings);
+        imu.startAccelerationIntegration(
+                new Position(),
+                new Velocity(),
+                1000);
+
+        imuSettings.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu.initialize(imuSettings);
+
     }
     public void tankDrive(double leftPower, double rightPower){
         lf.setPower(leftPower);
@@ -46,17 +70,31 @@ public class RoverRuckusClass {
         rr.setPower(rightPower);
         rf.setPower(rightPower);
     }
+    public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
+        lf.setPower(lfPower);
+        lr.setPower(lrPower);
+        rf.setPower(rfPower);
+        rr.setPower(rrPower);
+    }
+
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
     }
     public void singleDrive(double power, DcMotor motor){
         motor.setPower(power);
     }
+    public void strafeDrive(double power){
+        lf.setPower(power);
+        lr.setPower(-power);
+        rf.setPower(-power);
+        rr.setPower(power);
+    }
+
+
+    //Encoder stuff
     public void readEncoders(){
         telemetry.addData("Encoders", "lf: " + lf.getCurrentPosition() + " lr: " + lr.getCurrentPosition() + " rf: " +rf.getCurrentPosition() + " rr: "+ rr.getCurrentPosition());
     }
-
-    //Encoder stuff
     public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -68,7 +106,7 @@ public class RoverRuckusClass {
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
             readEncoders();
-            telemetry.addData("gyroPosition", getAngle());
+            telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
         }
     }
@@ -87,16 +125,83 @@ public class RoverRuckusClass {
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
             readEncoders();
-            telemetry.addData("gyroPosition", getAngle());
+            telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
+        }
+    }
+    public void encoderTurn(double degrees, double close, double enuff, double speed){
+        //Note: These first two parts are just encoderTankDrive.
+
+        if(degrees>0){
+            multiSetPower(0.0, lf, lr, rf, rr);
+            multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            lf.setTargetPosition(-10000000);
+            rf.setTargetPosition(1000000);
+            lr.setTargetPosition(-1000000);
+            rr.setTargetPosition(1000000);
+            multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            multiSetPower(speed, lf, lr, rf, rr);
+        }
+        if(degrees<=0){
+            multiSetPower(0.0, lf, lr, rf, rr);
+            multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+            lf.setTargetPosition(1000000);
+            rf.setTargetPosition(-1000000);
+            lr.setTargetPosition(1000000);
+            rr.setTargetPosition(-1000000);
+            multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+            multiSetPower(speed, lf, lr, rf, rr);
+        }
+        //This part needs to be different though
+        while (anyBusy()) {
+            telemetry.addData("encoderPosition", getEncoderPosition());
+            telemetry.addData("gyroPosition", getHorizontalAngle());
+
+            if(getHorizontalAngle()<degrees+close && getHorizontalAngle()>degrees-close) {
+                tankDrive(0.1, 0.1);
+                if (getHorizontalAngle() < degrees + enuff && getHorizontalAngle() > degrees - enuff) {
+                    telemetry.update();
+                    br8kMotors();
+                    multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+                    break;
+                }
+            }
+            telemetry.update();
+        }
+    }
+    public void driveUntilCrater(double speed){
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(10000000);
+        lr.setTargetPosition(10000000);
+        rf.setTargetPosition(10000000);
+        rr.setTargetPosition(10000000);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(speed, lf, lr, rf, rr);
+        while(anyBusy()){
+            if(getVerticalAngle()>3){
+                telemetry.update();
+                br8kMotors();
+                multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+                break;
+            }
         }
     }
 
     //Sensor Stuff
-    public double getAngle () {
+    public double getHorizontalAngle () {
         double angleX;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         angleX = angles.firstAngle;  //ToDo: assume the 3rd angle is the Robot front dir
+        //convert the angle to be within the +/-180 degree rangeection
+        if (angleX > 180)  angleX -= 360;
+        if (angleX <= -180) angleX += 360;
+        return (angleX);
+    }
+    public double getVerticalAngle(){
+        double angleX;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angleX = angles.secondAngle;  //ToDo: assume the 3rd angle is the Robot front dir
         //convert the angle to be within the +/-180 degree rangeection
         if (angleX > 180)  angleX -= 360;
         if (angleX <= -180) angleX += 360;
@@ -127,6 +232,25 @@ public class RoverRuckusClass {
             }
         }
         return total > ENCODERS_CLOSE_ENOUGH;
+    }
+    public void br8kMotors(){
+        lf.setPower(0);
+        lr.setPower(0);
+        rf.setPower(0);
+        rr.setPower(0);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public String getEncoderPosition()
+    {
+        return String.format("lf: %d,rf: %d, lr:%d, rr:%d",
+                lf.getCurrentPosition(),
+                rf.getCurrentPosition(),
+                lr.getCurrentPosition(),
+                rr.getCurrentPosition()
+                );
     }
 
 

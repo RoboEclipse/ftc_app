@@ -52,7 +52,6 @@ class MecanumBot {
     ButtonPositions buttonPositions = new ButtonPositions();
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
-
         InitializeQuick(hardwareMap, _telemetry);
     }
 
