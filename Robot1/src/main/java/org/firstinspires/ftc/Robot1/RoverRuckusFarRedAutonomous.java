@@ -113,13 +113,13 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             }
             else{
                 Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
-                if((presumedParticle.y+presumedParticle.height)/2>=200){
-                    position = "Center";
+                if((presumedParticle.x+presumedParticle.width)/2>=200){
+                    position = "Right";
                     telemetry.addData("Position", position);
                     telemetry.update();
                 }
                 else{
-                    position = "Right";
+                    position = "Center";
                     telemetry.addData("Position", position);
                     telemetry.update();
                 }

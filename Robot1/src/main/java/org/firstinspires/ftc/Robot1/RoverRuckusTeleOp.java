@@ -110,11 +110,17 @@ public class RoverRuckusTeleOp extends OpMode
         else{
             myRobot.leadScrewDrive(0);
         }
+
+        //myRobot.singleDrive(-4.0, );
+        myRobot.eMotorDrive(gamepad2.left_stick_y);
+
+
         /*
         double leftPower = gamepad1.left_stick_y;
         double rightPower =gamepad1.right_stick_y;
         myRobot.tankDrive(leftPower,rightPower);
         */
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -128,6 +134,7 @@ public class RoverRuckusTeleOp extends OpMode
      */
     @Override
     public void stop() {
+
     }
 
 }

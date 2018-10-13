@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    private DcMotor lf, lr, rf, rr, leadScrew;
+    private DcMotor lf, lr, rf, rr, leadScrew, cmotor, emotor, cflip;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
     private BNO055IMU imu;
@@ -34,6 +34,9 @@ public class RoverRuckusClass {
         lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
+        cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
+        emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
+        cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
@@ -76,9 +79,22 @@ public class RoverRuckusClass {
         rf.setPower(rfPower);
         rr.setPower(rrPower);
     }
+    public void cMotorDrive(double power)
+    {
+        cmotor.setPower(power);
+    }
 
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
+    }
+    public void eMotorDrive(double power)
+    {
+        emotor.setPower(power);
+    }
+
+    public void cFlipDrive(double power)
+    {
+        cflip.setPower(power);
     }
     public void singleDrive(double power, DcMotor motor){
         motor.setPower(power);
