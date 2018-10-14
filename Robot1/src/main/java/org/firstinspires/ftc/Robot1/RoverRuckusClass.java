@@ -128,7 +128,7 @@ public class RoverRuckusClass {
     }
     public void encoderStrafeDrive(int ticks, double power, String direction) {
         int multiplier = 1;
-        if (direction.equals("left")){
+        if (direction.equals("Left")){
             multiplier = -1;
         }
         multiSetPower(0.0, lf, lr, rf, rr);

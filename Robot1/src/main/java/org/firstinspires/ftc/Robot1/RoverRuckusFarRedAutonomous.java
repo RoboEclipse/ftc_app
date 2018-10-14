@@ -126,7 +126,7 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             }
             goldVision.disable();
             telemetry.update();
-            /*
+
             sleep(100);
             //Drive sideways to line up with the gold particle 5 seconds
             myRobot.encoderTankDrive(400,400,0.3);
@@ -163,7 +163,7 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
             break;
-            */
+
         }
     }
 }

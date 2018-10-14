@@ -98,27 +98,24 @@ public class RoverRuckusCloseAutonomous extends LinearOpMode {
             myRobot.encoderTankDrive(200,200, 0.5);
             myRobot.encoderStrafeDrive(200, 0.5, "right");
             */
-            //Scan two particles and deduce where the gold one is
-            //Drive forward to get out of the way of the lander 2 seconds
-            // get a list of contours from the vision system
+            //Scan two particles
             List<MatOfPoint> contours = goldVision.getContours();
             List<Rect> readContours;
             readContours = new ArrayList<Rect>();
             for (int i = 0; i < contours.size(); i++) {
-                // get the bounding rectangle of a single contour, we use it to get the x/y center
-                // yes there's a mass center using Imgproc.moments but w/e
                 Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+                //Filter out anything above about half of the y axis
                 if((boundingRect.y + boundingRect.width)/2>=200){
                     readContours.add(boundingRect);
                 }
             }
+            //Print out filtered contours to telemetry
             for(int i = 0; i<readContours.size();i++){
-                // get the bounding rectangle of a single contour, we use it to get the x/y center
-                // yes there's a mass center using Imgproc.moments but w/e
                 Rect boundingRect = readContours.get(i);
                 telemetry.addData("contour" + Integer.toString(i),
                         String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
             }
+            //Deduce where the gold particle is
             String position = "Left";
             //Size of rectangle: (240,320)
             if(readContours.isEmpty()){
@@ -137,41 +134,51 @@ public class RoverRuckusCloseAutonomous extends LinearOpMode {
             }
             telemetry.update();
             goldVision.disable();
-            /*
 
-            //Drive sideways to line up with the gold particle 5 seconds
+
+            //Drive forward to clear the lander
             myRobot.encoderTankDrive(400,400,0.3);
+            sleep(100);
+
+            //Align to the mineral, drive forward, drive back, then align to the left particle
             if(position == "Left"){
                 myRobot.encoderStrafeDrive(300, 0.3, "Left");
+                myRobot.encoderTankDrive(500,500,0.3);
+                myRobot.encoderTankDrive(-500,-500,0.3);
             }
             if(position == "Right"){
-                myRobot.encoderStrafeDrive(300,0.3,"Right");
+                myRobot.encoderStrafeDrive(300, 0.3, "Right");
+                myRobot.encoderTankDrive(500,500,0.3);
+                myRobot.encoderTankDrive(-500,-500,0.3);
+                myRobot.encoderStrafeDrive(600,0.3,"Left");
+            }
+            if(position == "Center"){
+                myRobot.encoderTankDrive(500,500,0.3);
+                myRobot.encoderTankDrive(-500,-500,0.3);
+                myRobot.encoderStrafeDrive(300,0.3,"Left");
             }
 
-            //Drive forward to knock off the gold particle 2 seconds
-            myRobot.encoderTankDrive(300,300,0.3);
-            sleep(100);
-            myRobot.encoderTankDrive(-200, -200, 0.3);
-            sleep(100);
-
-            //Move to get inside the depot zone 2 seconds
+            //Turn around the robot so it will be able to place the marker
             myRobot.encoderTurn(180,60,10,0.2);
-            //Move sideways until the touch sensor detects the wall 5 seconds
-            /*
+
+            //Move sideways and align to the wall
             myRobot.allDrive(0.3,-0.3, -0.3,0.3);
             sleep(1000);
             myRobot.allDrive(0.1,-0.1, -0.1,0.1);
             sleep(1000);
-            myRobot.encoderStrafeDrive(300,0.5,"right");
-            */
-            //Back up a centimeter or two from the wall 2 seconds
+            //Move sideways to separate from the wall
+            myRobot.encoderStrafeDrive(300,0.5,"Left");
+            //Move forward to the depot
+            //45 inches*(1 rotation/6pi inches)*(1120 ticks/1 rotation) = 26734
+            myRobot.encoderTankDrive(2500,2500,0.3);
             //Drive into the crater 5 seconds
+            myRobot.driveUntilCrater(-0.3);
 
 
-            // Show the elapsed game time and wheel power.
-            //telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.update();
-            //break;
+            //Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+            break;
         }
     }
 }

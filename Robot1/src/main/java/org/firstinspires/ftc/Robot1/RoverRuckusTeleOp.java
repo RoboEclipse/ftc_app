@@ -110,17 +110,32 @@ public class RoverRuckusTeleOp extends OpMode
         else{
             myRobot.leadScrewDrive(0);
         }
+        myRobot.leadScrewDrive(gamepad2.right_stick_y);
 
-        //myRobot.singleDrive(-4.0, );
+        //Elevator Motor Controls
         myRobot.eMotorDrive(gamepad2.left_stick_y);
 
+        //Collector Motor Controls
+        if(gamepad2.left_bumper){
+            myRobot.cMotorDrive(1.0);
+        }
+        else if(gamepad2.right_bumper){
+            myRobot.cMotorDrive(-1.0);
+        }
+        else{
+            myRobot.cMotorDrive(0);
+        }
 
-        /*
-        double leftPower = gamepad1.left_stick_y;
-        double rightPower =gamepad1.right_stick_y;
-        myRobot.tankDrive(leftPower,rightPower);
-        */
-
+        //Collector Flipper Controls
+        if(gamepad2.a) {
+            myRobot.cFlipDrive(0.5);
+        }
+        else if(gamepad2.b){
+            myRobot.cFlipDrive(-1.0);
+        }
+        else {
+            myRobot.cFlipDrive(0);
+        }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
