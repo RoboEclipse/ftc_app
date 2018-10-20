@@ -12,6 +12,9 @@ public class RoverRuckusConfiguration {
     public static final String CollectionFlipperName = "collectionFlipperMotor";
     public static final String ExtenderMotorName = "extenderMotor";
 
+    //Servos
+    public static final String ElevatorServoName = "elevatorServo";
+
     //Sensors
     public static final String IMUNAme = "imu";
     public static final String RangeSensor = "rangeSensor";

@@ -58,6 +58,7 @@ public class RoverRuckusTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
+    double elevatorServoPosition = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -128,18 +129,28 @@ public class RoverRuckusTeleOp extends OpMode
 
         //Collector Flipper Controls
         if(gamepad2.a) {
-            myRobot.cFlipDrive(0.5);
+            myRobot.cFlipDrive(0.25);
         }
         else if(gamepad2.b){
-            myRobot.cFlipDrive(-1.0);
+            myRobot.cFlipDrive(-.5);
         }
         else {
             myRobot.cFlipDrive(0);
         }
+        //Elevator Flipper Controls
+        if(gamepad2.x && elevatorServoPosition<=1.0){
+            elevatorServoPosition += 0.03;
+        }
+        if (gamepad2.y && elevatorServoPosition>=0){
+            elevatorServoPosition -= 0.03;
+        }
+
+        myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Angle", myRobot.getHorizontalAngle());
+        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         myRobot.readEncoders();
         telemetry.update();
     }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, emotor, cflip;
+    private Servo elevatorServo;
     private Telemetry telemetry;
     private HardwareMap HardwareMap;
     private BNO055IMU imu;
@@ -34,6 +36,7 @@ public class RoverRuckusClass {
         lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
+        elevatorServo = hardwareMap.servo.get(config.ElevatorServoName);
         cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
@@ -47,6 +50,8 @@ public class RoverRuckusClass {
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
@@ -105,6 +110,9 @@ public class RoverRuckusClass {
         rf.setPower(-power);
         rr.setPower(power);
     }
+    public void elevatorServoDrive(double position){
+        elevatorServo.setPosition(position);
+    }
 
 
     //Encoder stuff
@@ -125,6 +133,7 @@ public class RoverRuckusClass {
             telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
         }
+
     }
     public void encoderStrafeDrive(int ticks, double power, String direction) {
         int multiplier = 1;

@@ -57,7 +57,7 @@ import java.util.Locale;
 
 @Autonomous(name="FarRedAutonomous", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusFarRedAutonomous extends LinearOpMode {
+public class RoverRuckusAutonomousFarRed extends LinearOpMode {
 
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -84,15 +84,18 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
         while (opModeIsActive()) {
             //Initialize
             myRobot.initialize(hardwareMap, telemetry);
-            /*
+
             //Lower the robot onto the field 5 seconds
-            myRobot.leadScrewDrive(-1);
+            myRobot.leadScrewDrive(1);
             sleep(3000);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
             myRobot.encoderStrafeDrive(200, 0.1, "right");
-            myRobot.encoderStrafeDrive(200, 0.1, "left");
-            */
+            sleep(100);
+            //Rotate to realign
+            if(Math.abs(myRobot.getHorizontalAngle())>3){
+                myRobot.encoderTurn(0,10,3,0.1);
+            }
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
@@ -126,10 +129,22 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
             }
             goldVision.disable();
             telemetry.update();
+            //Drive forward to clear the hook
+            myRobot.encoderTankDrive(200,200, 0.5);
+            sleep(100);
+            //Move sideways to realign
+            myRobot.encoderStrafeDrive(200, 0.1, "left");
+            myRobot.leadScrewDrive(-1);
+            sleep(3000);
+            myRobot.leadScrewDrive(0);
+
+
+
 
             sleep(100);
-            //Drive sideways to line up with the gold particle 5 seconds
+            //Drive forward to clear the lander
             myRobot.encoderTankDrive(400,400,0.3);
+            //Drive sideways to line up with the gold particle 5 seconds
             if(position == "Left"){
                 myRobot.encoderStrafeDrive(300, 0.3, "Left");
             }
@@ -137,12 +152,9 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
                 myRobot.encoderStrafeDrive(300,0.3,"Right");
             }
             //Drive forward to knock off the gold particle 2 seconds
-            myRobot.encoderTankDrive(300,300,0.3);
+            myRobot.encoderTankDrive(600,600,0.3);
             sleep(100);
-            myRobot.encoderTankDrive(-200, -200, 0.3);
-            sleep(100);
-            //Move to get inside the depot zone 2 seconds
-            myRobot.encoderTurn(180,60,10,0.2);
+            //Realign to the center of the depot
             if(position == "Left"){
                 myRobot.encoderStrafeDrive(300, 0.3, "Right");
             }
@@ -150,13 +162,11 @@ public class RoverRuckusFarRedAutonomous extends LinearOpMode {
                 myRobot.encoderStrafeDrive(300,0.3,"Left");
             }
             //Move sideways until the touch sensor detects the wall 5 seconds
-            myRobot.allDrive(0.3,-0.3, -0.3,0.3);
-            sleep(1000);
             myRobot.allDrive(0.1,-0.1, -0.1,0.1);
             sleep(1000);
-            myRobot.encoderStrafeDrive(300,0.5,"right");
+            myRobot.encoderStrafeDrive(300,0.5,"Right");
 
-            myRobot.driveUntilCrater(0.3);
+            myRobot.driveUntilCrater(-0.3);
 
 
             // Show the elapsed game time and wheel power.

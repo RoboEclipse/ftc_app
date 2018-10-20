@@ -62,7 +62,7 @@ import java.util.Locale;
 
 @Autonomous(name="CloseRedAutonomous", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusCloseAutonomous extends LinearOpMode {
+public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
 
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -88,16 +88,17 @@ public class RoverRuckusCloseAutonomous extends LinearOpMode {
             //Initialize
 
             myRobot.initialize(hardwareMap, telemetry);
-            /*
+
             //Lower the robot onto the field 5 seconds
-            myRobot.leadScrewDrive(-1);
+            myRobot.leadScrewDrive(1);
             sleep(3000);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
             myRobot.encoderStrafeDrive(200, 0.5, "left");
-            myRobot.encoderTankDrive(200,200, 0.5);
-            myRobot.encoderStrafeDrive(200, 0.5, "right");
-            */
+            //Face back in original direction
+            if(Math.abs(myRobot.getHorizontalAngle())>3){
+                myRobot.encoderTurn(0,10,3,0.1);
+            }
             //Scan two particles
             List<MatOfPoint> contours = goldVision.getContours();
             List<Rect> readContours;
@@ -134,6 +135,16 @@ public class RoverRuckusCloseAutonomous extends LinearOpMode {
             }
             telemetry.update();
             goldVision.disable();
+            //Move forward to clear the hook
+            myRobot.encoderTankDrive(200,200, 0.5);
+            //Move sideways to recenter
+            myRobot.encoderStrafeDrive(200, 0.5, "right");
+            //Lower the leadScrew
+            myRobot.leadScrewDrive(-1);
+            sleep(3000);
+            myRobot.leadScrewDrive(0);
+
+
 
 
             //Drive forward to clear the lander
