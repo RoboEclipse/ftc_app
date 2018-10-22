@@ -58,8 +58,7 @@ public class RoverRuckusTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-    double elevatorServoPosition = 0;
-
+    static int elevatorPosition = 0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -81,7 +80,8 @@ public class RoverRuckusTeleOp extends OpMode
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start()
+    {
         runtime.reset();
     }
 
@@ -99,7 +99,7 @@ public class RoverRuckusTeleOp extends OpMode
         v_theta = Math.sqrt(lx * lx + ly * ly);
         v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  0.5*v_theta, v_rotation); //move robot
+        myRobot.drive(theta,  0.5*v_theta, -1 * v_rotation); //move robot
 
         //Lead Screw Controls
         if(gamepad1.dpad_up){
@@ -108,49 +108,33 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad1.dpad_down){
             myRobot.leadScrewDrive(-1);
         }
-        else{
+        else {
             myRobot.leadScrewDrive(0);
         }
-        myRobot.leadScrewDrive(gamepad2.right_stick_y);
-
-        //Elevator Motor Controls
-        myRobot.eMotorDrive(gamepad2.left_stick_y);
-
-        //Collector Motor Controls
-        if(gamepad2.left_bumper){
-            myRobot.cMotorDrive(1.0);
+        // Linear slide controls
+        if(gamepad2.left_stick_y > 0.1) {
+            myRobot.eMotorDrive(0.5);
         }
-        else if(gamepad2.right_bumper){
-            myRobot.cMotorDrive(-1.0);
-        }
-        else{
-            myRobot.cMotorDrive(0);
-        }
-
-        //Collector Flipper Controls
-        if(gamepad2.a) {
-            myRobot.cFlipDrive(0.25);
-        }
-        else if(gamepad2.b){
-            myRobot.cFlipDrive(-.5);
+        else if(gamepad2.left_stick_y < -0.1)
+        {
+            myRobot.eMotorDrive(-0.5);
         }
         else {
-            myRobot.cFlipDrive(0);
+            myRobot.eMotorDrive(0);
         }
-        //Elevator Flipper Controls
-        if(gamepad2.x && elevatorServoPosition<=1.0){
-            elevatorServoPosition += 0.03;
+        // Flipping Mechanism Controls
+        if(gamepad2.right_bumper)
+        {
+            myRobot.cFlipDrive(0.5);
         }
-        if (gamepad2.y && elevatorServoPosition>=0){
-            elevatorServoPosition -= 0.03;
-        }
-
-        myRobot.elevatorServoDrive(elevatorServoPosition);
+        /*
+        double leftPower = gamepad1.left_stick_y;
+        double rightPower =gamepad1.right_stick_y;
+        myRobot.tankDrive(leftPower,rightPower);
+        */
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Angle", myRobot.getHorizontalAngle());
-        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         myRobot.readEncoders();
         telemetry.update();
     }
