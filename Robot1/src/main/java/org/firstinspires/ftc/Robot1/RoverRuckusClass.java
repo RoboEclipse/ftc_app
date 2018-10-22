@@ -223,7 +223,6 @@ public class RoverRuckusClass {
         if (angleX <= -180) angleX += 360;
         return (angleX);
     }
-
     public double getVerticalAngle(){
         double angleX;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
