@@ -22,7 +22,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
 
 class MecanumBot {
     public static final double DownPowerArm = -0.2;
@@ -53,7 +52,6 @@ class MecanumBot {
     ButtonPositions buttonPositions = new ButtonPositions();
 
     public void initMecanumBot(HardwareMap hardwareMap, Telemetry _telemetry) {
-
         InitializeQuick(hardwareMap, _telemetry);
     }
 
@@ -144,7 +142,7 @@ class MecanumBot {
         if (angleX > 180)  angleX -= 360;
         if (angleX <= -180) angleX += 360;
         return (angleX);
-        }
+    }
 
     public double getGravity (){
         gravity=imu.getGravity();
@@ -256,7 +254,7 @@ class MecanumBot {
         return new Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
     }
     public void drive(double direction, double velocity, double rotationVelocity) {
-         Wheels w = getWheels(direction, velocity, rotationVelocity);
+        Wheels w = getWheels(direction, velocity, rotationVelocity);
         lf.setPower(w.lf);
         rf.setPower(w.rf);
         lr.setPower(w.lr);
@@ -447,7 +445,6 @@ class MecanumBot {
             telemetry.addData("gyroPosition", getAngle());
             telemetry.update();
         }
-
     }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
