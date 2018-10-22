@@ -30,12 +30,8 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
@@ -139,9 +135,17 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
             myRobot.encoderTankDrive(200,200, 0.5);
             //Move sideways to recenter
             myRobot.encoderStrafeDrive(200, 0.5, "right");
+
             //Lower the leadScrew
             myRobot.leadScrewDrive(-1);
-            sleep(3000);
+            ElapsedTime leadScrewTime = new ElapsedTime();
+            //While limit switch isn't triggered, continue
+            while(myRobot.returnLimitSwitch() ){
+                //If the screw has been moving for 3 seconds, stop
+                if(leadScrewTime.time()>3){
+                    break;
+                }
+            }
             myRobot.leadScrewDrive(0);
 
 

@@ -3,9 +3,7 @@ package org.firstinspires.ftc.Robot1;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -22,15 +20,15 @@ public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, emotor, cflip;
     private Servo elevatorServo;
     private Telemetry telemetry;
-    private HardwareMap HardwareMap;
+    private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
-    private DigitalChannel touchSensor;
+    private DigitalChannel limitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
 
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
-    public void initialize(HardwareMap hardwareMap, Telemetry telemetry_){
+    public void initialize(com.qualcomm.robotcore.hardware.HardwareMap hardwareMap, Telemetry telemetry_){
         telemetry = telemetry_;
         lf = hardwareMap.dcMotor.get(config.LeftFrontMotorName);
         lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
@@ -41,6 +39,7 @@ public class RoverRuckusClass {
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
+        limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
@@ -79,6 +78,10 @@ public class RoverRuckusClass {
         rf.setPower(rightPower);
     }
     public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
+        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lf.setPower(lfPower);
         lr.setPower(lrPower);
         rf.setPower(rfPower);
@@ -113,6 +116,9 @@ public class RoverRuckusClass {
     public void elevatorServoDrive(double position){
         elevatorServo.setPosition(position);
     }
+    public boolean returnLimitSwitch(){
+        return limitSwitch.getState();
+    }
 
 
     //Encoder stuff
@@ -137,7 +143,7 @@ public class RoverRuckusClass {
     }
     public void encoderStrafeDrive(int ticks, double power, String direction) {
         int multiplier = 1;
-        if (direction.equals("Left")){
+        if (direction.equals("Right") || direction.equals("right")){
             multiplier = -1;
         }
         multiSetPower(0.0, lf, lr, rf, rr);
@@ -195,16 +201,21 @@ public class RoverRuckusClass {
         }
     }
     public void driveUntilCrater(double speed){
+        double startingAngle = getHorizontalAngle();
+        int multiplier=1;
+        if(speed<0){
+            multiplier = -1;
+        }
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
-        lf.setTargetPosition(10000000);
-        lr.setTargetPosition(10000000);
-        rf.setTargetPosition(10000000);
-        rr.setTargetPosition(10000000);
+        lf.setTargetPosition(multiplier*10000000);
+        lr.setTargetPosition(multiplier*10000000);
+        rf.setTargetPosition(multiplier*10000000);
+        rr.setTargetPosition(multiplier*10000000);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(getVerticalAngle()>3){
+            if(Math.abs(getHorizontalAngle()-startingAngle)>5){
                 telemetry.update();
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -275,7 +286,7 @@ public class RoverRuckusClass {
                 rf.getCurrentPosition(),
                 lr.getCurrentPosition(),
                 rr.getCurrentPosition()
-                );
+        );
     }
 
 
@@ -284,7 +295,7 @@ public class RoverRuckusClass {
     //Drive Stuff
     //Preferably Do Not Touch
     public void drive(double direction, double velocity, double rotationVelocity) {
-        Wheels w = getWheels(direction, velocity, rotationVelocity);
+        RoverRuckusClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
         lf.setPower(w.lf);
         rf.setPower(w.rf);
         lr.setPower(w.lr);
@@ -302,7 +313,7 @@ public class RoverRuckusClass {
             this.rr = rr;
         }
     }
-    private Wheels getWheels(double direction, double velocity, double rotationVelocity) {
+    private RoverRuckusClass.Wheels getWheels(double direction, double velocity, double rotationVelocity) {
         final double vd = velocity;
         final double td = direction;
         final double vt = rotationVelocity;
@@ -322,7 +333,7 @@ public class RoverRuckusClass {
         // over 1.0, just scale by 1.0 and keep all values.
         double scale = ma(1.0, v1, v2, v3, v4);
 
-        return new Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
+        return new RoverRuckusClass.Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
     }
     private static double ma(double... xs) {
         double ret = 0.0;
@@ -331,5 +342,4 @@ public class RoverRuckusClass {
         }
         return ret;
     }
-
 }

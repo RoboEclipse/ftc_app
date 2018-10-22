@@ -66,6 +66,7 @@ public class LinearTemplate extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -73,6 +74,7 @@ public class LinearTemplate extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)");
             telemetry.update();
+            break;
         }
     }
 }

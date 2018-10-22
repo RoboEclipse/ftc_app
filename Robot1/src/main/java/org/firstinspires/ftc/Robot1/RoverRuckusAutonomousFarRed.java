@@ -85,16 +85,16 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             //Initialize
             myRobot.initialize(hardwareMap, telemetry);
 
-            //Lower the robot onto the field 5 seconds
+            //Lower the robot onto the field
             myRobot.leadScrewDrive(1);
             sleep(3000);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
-            myRobot.encoderStrafeDrive(200, 0.1, "right");
+            myRobot.encoderStrafeDrive(200, 0.1, "Right");
             sleep(100);
             //Rotate to realign
             if(Math.abs(myRobot.getHorizontalAngle())>3){
-                myRobot.encoderTurn(0,10,3,0.1);
+                //myRobot.encoderTurn(0,10,3,0.1);
             }
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
@@ -134,11 +134,17 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             sleep(100);
             //Move sideways to realign
             myRobot.encoderStrafeDrive(200, 0.1, "left");
+            //Lowers hook
+            ElapsedTime leadScrewTime = new ElapsedTime();
             myRobot.leadScrewDrive(-1);
-            sleep(3000);
+            //While limit switch isn't triggered, continue
+            while(myRobot.returnLimitSwitch() ){
+                //If the screw has been moving for 3 seconds, stop
+                if(leadScrewTime.time()>3){
+                    break;
+                }
+            }
             myRobot.leadScrewDrive(0);
-
-
 
 
             sleep(100);
@@ -151,9 +157,15 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             if(position == "Right"){
                 myRobot.encoderStrafeDrive(300,0.3,"Right");
             }
+            //myRobot.cFlipDrive(0.2);
+            sleep(500);
             //Drive forward to knock off the gold particle 2 seconds
             myRobot.encoderTankDrive(600,600,0.3);
-            sleep(100);
+            //Retract the collector
+            //myRobot.cFlipDrive(-0.4);
+            sleep(500);
+            //Drive forward more
+            myRobot.encoderTankDrive(600,600,0.3);
             //Realign to the center of the depot
             if(position == "Left"){
                 myRobot.encoderStrafeDrive(300, 0.3, "Right");
@@ -161,9 +173,10 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             if(position == "Right"){
                 myRobot.encoderStrafeDrive(300,0.3,"Left");
             }
+            myRobot.encoderTurn(-45,20,3,0.1);
             //Move sideways until the touch sensor detects the wall 5 seconds
-            myRobot.allDrive(0.1,-0.1, -0.1,0.1);
-            sleep(1000);
+            myRobot.allDrive(-0.2,0.2, 0.2,-0.2);
+            sleep(2000);
             myRobot.encoderStrafeDrive(300,0.5,"Right");
 
             myRobot.driveUntilCrater(-0.3);

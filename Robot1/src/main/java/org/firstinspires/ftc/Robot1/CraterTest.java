@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,18 +48,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="GyroTest", group="Linear Opmode")
+@TeleOp(name="Meow", group="Linear Opmode")
 //@Disabled
-public class GyroTest extends LinearOpMode {
+public class CraterTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    RoverRuckusClass myRobot = new RoverRuckusClass();
-    MecanumBot hmmst = new MecanumBot();
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        RoverRuckusClass myRobot = new RoverRuckusClass();
+        myRobot.initialize(hardwareMap,telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -66,17 +68,12 @@ public class GyroTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            myRobot.initialize(hardwareMap, telemetry);
-            myRobot.getHorizontalAngle();
+            myRobot.driveUntilCrater(-0.3);
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Angle", myRobot.getHorizontalAngle());
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)");
             telemetry.update();
-
-            //hmmst.initAutoMecanumBot(hardwareMap, telemetry);
-            //telemetry.addData("Angle", hmmst.getAngle());
+            break;
         }
     }
 }

@@ -29,12 +29,9 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -58,7 +55,7 @@ public class RoverRuckusTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-    double elevatorServoPosition = 0;
+    double elevatorServoPosition = 0.75;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -99,7 +96,7 @@ public class RoverRuckusTeleOp extends OpMode
         v_theta = Math.sqrt(lx * lx + ly * ly);
         v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  0.5*v_theta, v_rotation); //move robot
+        myRobot.drive(theta,  0.5*v_theta, 0.75*v_rotation); //move robot
 
         //Lead Screw Controls
         if(gamepad1.dpad_up){
@@ -138,7 +135,7 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.cFlipDrive(0);
         }
         //Elevator Flipper Controls
-        if(gamepad2.x && elevatorServoPosition<=1.0){
+        if(gamepad2.x && elevatorServoPosition<=0.8){
             elevatorServoPosition += 0.03;
         }
         if (gamepad2.y && elevatorServoPosition>=0){
