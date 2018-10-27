@@ -2,6 +2,7 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,7 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    private DcMotor lf, lr, rf, rr, leadScrew, cmotor, emotor, cflip;
+    private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip;
+    private CRServo emotor;
     private Servo elevatorServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
@@ -36,7 +38,7 @@ public class RoverRuckusClass {
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
         elevatorServo = hardwareMap.servo.get(config.ElevatorServoName);
         cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
-        emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
+        emotor = hardwareMap.crservo.get(config.ElevatorMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
@@ -49,7 +51,6 @@ public class RoverRuckusClass {
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
