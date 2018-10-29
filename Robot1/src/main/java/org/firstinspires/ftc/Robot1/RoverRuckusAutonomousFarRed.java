@@ -64,30 +64,34 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
     String position = "";
     DetectGoldMineral goldVision;
 
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         RoverRuckusClass myRobot = new RoverRuckusClass();
+        RoverRuckusConstants constants = new RoverRuckusConstants();
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         goldVision.setShowCountours(true);
         // start the vision system
         goldVision.enable();
-
+        int ticksPerMineral = (int)(constants.TICKS_PER_INCH*14.25);
+        int ticksPerInch = constants.TICKS_PER_INCH;
+        int leadScrewRunTime=constants.leadScrewTime;
+        //Initialize
+        myRobot.initialize(hardwareMap, telemetry);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            //Initialize
-            myRobot.initialize(hardwareMap, telemetry);
 
             //Lower the robot onto the field
             myRobot.leadScrewDrive(1);
-            sleep(3000);
+            sleep(leadScrewRunTime);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
             myRobot.encoderStrafeDrive(200, 0.1, "Right");
@@ -134,6 +138,7 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             sleep(100);
             //Move sideways to realign
             myRobot.encoderStrafeDrive(200, 0.1, "left");
+            /*
             //Lowers hook
             ElapsedTime leadScrewTime = new ElapsedTime();
             myRobot.leadScrewDrive(-1);
@@ -145,42 +150,44 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
                 }
             }
             myRobot.leadScrewDrive(0);
-
+            */
 
             sleep(100);
             //Drive forward to clear the lander
             myRobot.encoderTankDrive(400,400,0.3);
             //Drive sideways to line up with the gold particle 5 seconds
             if(position == "Left"){
-                myRobot.encoderStrafeDrive(300, 0.3, "Left");
+                myRobot.encoderStrafeDrive(ticksPerMineral, 0.3, "Left");
             }
             if(position == "Right"){
-                myRobot.encoderStrafeDrive(300,0.3,"Right");
+                myRobot.encoderStrafeDrive(ticksPerMineral,0.3,"Right");
             }
-            //myRobot.cFlipDrive(0.2);
+            myRobot.cFlipDrive(0.2);
             sleep(500);
             //Drive forward to knock off the gold particle 2 seconds
             myRobot.encoderTankDrive(600,600,0.3);
             //Retract the collector
-            //myRobot.cFlipDrive(-0.4);
+            myRobot.cFlipDrive(-0.4);
             sleep(500);
-            //Drive forward more
-            myRobot.encoderTankDrive(600,600,0.3);
-            //Realign to the center of the depot
+            //Move far left
             if(position == "Left"){
-                myRobot.encoderStrafeDrive(300, 0.3, "Right");
+                myRobot.encoderStrafeDrive(100, 0.3, "Left");
+            }
+            if(position == "Center"){
+                myRobot.encoderStrafeDrive(100+ticksPerMineral, 0.3, "Left");
             }
             if(position == "Right"){
-                myRobot.encoderStrafeDrive(300,0.3,"Left");
+                myRobot.encoderStrafeDrive(100+2*ticksPerMineral,0.3,"Left");
             }
-            myRobot.encoderTurn(-45,20,3,0.1);
+            myRobot.encoderTurn(135,20,3,0.1);
             //Move sideways until the touch sensor detects the wall 5 seconds
-            myRobot.allDrive(-0.2,0.2, 0.2,-0.2);
+            myRobot.allDrive(0.2,-0.2, -0.2,0.2);
             sleep(2000);
             myRobot.encoderStrafeDrive(300,0.5,"Right");
-
-            myRobot.driveUntilCrater(-0.3);
-
+            myRobot.encoderTankDrive(34*ticksPerInch, 34*ticksPerInch, 0.3);
+            myRobot.markerServoDrive(0);
+            sleep(100);
+            myRobot.driveUntilCrater(0.3);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

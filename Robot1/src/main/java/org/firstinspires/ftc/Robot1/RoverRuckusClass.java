@@ -18,16 +18,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip;
-    private CRServo emotor;
-    private Servo elevatorServo;
+    private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
+    private CRServo exservo;
+    private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
     private DigitalChannel limitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
-
+    int TICKS_PER_ROTATION = 1120;
+    public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+    public int leadScrewTime=5000;
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     public void initialize(com.qualcomm.robotcore.hardware.HardwareMap hardwareMap, Telemetry telemetry_){
@@ -37,8 +39,10 @@ public class RoverRuckusClass {
         rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
         rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
         elevatorServo = hardwareMap.servo.get(config.ElevatorServoName);
+        markerServo = hardwareMap.servo.get(config.TeamMarkerServoName);
         cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
-        emotor = hardwareMap.crservo.get(config.ElevatorMotorName);
+        emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
+        exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
@@ -100,7 +104,13 @@ public class RoverRuckusClass {
     {
         emotor.setPower(power);
     }
-
+    public void exServoDrive(double power){
+        exservo.setPower(power);
+        //power = 0.5+0.25*power;
+    }
+    public void markerServoDrive(double position){
+        markerServo.setPosition(position);
+    }
     public void cFlipDrive(double power)
     {
         cflip.setPower(power);
@@ -216,7 +226,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(Math.abs(getHorizontalAngle()-startingAngle)>5){
+            if(Math.abs(getHorizontalAngle()-startingAngle)>10){
                 telemetry.update();
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);

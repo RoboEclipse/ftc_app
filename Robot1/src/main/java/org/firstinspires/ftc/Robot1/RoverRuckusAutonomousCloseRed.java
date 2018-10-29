@@ -69,25 +69,26 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         RoverRuckusClass myRobot = new RoverRuckusClass();
+        RoverRuckusConstants constants = new RoverRuckusConstants();
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         // start the vision system
         goldVision.enable();
-
+        int ticksPerMineral = (int)(constants.TICKS_PER_INCH*14.25);
+        int ticksPerInch = constants.TICKS_PER_INCH;
+        int leadScrewRunTime = constants.leadScrewTime;
+        //Initialize
+        myRobot.initialize(hardwareMap, telemetry);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            //Initialize
-
-            myRobot.initialize(hardwareMap, telemetry);
-
             //Lower the robot onto the field 5 seconds
             myRobot.leadScrewDrive(1);
-            sleep(3000);
+            sleep(leadScrewRunTime);
             myRobot.leadScrewDrive(0);
             //Move sideways to detach from the hook
             myRobot.encoderStrafeDrive(200, 0.5, "left");
@@ -135,19 +136,19 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
             myRobot.encoderTankDrive(200,200, 0.5);
             //Move sideways to recenter
             myRobot.encoderStrafeDrive(200, 0.5, "right");
-
+            /*
             //Lower the leadScrew
             myRobot.leadScrewDrive(-1);
             ElapsedTime leadScrewTime = new ElapsedTime();
             //While limit switch isn't triggered, continue
             while(myRobot.returnLimitSwitch() ){
                 //If the screw has been moving for 3 seconds, stop
-                if(leadScrewTime.time()>3){
+                if(leadScrewTime.time()>6){
                     break;
                 }
             }
             myRobot.leadScrewDrive(0);
-
+            */
 
 
 
@@ -173,21 +174,23 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
                 myRobot.encoderStrafeDrive(300,0.3,"Left");
             }
 
-            //Turn around the robot so it will be able to place the marker
-            myRobot.encoderTurn(180,60,10,0.2);
+            //Align the robot to the wall
+            myRobot.encoderTurn(-45,30,10,0.2);
 
             //Move sideways and align to the wall
-            myRobot.allDrive(0.3,-0.3, -0.3,0.3);
+            myRobot.allDrive(-0.3,0.3, 0.3,-0.3);
             sleep(1000);
-            myRobot.allDrive(0.1,-0.1, -0.1,0.1);
+            myRobot.allDrive(-0.1,0.1, 0.1,-0.1);
             sleep(1000);
             //Move sideways to separate from the wall
             myRobot.encoderStrafeDrive(300,0.5,"Left");
             //Move forward to the depot
             //45 inches*(1 rotation/6pi inches)*(1120 ticks/1 rotation) = 26734
-            myRobot.encoderTankDrive(2500,2500,0.3);
+            myRobot.encoderTankDrive(2500,2500,-0.3);
+            myRobot.markerServoDrive(0);
+            sleep(100);
             //Drive into the crater 5 seconds
-            myRobot.driveUntilCrater(-0.3);
+            myRobot.driveUntilCrater(0.3);
 
 
             //Show the elapsed game time and wheel power.

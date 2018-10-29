@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.Robot1;
-
+//jason qian's work
 public class RoverRuckusConfiguration {
     //Motors
     public static final String LeftFrontMotorName = "leftf_motor";
@@ -7,14 +7,15 @@ public class RoverRuckusConfiguration {
     public static final String LeftRearMotorName = "leftb_motor";
     public static final String RightRearMotorName = "rightb_motor";
     public static final String LeadScrewMotorName = "leadScrewMotor";
-    //ElevatorMotor is actually a continuous rotation servo
     public static final String ElevatorMotorName = "elevatorMotor";
     public static final String CollectorMotorName = "collectionRotationMotor";
     public static final String CollectionFlipperName = "collectionFlipperMotor";
-    public static final String ExtenderMotorName = "extenderMotor";
+    //ElevatorMotor is actually a continuous rotation servo
+    public static final String ExtenderMotorName = "extenderServo";
 
     //Servos
     public static final String ElevatorServoName = "elevatorServo";
+    public static final String TeamMarkerServoName = "teamMarkerServo";
 
     //Sensors
     public static final String IMUNAme = "imu";

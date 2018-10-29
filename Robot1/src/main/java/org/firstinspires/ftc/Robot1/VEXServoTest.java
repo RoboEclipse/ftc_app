@@ -29,9 +29,12 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -47,22 +50,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOp", group="Iterative Opmode")
-//@Disabled
-public class RoverRuckusTeleOp extends OpMode
+@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@Disabled
+public class VEXServoTest extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    RoverRuckusClass myRobot = new RoverRuckusClass();
-    double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-    double elevatorServoPosition = 0.75;
-    double speedMultiplier = 1;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        myRobot.initialize(hardwareMap, telemetry);
+        hardwareMap.crservo.get("crServo");
+        // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -87,102 +88,13 @@ public class RoverRuckusTeleOp extends OpMode
      */
     @Override
     public void loop() {
+        // Setup a variable for each drive wheel to save power level for telemetry
+        double servoPower = 0;
 
-        //Drive motor controls
-        double lx = gamepad1.left_stick_x;
-        double ly = -gamepad1.left_stick_y;
-        if(gamepad1.dpad_up){
-            ly=1;
-            speedMultiplier = 0.5;
-        }
-        else if(gamepad1.dpad_down){
-            ly=-1;
-            speedMultiplier = 0.5;
-        }
-        else if(gamepad1.dpad_left){
-            lx=-1;
-            speedMultiplier = 0.5;
-        }
-        else if(gamepad1.dpad_right){
-            lx =1;
-            speedMultiplier = 0.5;
-        }
-        else {
-            speedMultiplier = 1;
-        }
-        theta = Math.atan2(lx, ly);
-        v_theta = Math.sqrt(lx * lx + ly * ly);
-        v_rotation = gamepad1.right_stick_x;
-
-        myRobot.drive(theta,  0.5*v_theta, 0.5*v_rotation); //move robot
-
-        //Lead Screw Controls
-        /*
-        if(gamepad2.dpad_up){
-            myRobot.leadScrewDrive(1);
-        }
-        else if(gamepad2.dpad_down){
-            myRobot.leadScrewDrive(-1);
-        }a
-        else{
-            myRobot.leadScrewDrive(0);
-        }
-        */
-        myRobot.leadScrewDrive(-gamepad2.right_stick_y);
-        //Elevator Motor Controls
-        myRobot.eMotorDrive(gamepad2.left_stick_y);
-
-        //Collector Motor Controls
-        if(gamepad2.left_bumper){
-            myRobot.cMotorDrive(1.0);
-        }
-        else if(gamepad2.right_bumper){
-            myRobot.cMotorDrive(-1.0);
-        }
-        else{
-            myRobot.cMotorDrive(0);
-        }
-        double collectorServoPower=0;
-        //Collector Extender Controls
-            //myRobot.exServoDrive(gamepad2.right_stick_y);
-        if(gamepad2.dpad_up){
-            collectorServoPower = .5;
-            myRobot.exServoDrive(collectorServoPower);
-        } else if(gamepad2.dpad_down){
-            collectorServoPower = -.5;
-            myRobot.exServoDrive(collectorServoPower);
-        }
-        else{
-            collectorServoPower = 0;
-            myRobot.exServoDrive(collectorServoPower);
-        }
-        //Collector Flipper Controls
-        if(gamepad2.a) {
-            myRobot.cFlipDrive(0.25);
-        }
-        else if(gamepad2.b){
-            myRobot.cFlipDrive(-.5);
-        }
-        else {
-            myRobot.cFlipDrive(0);
-        }
-        //Elevator Flipper Controls
-        if(gamepad2.x && elevatorServoPosition<=0.8){
-            elevatorServoPosition += 0.03;
-        }
-        if (gamepad2.y && elevatorServoPosition>=0){
-            elevatorServoPosition -= 0.03;
-        }
-
-        myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Angle", myRobot.getHorizontalAngle());
-        telemetry.addData("collectorServoPower", collectorServoPower);
-        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-        myRobot.readEncoders();
-        telemetry.update();
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)");
     }
 
     /*
@@ -190,7 +102,6 @@ public class RoverRuckusTeleOp extends OpMode
      */
     @Override
     public void stop() {
-
     }
 
 }
