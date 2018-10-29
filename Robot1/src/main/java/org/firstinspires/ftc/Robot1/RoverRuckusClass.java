@@ -56,7 +56,8 @@ public class RoverRuckusClass {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -153,9 +154,9 @@ public class RoverRuckusClass {
 
     }
     public void encoderStrafeDrive(int ticks, double power, String direction) {
-        int multiplier = 1;
+        int multiplier = -1;
         if (direction.equals("Right") || direction.equals("right")){
-            multiplier = -1;
+            multiplier = 1;
         }
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);

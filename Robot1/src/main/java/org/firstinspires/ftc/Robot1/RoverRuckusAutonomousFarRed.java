@@ -58,7 +58,9 @@ import java.util.Locale;
 @Autonomous(name="FarRedAutonomous", group="Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousFarRed extends LinearOpMode {
-
+    int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*14.25);
+    int ticksPerInch = RoverRuckusConstants.TICKS_PER_INCH;
+    int leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     String position = "";
@@ -70,16 +72,14 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         RoverRuckusClass myRobot = new RoverRuckusClass();
-        RoverRuckusConstants constants = new RoverRuckusConstants();
+
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         goldVision.setShowCountours(true);
         // start the vision system
         goldVision.enable();
-        int ticksPerMineral = (int)(constants.TICKS_PER_INCH*14.25);
-        int ticksPerInch = constants.TICKS_PER_INCH;
-        int leadScrewRunTime=constants.leadScrewTime;
+
         //Initialize
         myRobot.initialize(hardwareMap, telemetry);
         // Wait for the game to start (driver presses PLAY)
@@ -88,57 +88,77 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            LandingFull(myRobot, leadScrewRunTime);
 
-            //Lower the robot onto the field
-            myRobot.leadScrewDrive(1);
-            sleep(leadScrewRunTime);
-            myRobot.leadScrewDrive(0);
-            //Move sideways to detach from the hook
-            myRobot.encoderStrafeDrive(200, 0.1, "Right");
-            sleep(100);
-            //Rotate to realign
-            if(Math.abs(myRobot.getHorizontalAngle())>3){
-                //myRobot.encoderTurn(0,10,3,0.1);
-            }
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
-            List<MatOfPoint> contours = goldVision.getContours();
-            for (int i = 0; i < contours.size(); i++) {
-                // get the bounding rectangle of a single contour, we use it to get the x/y center
-                // yes there's a mass center using Imgproc.moments but w/e
-                Rect boundingRect = Imgproc.boundingRect(contours.get(i));
-                telemetry.addData("contour" + Integer.toString(i),
-                        String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
-                telemetry.update();
-            }
-            //Size of rectangle: (240,320)
-            if(contours.isEmpty()){
-                position = "Left";
+            SampleFullProcess(myRobot, ticksPerMineral, ticksPerInch);
+            ClaimFull(myRobot, ticksPerMineral, ticksPerInch);
+
+            myRobot.driveUntilCrater(0.3);
+
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+            break;
+
+        }
+    }
+
+    private void LandingFull(RoverRuckusClass myRobot, int leadScrewRunTime) {
+        //Lower the robot onto the field
+        myRobot.leadScrewDrive(1);
+        sleep(leadScrewRunTime);
+        myRobot.leadScrewDrive(0);
+        //Move sideways to detach from the hook
+        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.1, "Left");
+        sleep(100);
+
+
+
+
+    }
+
+    // 2 inches to the left of start
+    private void SampleFullProcess(RoverRuckusClass myRobot, int ticksPerMineral, int ticksPerInch) {
+        List<MatOfPoint> contours = goldVision.getContours();
+        for (int i = 0; i < contours.size(); i++) {
+            // get the bounding rectangle of a single contour, we use it to get the x/y center
+            // yes there's a mass center using Imgproc.moments but w/e
+            Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+            telemetry.addData("contour" + Integer.toString(i),
+                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
+            telemetry.update();
+        }
+        //Size of rectangle: (240,320)
+        if(contours.isEmpty()){
+            position = "Left";
+            telemetry.addData("Position", position);
+            telemetry.update();
+        }
+        else{
+            Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
+            if((presumedParticle.x+presumedParticle.width)/2>=200){
+                position = "Right";
                 telemetry.addData("Position", position);
                 telemetry.update();
             }
             else{
-                Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
-                if((presumedParticle.x+presumedParticle.width)/2>=200){
-                    position = "Right";
-                    telemetry.addData("Position", position);
-                    telemetry.update();
-                }
-                else{
-                    position = "Center";
-                    telemetry.addData("Position", position);
-                    telemetry.update();
-                }
+                position = "Center";
+                telemetry.addData("Position", position);
+                telemetry.update();
             }
-            goldVision.disable();
-            telemetry.update();
-            //Drive forward to clear the hook
-            myRobot.encoderTankDrive(200,200, 0.5);
-            sleep(100);
-            //Move sideways to realign
-            myRobot.encoderStrafeDrive(200, 0.1, "left");
-            /*
+        }
+        goldVision.disable();
+        telemetry.update();
+        //Drive forward to clear the hook
+        myRobot.encoderTankDrive(ticksPerInch*3,ticksPerInch*3, 0.5);
+        sleep(100);
+        //Move sideways to realign
+        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.1, "Right");
+        //Currently facing center particle
+        /*
             //Lowers hook
             ElapsedTime leadScrewTime = new ElapsedTime();
             myRobot.leadScrewDrive(-1);
@@ -152,48 +172,52 @@ public class RoverRuckusAutonomousFarRed extends LinearOpMode {
             myRobot.leadScrewDrive(0);
             */
 
-            sleep(100);
-            //Drive forward to clear the lander
-            myRobot.encoderTankDrive(400,400,0.3);
-            //Drive sideways to line up with the gold particle 5 seconds
-            if(position == "Left"){
-                myRobot.encoderStrafeDrive(ticksPerMineral, 0.3, "Left");
-            }
-            if(position == "Right"){
-                myRobot.encoderStrafeDrive(ticksPerMineral,0.3,"Right");
-            }
-            myRobot.cFlipDrive(0.2);
-            sleep(500);
-            //Drive forward to knock off the gold particle 2 seconds
-            myRobot.encoderTankDrive(600,600,0.3);
-            //Retract the collector
-            myRobot.cFlipDrive(-0.4);
-            sleep(500);
-            //Move far left
-            if(position == "Left"){
-                myRobot.encoderStrafeDrive(100, 0.3, "Left");
-            }
-            if(position == "Center"){
-                myRobot.encoderStrafeDrive(100+ticksPerMineral, 0.3, "Left");
-            }
-            if(position == "Right"){
-                myRobot.encoderStrafeDrive(100+2*ticksPerMineral,0.3,"Left");
-            }
-            myRobot.encoderTurn(135,20,3,0.1);
-            //Move sideways until the touch sensor detects the wall 5 seconds
-            myRobot.allDrive(0.2,-0.2, -0.2,0.2);
-            sleep(2000);
-            myRobot.encoderStrafeDrive(300,0.5,"Right");
-            myRobot.encoderTankDrive(34*ticksPerInch, 34*ticksPerInch, 0.3);
-            myRobot.markerServoDrive(0);
-            sleep(100);
-            myRobot.driveUntilCrater(0.3);
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-            break;
-
+        sleep(100);
+        //Drive forward to clear the lander
+        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
+        //Drive sideways to line up with the gold particle 5 seconds
+        if(position == "Left"){
+            myRobot.encoderStrafeDrive(ticksPerMineral, 0.3, "Left");
         }
+        if(position == "Right"){
+            myRobot.encoderStrafeDrive(ticksPerMineral,0.3,"Right");
+        }
+        myRobot.cFlipDrive(0.2);
+        sleep(1000);
+        //Rotate to realign
+        telemetry.addData("Angle", myRobot.getHorizontalAngle());
+        telemetry.update();
+        //Drive forward to knock off the gold particle 2 seconds
+        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
+        //Retract the collector
+        myRobot.cFlipDrive(-0.4);
+        sleep(500);
+        //aligned to gold particle 5 inches from the lander
     }
+    private void ClaimFull(RoverRuckusClass myRobot, int ticksPerMineral, int ticksPerInch) {
+        //Move far left
+        if(position == "Left"){
+            myRobot.encoderStrafeDrive(ticksPerInch, 0.3, "Left");
+        }
+        if(position == "Center"){
+            myRobot.encoderStrafeDrive(ticksPerInch+ticksPerMineral, 0.3, "Left");
+        }
+        if(position == "Right"){
+            myRobot.encoderStrafeDrive(ticksPerInch+2*ticksPerMineral,0.3,"Left");
+        }
+        myRobot.encoderTurn(135,20,3,0.4);
+        Parking(myRobot, ticksPerInch);
+
+        sleep(100);
+    }
+
+    private void Parking(RoverRuckusClass myRobot, int ticksPerInch) {
+        //Move sideways until you are an inch or two from the wall
+        myRobot.encoderStrafeDrive(ticksPerInch*14,0.3,"Right");
+        myRobot.encoderTankDrive(-28*ticksPerInch, -28*ticksPerInch, 0.3);
+        myRobot.markerServoDrive(1);
+        sleep(1000);
+    }
+
+
 }

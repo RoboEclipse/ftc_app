@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import android.support.annotation.NonNull;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -96,23 +98,8 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
             if(Math.abs(myRobot.getHorizontalAngle())>3){
                 myRobot.encoderTurn(0,10,3,0.1);
             }
-            //Scan two particles
-            List<MatOfPoint> contours = goldVision.getContours();
-            List<Rect> readContours;
-            readContours = new ArrayList<Rect>();
-            for (int i = 0; i < contours.size(); i++) {
-                Rect boundingRect = Imgproc.boundingRect(contours.get(i));
-                //Filter out anything above about half of the y axis
-                if((boundingRect.y + boundingRect.width)/2>=200){
-                    readContours.add(boundingRect);
-                }
-            }
-            //Print out filtered contours to telemetry
-            for(int i = 0; i<readContours.size();i++){
-                Rect boundingRect = readContours.get(i);
-                telemetry.addData("contour" + Integer.toString(i),
-                        String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
-            }
+            List<Rect> readContours = getGoldMineralRects();
+
             //Deduce where the gold particle is
             String position = "Left";
             //Size of rectangle: (240,320)
@@ -195,8 +182,31 @@ public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
 
             //Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Position", position);
             telemetry.update();
             break;
         }
+    }
+
+    @NonNull
+    private List<Rect> getGoldMineralRects() {
+        //Scan two particles
+        List<MatOfPoint> contours = goldVision.getContours();
+        List<Rect> readContours;
+        readContours = new ArrayList<Rect>();
+        for (int i = 0; i < contours.size(); i++) {
+            Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+            //Filter out anything above about half of the y axis
+            if((boundingRect.y + boundingRect.width)/2>=200){
+                readContours.add(boundingRect);
+            }
+        }
+        //Print out filtered contours to telemetry
+        for(int i = 0; i<readContours.size();i++){
+            Rect boundingRect = readContours.get(i);
+            telemetry.addData("contour" + Integer.toString(i),
+                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
+        }
+        return readContours;
     }
 }

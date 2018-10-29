@@ -57,6 +57,7 @@ public class RoverRuckusTeleOp extends OpMode
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     double elevatorServoPosition = 0.75;
     double speedMultiplier = 1;
+    double purr = 0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -156,6 +157,16 @@ public class RoverRuckusTeleOp extends OpMode
             collectorServoPower = 0;
             myRobot.exServoDrive(collectorServoPower);
         }
+
+        if(gamepad1.right_bumper){
+            purr += .03;
+        }
+        else if(gamepad1.left_bumper){
+            purr -= .03;
+        }
+        myRobot.markerServoDrive(purr);
+        telemetry.addData("purr", purr);
+        telemetry.update();
         //Collector Flipper Controls
         if(gamepad2.a) {
             myRobot.cFlipDrive(0.25);
