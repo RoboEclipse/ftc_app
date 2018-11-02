@@ -174,8 +174,8 @@ public class RoverRuckusClass {
     }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
-
-        if(degrees>0){
+        double currentDegrees = getHorizontalAngle();
+        if(degrees-currentDegrees>0){
             multiSetPower(0.0, lf, lr, rf, rr);
             multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             lf.setTargetPosition(-10000000);
@@ -185,7 +185,7 @@ public class RoverRuckusClass {
             multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
             multiSetPower(speed, lf, lr, rf, rr);
         }
-        if(degrees<=0){
+        if(degrees-currentDegrees<=0){
             multiSetPower(0.0, lf, lr, rf, rr);
             multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             lf.setTargetPosition(1000000);
@@ -227,7 +227,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(Math.abs(getHorizontalAngle()-startingAngle)>10){
+            if(Math.abs(getHorizontalAngle()-startingAngle)>10 || getVerticalAngle()-startingAngle>2){
                 telemetry.update();
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);

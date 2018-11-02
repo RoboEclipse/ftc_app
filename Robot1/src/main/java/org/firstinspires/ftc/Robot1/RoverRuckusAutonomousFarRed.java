@@ -29,11 +29,15 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import android.support.annotation.NonNull;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -57,167 +61,44 @@ import java.util.Locale;
 
 @Autonomous(name="FarRedAutonomous", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends LinearOpMode {
-    int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*14.25);
-    int ticksPerInch = RoverRuckusConstants.TICKS_PER_INCH;
-    int leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
-    //Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    String position = "";
-    DetectGoldMineral goldVision;
+public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+
 
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        RoverRuckusClass myRobot = new RoverRuckusClass();
 
-        goldVision = new DetectGoldMineral();
-        // can replace with ActivityViewDisplay.getInstance() for fullscreen
-        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        goldVision.setShowCountours(true);
-        // start the vision system
-        goldVision.enable();
-
-        //Initialize
-        myRobot.initialize(hardwareMap, telemetry);
-        // Wait for the game to start (driver presses PLAY)
+        RoverRuckusClass myRobot = initialize();
         waitForStart();
-        runtime.reset();
-
+        //Initialize
+        SetPosition();
+        goldVision.disable();
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            LandingFull(myRobot, leadScrewRunTime);
+
+            LandingFull(myRobot);
 
             //Scan two particles and deduce where the gold one is
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
-            SampleFullProcess(myRobot, ticksPerMineral, ticksPerInch);
-            ClaimFull(myRobot, ticksPerMineral, ticksPerInch);
+            SampleFullProcess(myRobot);
 
-            myRobot.driveUntilCrater(0.3);
+            myRobot.encoderTurn(135,40,3,0.4);
+            myRobot.encoderStrafeDrive(ticksPerInch*13,0.4,"Right");
+
+            ClaimFull(myRobot);
+            Parking(myRobot);
+
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
             break;
 
         }
     }
 
-    private void LandingFull(RoverRuckusClass myRobot, int leadScrewRunTime) {
-        //Lower the robot onto the field
-        myRobot.leadScrewDrive(1);
-        sleep(leadScrewRunTime);
-        myRobot.leadScrewDrive(0);
-        //Move sideways to detach from the hook
-        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.1, "Left");
-        sleep(100);
 
 
 
-
-    }
-
-    // 2 inches to the left of start
-    private void SampleFullProcess(RoverRuckusClass myRobot, int ticksPerMineral, int ticksPerInch) {
-        List<MatOfPoint> contours = goldVision.getContours();
-        for (int i = 0; i < contours.size(); i++) {
-            // get the bounding rectangle of a single contour, we use it to get the x/y center
-            // yes there's a mass center using Imgproc.moments but w/e
-            Rect boundingRect = Imgproc.boundingRect(contours.get(i));
-            telemetry.addData("contour" + Integer.toString(i),
-                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
-            telemetry.update();
-        }
-        //Size of rectangle: (240,320)
-        if(contours.isEmpty()){
-            position = "Left";
-            telemetry.addData("Position", position);
-            telemetry.update();
-        }
-        else{
-            Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
-            if((presumedParticle.x+presumedParticle.width)/2>=200){
-                position = "Right";
-                telemetry.addData("Position", position);
-                telemetry.update();
-            }
-            else{
-                position = "Center";
-                telemetry.addData("Position", position);
-                telemetry.update();
-            }
-        }
-        goldVision.disable();
-        telemetry.update();
-        //Drive forward to clear the hook
-        myRobot.encoderTankDrive(ticksPerInch*3,ticksPerInch*3, 0.5);
-        sleep(100);
-        //Move sideways to realign
-        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.1, "Right");
-        //Currently facing center particle
-        /*
-            //Lowers hook
-            ElapsedTime leadScrewTime = new ElapsedTime();
-            myRobot.leadScrewDrive(-1);
-            //While limit switch isn't triggered, continue
-            while(myRobot.returnLimitSwitch() ){
-                //If the screw has been moving for 3 seconds, stop
-                if(leadScrewTime.time()>3){
-                    break;
-                }
-            }
-            myRobot.leadScrewDrive(0);
-            */
-
-        sleep(100);
-        //Drive forward to clear the lander
-        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
-        //Drive sideways to line up with the gold particle 5 seconds
-        if(position == "Left"){
-            myRobot.encoderStrafeDrive(ticksPerMineral, 0.3, "Left");
-        }
-        if(position == "Right"){
-            myRobot.encoderStrafeDrive(ticksPerMineral,0.3,"Right");
-        }
-        myRobot.cFlipDrive(0.2);
-        sleep(1000);
-        //Rotate to realign
-        telemetry.addData("Angle", myRobot.getHorizontalAngle());
-        telemetry.update();
-        //Drive forward to knock off the gold particle 2 seconds
-        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
-        //Retract the collector
-        myRobot.cFlipDrive(-0.4);
-        sleep(500);
-        //aligned to gold particle 5 inches from the lander
-    }
-    private void ClaimFull(RoverRuckusClass myRobot, int ticksPerMineral, int ticksPerInch) {
-        //Move far left
-        if(position == "Left"){
-            myRobot.encoderStrafeDrive(ticksPerInch, 0.3, "Left");
-        }
-        if(position == "Center"){
-            myRobot.encoderStrafeDrive(ticksPerInch+ticksPerMineral, 0.3, "Left");
-        }
-        if(position == "Right"){
-            myRobot.encoderStrafeDrive(ticksPerInch+2*ticksPerMineral,0.3,"Left");
-        }
-        myRobot.encoderTurn(135,20,3,0.4);
-        Parking(myRobot, ticksPerInch);
-
-        sleep(100);
-    }
-
-    private void Parking(RoverRuckusClass myRobot, int ticksPerInch) {
-        //Move sideways until you are an inch or two from the wall
-        myRobot.encoderStrafeDrive(ticksPerInch*14,0.3,"Right");
-        myRobot.encoderTankDrive(-28*ticksPerInch, -28*ticksPerInch, 0.3);
-        myRobot.markerServoDrive(1);
-        sleep(1000);
-    }
 
 
 }

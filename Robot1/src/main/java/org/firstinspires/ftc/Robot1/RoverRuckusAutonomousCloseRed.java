@@ -50,163 +50,43 @@ import java.util.Locale;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="CloseRedAutonomous", group="Linear Opmode")
+@Autonomous(name = "CloseRedAutonomous", group = "Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousCloseRed extends LinearOpMode {
-
-    //Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    DetectGoldMineral goldVision;
-
+public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        RoverRuckusClass myRobot = new RoverRuckusClass();
-        RoverRuckusConstants constants = new RoverRuckusConstants();
-        goldVision = new DetectGoldMineral();
-        // can replace with ActivityViewDisplay.getInstance() for fullscreen
-        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        // start the vision system
-        goldVision.enable();
-        int ticksPerMineral = (int)(constants.TICKS_PER_INCH*14.25);
-        int ticksPerInch = constants.TICKS_PER_INCH;
-        int leadScrewRunTime = constants.leadScrewTime;
-        //Initialize
-        myRobot.initialize(hardwareMap, telemetry);
-        // Wait for the game to start (driver presses PLAY)
+        //Import classes
+        RoverRuckusClass myRobot = initialize();
         waitForStart();
-        runtime.reset();
-
+        //Get mineral positions
+        SetPosition();
+        //Disable OpenCV
+        goldVision.disable();
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            //Lower the robot onto the field 5 seconds
-            myRobot.leadScrewDrive(1);
-            sleep(leadScrewRunTime);
-            myRobot.leadScrewDrive(0);
-            //Move sideways to detach from the hook
-            myRobot.encoderStrafeDrive(200, 0.5, "left");
-            //Face back in original direction
-            if(Math.abs(myRobot.getHorizontalAngle())>3){
-                myRobot.encoderTurn(0,10,3,0.1);
-            }
-            List<Rect> readContours = getGoldMineralRects();
-
-            //Deduce where the gold particle is
-            String position = "Left";
-            //Size of rectangle: (240,320)
-            if(readContours.isEmpty()){
-                telemetry.addData("Position", position);
-            }
-            else{
-                Rect presumedParticle = readContours.get(0);
-                if((presumedParticle.x+presumedParticle.width)/2>=180){
-                    position = "Right";
-                    telemetry.addData("Position", position);
-                }
-                else{
-                    position = "Center";
-                    telemetry.addData("Position", position);
-                }
-            }
-            telemetry.update();
-            goldVision.disable();
-            //Move forward to clear the hook
-            myRobot.encoderTankDrive(200,200, 0.5);
-            //Move sideways to recenter
-            myRobot.encoderStrafeDrive(200, 0.5, "right");
-            /*
-            //Lower the leadScrew
-            myRobot.leadScrewDrive(-1);
-            ElapsedTime leadScrewTime = new ElapsedTime();
-            //While limit switch isn't triggered, continue
-            while(myRobot.returnLimitSwitch() ){
-                //If the screw has been moving for 3 seconds, stop
-                if(leadScrewTime.time()>6){
-                    break;
-                }
-            }
-            myRobot.leadScrewDrive(0);
-            */
-
-
-
-            //Drive forward to clear the lander
-            myRobot.encoderTankDrive(400,400,0.3);
-            sleep(100);
-
-            //Align to the mineral, drive forward, drive back, then align to the left particle
-            if(position == "Left"){
-                myRobot.encoderStrafeDrive(300, 0.3, "Left");
-                myRobot.encoderTankDrive(500,500,0.3);
-                myRobot.encoderTankDrive(-500,-500,0.3);
-            }
-            if(position == "Right"){
-                myRobot.encoderStrafeDrive(300, 0.3, "Right");
-                myRobot.encoderTankDrive(500,500,0.3);
-                myRobot.encoderTankDrive(-500,-500,0.3);
-                myRobot.encoderStrafeDrive(600,0.3,"Left");
-            }
-            if(position == "Center"){
-                myRobot.encoderTankDrive(500,500,0.3);
-                myRobot.encoderTankDrive(-500,-500,0.3);
-                myRobot.encoderStrafeDrive(300,0.3,"Left");
-            }
-
-            //Align the robot to the wall
-            myRobot.encoderTurn(-45,30,10,0.2);
-
-            //Move sideways and align to the wall
-            myRobot.allDrive(-0.3,0.3, 0.3,-0.3);
-            sleep(1000);
-            myRobot.allDrive(-0.1,0.1, 0.1,-0.1);
-            sleep(1000);
-            //Move sideways to separate from the wall
-            myRobot.encoderStrafeDrive(300,0.5,"Left");
-            //Move forward to the depot
-            //45 inches*(1 rotation/6pi inches)*(1120 ticks/1 rotation) = 26734
-            myRobot.encoderTankDrive(2500,2500,-0.3);
-            myRobot.markerServoDrive(0);
-            sleep(100);
-            //Drive into the crater 5 seconds
-            myRobot.driveUntilCrater(0.3);
-
-
-            //Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Position", position);
-            telemetry.update();
+        while (opModeIsActive())
+        {
+            //Land
+            LandingFull(myRobot);
+            //Sample
+            SampleFullProcess(myRobot);
+            //Line up to wall
+            myRobot.encoderTurn(-45, 20, 3, 0.4);
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 13, 0.4, "Left");
+            //Place Marker
+            ClaimFull(myRobot);
+            //Park
+            Parking(myRobot);
             break;
-        }
-    }
 
-    @NonNull
-    private List<Rect> getGoldMineralRects() {
-        //Scan two particles
-        List<MatOfPoint> contours = goldVision.getContours();
-        List<Rect> readContours;
-        readContours = new ArrayList<Rect>();
-        for (int i = 0; i < contours.size(); i++) {
-            Rect boundingRect = Imgproc.boundingRect(contours.get(i));
-            //Filter out anything above about half of the y axis
-            if((boundingRect.y + boundingRect.width)/2>=200){
-                readContours.add(boundingRect);
-            }
         }
-        //Print out filtered contours to telemetry
-        for(int i = 0; i<readContours.size();i++){
-            Rect boundingRect = readContours.get(i);
-            telemetry.addData("contour" + Integer.toString(i),
-                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
-        }
-        return readContours;
+
     }
 }
