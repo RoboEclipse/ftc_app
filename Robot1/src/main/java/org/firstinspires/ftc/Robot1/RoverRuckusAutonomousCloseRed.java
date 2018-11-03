@@ -78,9 +78,9 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Sample
             SampleFullProcess(myRobot);
             //Line up to wall
-            myRobot.encoderTurn(-45, 40, 3, 0.4);
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 12, 0.4, "Left");
-            myRobot.encoderTankDrive(-41*RoverRuckusConstants.TICKS_PER_INCH, -41*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTurn(-35, 20, 3, 0.1);
+            myRobot.encoderTankDrive(-42*RoverRuckusConstants.TICKS_PER_INCH, -42*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             //Place Marker
             ClaimFull(myRobot);
             //Park

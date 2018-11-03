@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -58,7 +59,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             Rect challengerParticle;
             for (int i = 0; i<contours.size(); i++){
                 challengerParticle = Imgproc.boundingRect(contours.get(i));
-                if(challengerParticle.y<presumedParticle.y){
+                if(challengerParticle.y>presumedParticle.y){
                     presumedParticle = challengerParticle;
                 }
             }
@@ -96,12 +97,12 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Move sideways to realign
         myRobot.encoderStrafeDrive(3*ticksPerInch, 0.4, "Right");
         sleep(100);
-        /*
-        if(Math.abs(myRobot.getHorizontalAngle())>2){
+
+        if(Math.abs(myRobot.getHorizontalAngle())>5 || Math.abs(myRobot.getHorizontalAngle())<10){
             //Reorient
             myRobot.encoderTurn(0,5,2,0.1);
         }
-        */
+
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
         sleep(100);
