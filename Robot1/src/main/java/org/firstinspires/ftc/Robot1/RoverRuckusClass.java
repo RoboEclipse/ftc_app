@@ -63,16 +63,17 @@ public class RoverRuckusClass {
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         imuSettings.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imuSettings.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        imuSettings.loggingEnabled      = true;
+        imuSettings.loggingEnabled      = false;
         imuSettings.loggingTag          = "IMU";
         imuSettings.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu.initialize(imuSettings);
+        /*
         imu.startAccelerationIntegration(
                 new Position(),
                 new Velocity(),
                 1000);
-
+        */
         imuSettings.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(imuSettings);
 
@@ -213,7 +214,9 @@ public class RoverRuckusClass {
         }
     }
     public void driveUntilCrater(double speed){
-        double startingAngle = getHorizontalAngle();
+        double startingHorizontalAngle = getHorizontalAngle();
+        double startingVerticalAngle = getVerticalAngle();
+        double startingThirdAngle = getThirdAngle();
         int multiplier=1;
         if(speed<0){
             multiplier = -1;
@@ -227,7 +230,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(Math.abs(getHorizontalAngle()-startingAngle)>10 || getVerticalAngle()-startingAngle>2){
+            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>10 || getVerticalAngle()-startingVerticalAngle>2 || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -255,6 +258,19 @@ public class RoverRuckusClass {
         if (angleX <= -180) angleX += 360;
         return (angleX);
     }
+    public double getThirdAngle(){
+        double angleX;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angleX = angles.thirdAngle;  //ToDo: assume the 3rd angle is the Robot front dir
+        //convert the angle to be within the +/-180 degree rangeection
+        if (angleX > 180)  angleX -= 360;
+        if (angleX <= -180) angleX += 360;
+        return (angleX);
+    }
+    public boolean isIMUCalibrated(){
+        return imu.isGyroCalibrated();
+    }
+
 
     //Space savers
     private void multiSetMode (DcMotor.RunMode mode, DcMotor... ms){

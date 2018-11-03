@@ -84,8 +84,8 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             SampleFullProcess(myRobot);
 
             myRobot.encoderTurn(135,40,3,0.4);
-            myRobot.encoderStrafeDrive(ticksPerInch*13,0.4,"Right");
-
+            myRobot.encoderStrafeDrive(ticksPerInch*12,0.4,"Right");
+            myRobot.encoderTankDrive(-23*RoverRuckusConstants.TICKS_PER_INCH, -23*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             ClaimFull(myRobot);
             Parking(myRobot);
 

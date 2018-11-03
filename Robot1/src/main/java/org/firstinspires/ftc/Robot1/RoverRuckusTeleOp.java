@@ -129,6 +129,15 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.leadScrewDrive(0);
         }
         */
+        if(gamepad1.left_bumper){
+            myRobot.leadScrewDrive(1);
+        }
+        else if(gamepad1.right_bumper){
+            myRobot.leadScrewDrive(-1);
+        }
+        else{
+            myRobot.leadScrewDrive(0);
+        }
         myRobot.leadScrewDrive(-gamepad2.right_stick_y);
         //Elevator Motor Controls
         myRobot.eMotorDrive(gamepad2.left_stick_y);
