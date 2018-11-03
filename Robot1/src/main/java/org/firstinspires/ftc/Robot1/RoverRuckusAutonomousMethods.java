@@ -29,7 +29,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        goldVision.setShowCountours(false);
+        goldVision.setShowCountours(true);
         // start the vision system
         goldVision.enable();
         telemetry.update();
@@ -55,6 +55,14 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         else{
             Rect presumedParticle = Imgproc.boundingRect(contours.get(0));
+            Rect challengerParticle;
+            for (int i = 0; i<contours.size(); i++){
+                challengerParticle = Imgproc.boundingRect(contours.get(i));
+                if(challengerParticle.y<presumedParticle.y){
+                    presumedParticle = challengerParticle;
+                }
+            }
+
             if((presumedParticle.x+presumedParticle.width)/2>=200){
                 position = "Right";
                 telemetry.addData("Position", position);
@@ -88,10 +96,12 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Move sideways to realign
         myRobot.encoderStrafeDrive(3*ticksPerInch, 0.4, "Right");
         sleep(100);
+        /*
         if(Math.abs(myRobot.getHorizontalAngle())>2){
             //Reorient
             myRobot.encoderTurn(0,5,2,0.1);
         }
+        */
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
         sleep(100);
@@ -105,7 +115,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         myRobot.cFlipDrive(0.2);
         sleep(2000);
-        //Rotate to realign
         telemetry.addData("Angle", myRobot.getHorizontalAngle());
         telemetry.update();
 
@@ -115,7 +124,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cFlipDrive(-0.8);
         sleep(1000);
         myRobot.cFlipDrive(0);
-        myRobot.encoderTankDrive(-5*ticksPerInch, -5*ticksPerInch, 0.5);
         //aligned to gold particle 5 inches from the lander
         //Move far left
         if(position == "Left"){

@@ -167,10 +167,10 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.exServoDrive(collectorServoPower);
         }
 
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_trigger>0.7 && purr <= 1){
             purr += .03;
         }
-        else if(gamepad1.left_bumper){
+        else if(gamepad1.left_trigger>0.7 && purr >= 0){
             purr -= .03;
         }
         myRobot.markerServoDrive(purr);
