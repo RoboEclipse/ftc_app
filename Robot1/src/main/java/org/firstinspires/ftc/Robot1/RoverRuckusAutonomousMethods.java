@@ -63,8 +63,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
                     presumedParticle = challengerParticle;
                 }
             }
-
-            if((presumedParticle.x+presumedParticle.width)/2>=200){
+            //If above top 10%
+            if(presumedParticle.y<32){
+                position = "Left";
+            }
+            else if((presumedParticle.x+presumedParticle.width)/2>=200){
                 position = "Right";
                 telemetry.addData("Position", position);
                 telemetry.update();
