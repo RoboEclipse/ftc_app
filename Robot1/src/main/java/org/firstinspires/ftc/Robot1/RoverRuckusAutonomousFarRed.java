@@ -63,7 +63,7 @@ import java.util.Locale;
 //@Disabled
 public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
 
-    int strafeInches = 12;
+    int strafeInches = 15;
     int reverseInches = -23;
 
     @Override
@@ -86,9 +86,10 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
 
             myRobot.encoderTurn(135,40,3,0.5);
             myRobot.encoderStrafeDrive(ticksPerInch*strafeInches,0.5,"Right");
-            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.7);
+            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            sleep(100);
             ClaimFull(myRobot);
-            Parking(myRobot);
+            Parking(myRobot, 135);
 
 
             // Show the elapsed game time and wheel power.

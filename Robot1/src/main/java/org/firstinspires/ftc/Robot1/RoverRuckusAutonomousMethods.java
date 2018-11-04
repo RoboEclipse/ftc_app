@@ -19,6 +19,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     int hookDetach = RoverRuckusConstants.hookDetach;
     int hookClear = RoverRuckusConstants.hookClear;
     int landerClear = RoverRuckusConstants.landerClear;
+    int knockOff = RoverRuckusConstants.knockOff;
     double idealAngle = 0;
 
     //Declare OpMode members.
@@ -30,12 +31,13 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         RoverRuckusClass myRobot = new RoverRuckusClass();
 
         myRobot.initialize(hardwareMap, telemetry);
-        //telemetry.addData("isCalibrated", myRobot.isIMUCalibrated());
+
         goldVision = new DetectGoldMineral();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         goldVision.setShowCountours(true);
 
+        telemetry.addData("isCalibrated", myRobot.isIMUCalibrated());
         telemetry.update();
         return myRobot;
     }
@@ -51,7 +53,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             // yes there's a mass center using Imgproc.moments but w/e
             Rect boundingRect = Imgproc.boundingRect(contours.get(i));
             telemetry.addData("contour" + Integer.toString(i),
-                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
+                    String.format(Locale.getDefault(),
+                            "(%d, %d)",
+                            (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
         }
         //Size of rectangle: (240,320)
         if(contours.isEmpty()){
@@ -91,6 +95,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.leadScrewDrive(1);
         sleep(leadScrewRunTime);
         myRobot.leadScrewDrive(0);
+        myRobot.tankDrive(0.5,0.5);
+        sleep(50);
+        myRobot.tankDrive(0,0);
+        sleep(100);
         //idealAngle = myRobot.getHorizontalAngle();
         //Move sideways to detach from the hook
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Left");
@@ -104,7 +112,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Move sideways to realign
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
 
-        if(Math.abs(myRobot.getHorizontalAngle())>5 || Math.abs(myRobot.getHorizontalAngle())<10){
+        if(Math.abs(myRobot.getHorizontalAngle())>5 || Math.abs(myRobot.getHorizontalAngle())<15){
             //Reorient
             //TODO: Possibly remove idealAngle
             myRobot.encoderTurn(idealAngle,5,2,0.1);
@@ -121,17 +129,26 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(position == "Right"){
             myRobot.encoderStrafeDrive(ticksPerMineral,0.4,"Right");
         }
+        /*
         myRobot.cFlipDrive(0.2);
-        sleep(2000);
+        sleep(1500);
+        */
         telemetry.addData("Angle", myRobot.getHorizontalAngle());
         telemetry.update();
 
         //Drive forward to knock off the gold particle 2 seconds
-        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
+        myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
+        sleep(100);
+        myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(0,10,4,0.1);
+        }
         //Retract the collector
+        /*
         myRobot.cFlipDrive(-0.8);
         sleep(1000);
         myRobot.cFlipDrive(0);
+        */
         //aligned to gold particle 5 inches from the lander
         //Move far left
         if(position == "Left"){
@@ -151,8 +168,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(1000);
     }
 
-    public void Parking(RoverRuckusClass myRobot) {
+    public void Parking(RoverRuckusClass myRobot, double angle) {
         //Move sideways until you are an inch or two from the wall
-        myRobot.driveUntilCrater(0.4);
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(angle,10,4,0.1);
+        }
+        myRobot.driveUntilCrater(0.5);
     }
 }
