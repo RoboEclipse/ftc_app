@@ -29,21 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import android.support.annotation.NonNull;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
-
-import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -59,9 +45,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name="FarRedCloseBlueGoldenNoPark", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+public class RoverRuckusAutonomousFarRedNoPark extends RoverRuckusAutonomousMethods {
 
     int strafeInches = 15;
     int reverseInches = -23;
@@ -87,10 +73,10 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             myRobot.encoderTurn(135,40,3,0.5);
             myRobot.encoderStrafeDrive(ticksPerInch*strafeInches,0.5,"Right");
             myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            myRobot.br8kMotors();
             sleep(100);
             ClaimFull(myRobot);
-            Parking(myRobot, 135);
+            myRobot.encoderTurn(135,40,5,0.5);
+            myRobot.encoderTankDrive(5*ticksPerInch, 5*ticksPerInch, 0.5);
 
 
             // Show the elapsed game time and wheel power.

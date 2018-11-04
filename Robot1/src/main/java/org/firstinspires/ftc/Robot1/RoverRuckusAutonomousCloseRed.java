@@ -84,6 +84,7 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             myRobot.encoderTankDrive(-38*RoverRuckusConstants.TICKS_PER_INCH, -32*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             //Place Marker
+            myRobot.br8kMotors();
             ClaimFull(myRobot);
             //Park
             Parking(myRobot, -45);

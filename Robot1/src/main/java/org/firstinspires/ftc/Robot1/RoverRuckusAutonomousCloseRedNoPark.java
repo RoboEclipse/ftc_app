@@ -29,21 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import android.support.annotation.NonNull;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
-
-import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -51,57 +37,47 @@ import java.util.Locale;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name = "CloseRedFarBlueSilverNoPark", group = "Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
-
-    int strafeInches = 15;
-    int reverseInches = -23;
-
+public class RoverRuckusAutonomousCloseRedNoPark extends RoverRuckusAutonomousMethods {
     @Override
     public void runOpMode() {
-
+        //Import classes
         RoverRuckusClass myRobot = initialize();
         waitForStart();
-        //Initialize
+        //Get mineral positions
         SetPosition();
+        //Disable OpenCV
         goldVision.disable();
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-
+        while (opModeIsActive())
+        {
+            //Land
             LandingFull(myRobot);
-
-            //Scan two particles and deduce where the gold one is
-            //Drive forward to get out of the way of the lander 2 seconds
-            // get a list of contours from the vision system
+            //Sample
             SampleFullProcess(myRobot);
-
-            myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.encoderStrafeDrive(ticksPerInch*strafeInches,0.5,"Right");
-            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            myRobot.br8kMotors();
+            //Line up to wall
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 14, 0.5, "Left");
+            myRobot.encoderTurn(-45, 30, 3, 0.4);
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH*6, 0.5, "Left");
+            myRobot.encoderTankDrive(-38*RoverRuckusConstants.TICKS_PER_INCH, -32*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
+            //Place Marker
             ClaimFull(myRobot);
-            Parking(myRobot, 135);
-
-
-            // Show the elapsed game time and wheel power.
+            //Park
+            myRobot.encoderTurn(-45,40,5,0.5);
+            myRobot.encoderTankDrive(5*ticksPerInch, 5*ticksPerInch, 0.5);
             break;
 
         }
+
     }
-
-
-
-
-
-
 }
