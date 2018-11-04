@@ -63,20 +63,24 @@ public class GyroTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        myRobot.initialize(hardwareMap, telemetry);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            myRobot.initialize(hardwareMap, telemetry);
-            myRobot.getHorizontalAngle();
+            telemetry.addData("AngleYawBefore", myRobot.getHorizontalAngle());
+            telemetry.addData("AnglePitchBefore", myRobot.getVerticalAngle());
+            telemetry.addData("AngleRollBefore", myRobot.getThirdAngle());
+            myRobot.encoderTurn(0,10,3,0.4);
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Angle", myRobot.getHorizontalAngle());
+            telemetry.addData("AngleYawAfter", myRobot.getHorizontalAngle());
+            telemetry.addData("AnglePitchAfter", myRobot.getVerticalAngle());
+            telemetry.addData("AngleRollAfter", myRobot.getThirdAngle());
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)");
             telemetry.update();
 
-            //hmmst.initAutoMecanumBot(hardwareMap, telemetry);
-            //telemetry.addData("Angle", hmmst.getAngle());
+
         }
     }
 }

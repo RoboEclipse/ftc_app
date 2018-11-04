@@ -176,30 +176,28 @@ public class RoverRuckusClass {
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
         double currentDegrees = getHorizontalAngle();
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
         if(degrees-currentDegrees>0){
-            multiSetPower(0.0, lf, lr, rf, rr);
-            multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             lf.setTargetPosition(-10000000);
             rf.setTargetPosition(1000000);
             lr.setTargetPosition(-1000000);
             rr.setTargetPosition(1000000);
-            multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
-            multiSetPower(speed, lf, lr, rf, rr);
         }
         if(degrees-currentDegrees<=0){
-            multiSetPower(0.0, lf, lr, rf, rr);
-            multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
             lf.setTargetPosition(1000000);
             rf.setTargetPosition(-1000000);
             lr.setTargetPosition(1000000);
             rr.setTargetPosition(-1000000);
-            multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
-            multiSetPower(speed, lf, lr, rf, rr);
         }
+
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(speed, lf, lr, rf, rr);
+
         //This part needs to be different though
         while (anyBusy()) {
-            telemetry.addData("encoderPosition", getEncoderPosition());
-            telemetry.addData("gyroPosition", getHorizontalAngle());
+            //telemetry.addData("encoderPosition", getEncoderPosition());
+            //telemetry.addData("gyroPosition", getHorizontalAngle());
 
             if(getHorizontalAngle()<degrees+close && getHorizontalAngle()>degrees-close) {
                 tankDrive(0.1, 0.1);
@@ -230,7 +228,9 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>10 || getVerticalAngle()-startingVerticalAngle>2 || getThirdAngle()-startingThirdAngle>2){
+            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>10
+                    || getVerticalAngle()-startingVerticalAngle>2
+                    || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);

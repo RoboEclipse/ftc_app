@@ -59,11 +59,12 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedAutonomous", group="Linear Opmode")
+@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
 
-
+    int strafeInches = 12;
+    int reverseInches = -23;
 
     @Override
     public void runOpMode() {
@@ -83,9 +84,9 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             // get a list of contours from the vision system
             SampleFullProcess(myRobot);
 
-            myRobot.encoderTurn(135,40,3,0.4);
-            myRobot.encoderStrafeDrive(ticksPerInch*12,0.4,"Right");
-            myRobot.encoderTankDrive(-23*RoverRuckusConstants.TICKS_PER_INCH, -23*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTurn(135,40,3,0.5);
+            myRobot.encoderStrafeDrive(ticksPerInch*strafeInches,0.5,"Right");
+            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.7);
             ClaimFull(myRobot);
             Parking(myRobot);
 

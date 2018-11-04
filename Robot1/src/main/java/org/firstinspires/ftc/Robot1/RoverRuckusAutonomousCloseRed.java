@@ -58,7 +58,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "CloseRedAutonomous", group = "Linear Opmode")
+@Autonomous(name = "CloseRedFarBlueSilver", group = "Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
     @Override
@@ -78,9 +78,10 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Sample
             SampleFullProcess(myRobot);
             //Line up to wall
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 12, 0.4, "Left");
-            myRobot.encoderTurn(-35, 20, 3, 0.1);
-            myRobot.encoderTankDrive(-42*RoverRuckusConstants.TICKS_PER_INCH, -42*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 14, 0.5, "Left");
+            myRobot.encoderTurn(-45, 30, 3, 0.4);
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH*3, 0.5, "Left");
+            myRobot.encoderTankDrive(-38*RoverRuckusConstants.TICKS_PER_INCH, -32*RoverRuckusConstants.TICKS_PER_INCH, 0.7);
             //Place Marker
             ClaimFull(myRobot);
             //Park

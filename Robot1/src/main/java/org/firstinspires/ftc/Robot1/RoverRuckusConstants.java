@@ -5,6 +5,9 @@ public class RoverRuckusConstants {
     static int TICKS_PER_ROTATION = 1120;
     static public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     static public int leadScrewTime=5000;
+    static public int hookDetach = 3;
+    static public int hookClear = 3;
+    static public int landerClear = 5;
     static public double flipOutPower = 0.25;
     static public double flipInPower = -.5;
 }

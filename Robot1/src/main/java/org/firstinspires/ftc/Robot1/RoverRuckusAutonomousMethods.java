@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -17,6 +16,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*13);
     int ticksPerInch = RoverRuckusConstants.TICKS_PER_INCH;
     int leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
+    int hookDetach = RoverRuckusConstants.hookDetach;
+    int hookClear = RoverRuckusConstants.hookClear;
+    int landerClear = RoverRuckusConstants.landerClear;
+    double idealAngle = 0;
+
     //Declare OpMode members.
     String position = "";
     DetectGoldMineral goldVision;
@@ -31,14 +35,16 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         goldVision.setShowCountours(true);
-        // start the vision system
-        goldVision.enable();
+
         telemetry.update();
         return myRobot;
     }
 
     @NonNull
     public List<MatOfPoint> SetPosition() {
+        // start the vision system
+        goldVision.enable();
+        sleep(2000);
         List<MatOfPoint> contours = goldVision.getContours();
         for (int i = 0; i < contours.size(); i++) {
             // get the bounding rectangle of a single contour, we use it to get the x/y center
@@ -46,7 +52,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             Rect boundingRect = Imgproc.boundingRect(contours.get(i));
             telemetry.addData("contour" + Integer.toString(i),
                     String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
-            telemetry.update();
         }
         //Size of rectangle: (240,320)
         if(contours.isEmpty()){
@@ -86,28 +91,27 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.leadScrewDrive(1);
         sleep(leadScrewRunTime);
         myRobot.leadScrewDrive(0);
+        //idealAngle = myRobot.getHorizontalAngle();
         //Move sideways to detach from the hook
-        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.4, "Left");
-        sleep(100);
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Left");
     }
 
     // 2 inches to the left of start
     public void SampleFullProcess(RoverRuckusClass myRobot) {
         telemetry.update();
         //Drive forward to clear the hook
-        myRobot.encoderTankDrive(ticksPerInch*3,ticksPerInch*3, 0.5);
-        sleep(100);
+        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
         //Move sideways to realign
-        myRobot.encoderStrafeDrive(3*ticksPerInch, 0.4, "Right");
-        sleep(100);
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
 
         if(Math.abs(myRobot.getHorizontalAngle())>5 || Math.abs(myRobot.getHorizontalAngle())<10){
             //Reorient
-            myRobot.encoderTurn(0,5,2,0.1);
+            //TODO: Possibly remove idealAngle
+            myRobot.encoderTurn(idealAngle,5,2,0.1);
         }
 
         //Drive forward to clear the lander
-        myRobot.encoderTankDrive(5*ticksPerInch,5*ticksPerInch,0.5);
+        myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.5);
         sleep(100);
         myRobot.leadScrewDrive(-1);
         //Drive sideways to line up with the gold particle 5 seconds
@@ -140,20 +144,15 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderStrafeDrive(ticksPerInch*3+2*ticksPerMineral,0.4,"Left");
         }
         myRobot.leadScrewDrive(0);
-        sleep(100);
     }
 
-    public void ClaimFull(RoverRuckusClass myRobot) {
-
-
+    public void ClaimFull(RoverRuckusClass myRobot){
         myRobot.markerServoDrive(1);
-
-        sleep(100);
+        sleep(1000);
     }
 
     public void Parking(RoverRuckusClass myRobot) {
         //Move sideways until you are an inch or two from the wall
-        sleep(1000);
         myRobot.driveUntilCrater(0.4);
     }
 }

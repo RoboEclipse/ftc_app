@@ -60,67 +60,21 @@ import java.util.Locale;
 
 @TeleOp(name="DetectGold", group="Iterative Opmode")
 //@Disabled
-public class DetectGoldMineralOp extends OpMode
+public class DetectGoldMineralOp extends RoverRuckusAutonomousMethods
 {
-    // Declare OpMode members.
-    private DetectGoldMineral goldVision;
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
-    public void init() {
-        goldVision = new DetectGoldMineral();
-        // can replace with ActivityViewDisplay.getInstance() for fullscreen
-        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        goldVision.setShowCountours(true);
-        // start the vision system
-        goldVision.enable();
-    }
+    public void runOpMode() {
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
+        RoverRuckusClass myRobot = initialize();
+        waitForStart();
+        //Initialize
 
-
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
-    public void loop() {
-        // update the settings of the vision pipeline
         goldVision.setShowCountours(true);
 
-        // get a list of contours from the vision system
-        List<MatOfPoint> contours = goldVision.getContours();
-        for (int i = 0; i < contours.size(); i++) {
-            // get the bounding rectangle of a single contour, we use it to get the x/y center
-            // yes there's a mass center using Imgproc.moments but w/e
-            Rect boundingRect = Imgproc.boundingRect(contours.get(i));
-            telemetry.addData("contour" + Integer.toString(i),
-                    String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+            SetPosition();
         }
-    }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-        // stop the vision system
         goldVision.disable();
     }
-
 }
