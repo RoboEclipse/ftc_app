@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //@Disabled
 public class RoverRuckusAutonomousFarRedNoPark extends RoverRuckusAutonomousMethods {
 
-    int strafeInches = 15;
+    int strafeInches = 13;
     int reverseInches = -23;
 
     @Override
