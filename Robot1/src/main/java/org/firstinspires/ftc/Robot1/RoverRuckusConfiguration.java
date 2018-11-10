@@ -19,7 +19,7 @@ public class RoverRuckusConfiguration {
 
     //Sensors
     public static final String IMUNAme = "imu";
-    public static final String RangeSensor = "rangeSensor";
-    public static final String TouchSensor = "touchSensor";
+    public static final String RangeSensorName = "rangeSensor";
+    public static final String TouchSensorName = "touchSensor";
     public static final String LimitSwitchName = "limitSwitch";
 }

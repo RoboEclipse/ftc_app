@@ -118,17 +118,18 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.drive(theta,  0.5*v_theta, 0.5*v_rotation); //move robot
 
         //Lead Screw Controls
-        /*
+
         if(gamepad2.dpad_up){
             myRobot.leadScrewDrive(1);
         }
         else if(gamepad2.dpad_down){
             myRobot.leadScrewDrive(-1);
-        }a
+        }
         else{
             myRobot.leadScrewDrive(0);
         }
-        */
+
+        /*
         if(gamepad1.left_bumper){
             myRobot.leadScrewDrive(1);
         }
@@ -138,9 +139,11 @@ public class RoverRuckusTeleOp extends OpMode
         else{
             myRobot.leadScrewDrive(-gamepad2.right_stick_y);
         }
+        */
 
         //Elevator Motor Controls
-        myRobot.eMotorDrive(gamepad2.left_stick_y);
+        //myRobot.eMotorDrive(gamepad2.left_stick_y);
+
 
         //Collector Motor Controls
         if(gamepad2.left_bumper){
@@ -155,6 +158,7 @@ public class RoverRuckusTeleOp extends OpMode
         double collectorServoPower=0;
         //Collector Extender Controls
             //myRobot.exServoDrive(gamepad2.right_stick_y);
+        /*
         if(gamepad2.dpad_up){
             collectorServoPower = .5;
             myRobot.exServoDrive(collectorServoPower);
@@ -166,7 +170,8 @@ public class RoverRuckusTeleOp extends OpMode
             collectorServoPower = 0;
             myRobot.exServoDrive(collectorServoPower);
         }
-
+        */
+        collectorServoPower = .99*gamepad2.left_stick_y;
         if(gamepad1.right_trigger>0.7 && purr <= 1){
             purr += .03;
         }

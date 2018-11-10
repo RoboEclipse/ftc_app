@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -20,6 +21,7 @@ import java.util.Locale;
 public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo;
+    private I2cDevice rangeSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
@@ -46,6 +48,7 @@ public class RoverRuckusClass {
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
+        rangeSensor = hardwareMap.i2cDevice.get(config.RangeSensorName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
@@ -58,6 +61,7 @@ public class RoverRuckusClass {
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        cmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -173,6 +177,28 @@ public class RoverRuckusClass {
             telemetry.update();
         }
     }
+
+    public void rangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
+        int multiplier = -1;
+        if (direction.equals("Right") || direction.equals("right")){
+            multiplier = 1;
+        }
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(multiplier*ticks);
+        rf.setTargetPosition(-multiplier*ticks);
+        lr.setTargetPosition(-multiplier*ticks);
+        rr.setTargetPosition(multiplier*ticks);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy()) {
+            readEncoders();
+            telemetry.addData("gyroPosition", getHorizontalAngle());
+            telemetry.update();
+        }
+    }
+
+
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
         double currentDegrees = getHorizontalAngle();

@@ -59,7 +59,6 @@ import java.util.Locale;
 @Autonomous(name="CloseBlueAutonomous", group="Linear Opmode")
 @Disabled
 public class RoverRuckusAutonomousFarBlue extends LinearOpMode {
-
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     String position = "";
