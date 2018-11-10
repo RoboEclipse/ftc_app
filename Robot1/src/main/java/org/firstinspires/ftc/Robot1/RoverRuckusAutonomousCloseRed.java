@@ -61,6 +61,8 @@ import java.util.Locale;
 @Autonomous(name = "CloseRedFarBlueSilver", group = "Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
+    int extraStrafeInches = 14;
+    int strafeInches = -32;
     @Override
     public void runOpMode() {
         //Import classes
@@ -78,10 +80,10 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Sample
             SampleFullProcess(myRobot);
             //Line up to wall
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 14, 0.5, "Left");
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH*6, 0.5, "Left");
-            myRobot.encoderTankDrive(-38*RoverRuckusConstants.TICKS_PER_INCH, -32*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.rangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*6, 10, 0.5, "Left");
+            myRobot.encoderTankDrive(strafeInches*RoverRuckusConstants.TICKS_PER_INCH, strafeInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             //Place Marker
             myRobot.br8kMotors();

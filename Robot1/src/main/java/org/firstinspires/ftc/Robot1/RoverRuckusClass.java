@@ -193,8 +193,12 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
+            if(rangeSensor.cmUltrasonic()<distanceCM){
+                break;
+            }
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
+            telemetry.addData("distance", rangeSensor.cmUltrasonic());
             telemetry.update();
         }
     }
@@ -255,8 +259,10 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(speed, lf, lr, rf, rr);
         while(anyBusy()){
-            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>10
-                    || getVerticalAngle()-startingVerticalAngle>2
+            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
+                encoderTurn(startingHorizontalAngle, 10,3, 0.1);
+            }
+            if(     getVerticalAngle()-startingVerticalAngle>2
                     || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();
                 br8kMotors();
