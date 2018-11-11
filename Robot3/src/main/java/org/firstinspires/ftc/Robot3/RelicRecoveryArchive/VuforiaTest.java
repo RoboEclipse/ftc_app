@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.Robot3.RelicRecoveryArchive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -49,7 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  */
 
 @Autonomous(name="VuforiaTest", group="Iterative Opmode")
-//@Disabled
+@Disabled
 public class VuforiaTest extends OpMode
 {
     // Declare OpMode members.
