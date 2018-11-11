@@ -322,6 +322,9 @@ public class RoverRuckusClass {
         if (angleX <= -180) angleX += 360;
         return (angleX);
     }
+    public double getRangeSensor(){
+        return rangeSensor.cmUltrasonic();
+    }
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();
     }

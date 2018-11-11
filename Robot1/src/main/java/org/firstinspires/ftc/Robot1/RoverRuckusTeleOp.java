@@ -142,7 +142,7 @@ public class RoverRuckusTeleOp extends OpMode
         */
 
         //Elevator Motor Controls
-        //myRobot.eMotorDrive(gamepad2.left_stick_y);
+        myRobot.eMotorDrive(gamepad2.left_stick_y);
 
 
         //Collector Motor Controls
@@ -171,7 +171,7 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.exServoDrive(collectorServoPower);
         }
         */
-        collectorServoPower = .99*gamepad2.left_stick_y;
+        myRobot.cMotorDrive(.99*gamepad2.right_stick_y);
         if(gamepad1.right_trigger>0.7 && purr <= 1){
             purr += .03;
         }
@@ -206,6 +206,7 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("Angle", myRobot.getHorizontalAngle());
         telemetry.addData("collectorServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
+        telemetry.addData("RangeSensor", myRobot.getRangeSensor());
         myRobot.readEncoders();
         telemetry.update();
     }
