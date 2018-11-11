@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -17,7 +18,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
+import java.time.Instant;
 import java.util.Locale;
+
+import javax.xml.datatype.Duration;
 
 public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
@@ -32,6 +36,7 @@ public class RoverRuckusClass {
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
     int TICKS_PER_ROTATION = 1120;
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+    public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     public int leadScrewTime=5000;
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
@@ -106,6 +111,16 @@ public class RoverRuckusClass {
 
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
+    }
+    public void extendLeadScrew(double runtime){
+        ElapsedTime time = new ElapsedTime();
+        leadScrew.setPower(1);
+        while(limitSwitch.getState()==true){
+            if(time.seconds() > runtime){
+                break;
+            }
+        }
+        leadScrew.setPower(0);
     }
     public void eMotorDrive(double power)
     {
@@ -261,6 +276,13 @@ public class RoverRuckusClass {
         while(anyBusy()){
             if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
+            }
+            if(rangeSensor.cmUltrasonic()>15){
+                encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Left");
+
+            }
+            if(rangeSensor.cmUltrasonic()<5){
+                encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Right");
             }
             if(     getVerticalAngle()-startingVerticalAngle>2
                     || getThirdAngle()-startingThirdAngle>2){

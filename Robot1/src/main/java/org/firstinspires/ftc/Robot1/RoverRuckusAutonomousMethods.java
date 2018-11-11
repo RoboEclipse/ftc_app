@@ -15,7 +15,7 @@ import java.util.Locale;
 abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*13);
     int ticksPerInch = RoverRuckusConstants.TICKS_PER_INCH;
-    int leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
+    double leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
     int hookDetach = RoverRuckusConstants.hookDetach;
     int hookClear = RoverRuckusConstants.hookClear;
     int landerClear = RoverRuckusConstants.landerClear;
@@ -92,9 +92,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
     public void LandingFull(RoverRuckusClass myRobot) {
         //Lower the robot onto the field
-        myRobot.leadScrewDrive(1);
-        sleep(leadScrewRunTime);
-        myRobot.leadScrewDrive(0);
+        myRobot.extendLeadScrew(leadScrewRunTime);
         myRobot.tankDrive(0.5,0.5);
         sleep(50);
         myRobot.tankDrive(0,0);
