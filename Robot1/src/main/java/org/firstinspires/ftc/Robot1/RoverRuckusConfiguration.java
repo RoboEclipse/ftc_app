@@ -12,6 +12,7 @@ public class RoverRuckusConfiguration {
     public static final String CollectionFlipperName = "collectionFlipperMotor";
     //ElevatorMotor is actually a continuous rotation servo
     public static final String ExtenderMotorName = "extenderServo";
+    public static final String ExtenderBackMotorName = "reverseExtenderServo";
 
     //Servos
     public static final String ElevatorServoName = "elevatorServo";
@@ -21,5 +22,6 @@ public class RoverRuckusConfiguration {
     public static final String IMUNAme = "imu";
     public static final String RangeSensorName = "rangeSensor";
     public static final String TouchSensorName = "touchSensor";
+    public static final String DistanceSensorName = "colorSensorRight";
     public static final String LimitSwitchName = "limitSwitch";
 }
