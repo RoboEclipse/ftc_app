@@ -104,15 +104,18 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         if (opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
-            if (tfod != null) {
+            if (tfod != null) 
+            {
                 tfod.activate();
             }
 
             while (opModeIsActive()) {
+                // Checks if the TensorFlow object shows something
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    // Outputs to the station
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
                         if (updatedRecognitions.size() == 3) {
