@@ -2,12 +2,10 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,19 +15,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-import java.time.Instant;
 import java.util.Locale;
-
-import javax.xml.datatype.Duration;
 
 public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo, exservoback;
-    private DistanceSensor distanceSensor;
-    private ModernRoboticsI2cRangeSensor rangeSensor;
+    private DistanceSensor leftDistanceSensor, rightDistanceSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
@@ -54,12 +46,12 @@ public class RoverRuckusClass {
         cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
         exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
-        distanceSensor = hardwareMap.get(DistanceSensor.class, config.DistanceSensorName);
+        leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
+        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, config.RangeSensorName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
@@ -225,12 +217,12 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
-            if(distanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
                 break;
             }
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
-            telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance", leftDistanceSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
     }
@@ -294,11 +286,11 @@ public class RoverRuckusClass {
             if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
             }
-            if(distanceSensor.getDistance(DistanceUnit.CM)>20){
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>20){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Left");
 
             }
-            if(distanceSensor.getDistance(DistanceUnit.CM)<10){
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<10){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Right");
             }
             if(     getVerticalAngle()-startingVerticalAngle>2
@@ -339,11 +331,11 @@ public class RoverRuckusClass {
         if (angleX <= -180) angleX += 360;
         return (angleX);
     }
-    public double getRangeSensor(){
-        return rangeSensor.cmUltrasonic();
+    public double getLeftDistanceSensor(){
+        return leftDistanceSensor.getDistance(DistanceUnit.CM);
     }
-    public double getDistanceSensor(){
-        return distanceSensor.getDistance(DistanceUnit.CM);
+    public double getRightDistanceSensor(){
+        return rightDistanceSensor.getDistance(DistanceUnit.CM);
     }
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();

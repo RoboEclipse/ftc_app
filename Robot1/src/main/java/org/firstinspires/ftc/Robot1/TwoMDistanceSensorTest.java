@@ -52,7 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
 @TeleOp(name = "Sensor: REV2mDistance", group = "Sensor")
-@Disabled
+//@Disabled
 public class TwoMDistanceSensorTest extends LinearOpMode {
 
     private DistanceSensor sensorRange;
@@ -64,7 +64,7 @@ public class TwoMDistanceSensorTest extends LinearOpMode {
 
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
         // methods associated with the Rev2mDistanceSensor class.
-        SensorREV2mDistance sensorTimeOfFlight = (SensorREV2mDistance) sensorRange;
+        //SensorREV2mDistance sensorTimeOfFlight = (SensorREV2mDistance) sensorRange;
 
         telemetry.addData(">>", "Press start to continue");
         telemetry.update();
