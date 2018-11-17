@@ -206,7 +206,7 @@ public class RoverRuckusTeleOp extends OpMode
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
-        telemetry.addData("DistanceSensor", myRobot.getDistanceSensor());
+        telemetry.addData("DistanceSensor", myRobot.getLeftDistanceSensor());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         telemetry.addData("RangeSensor", myRobot.getRangeSensor());
