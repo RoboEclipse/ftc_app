@@ -47,6 +47,7 @@ public class RoverRuckusClass {
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
         exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
+        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
@@ -332,6 +333,9 @@ public class RoverRuckusClass {
     }
     public double getLeftDistanceSensor(){
         return leftDistanceSensor.getDistance(DistanceUnit.CM);
+    }
+    public double getRightDistanceSensor(){
+        return rightDistanceSensor.getDistance(DistanceUnit.CM);
     }
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();
