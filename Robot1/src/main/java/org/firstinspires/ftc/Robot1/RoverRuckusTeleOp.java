@@ -195,11 +195,11 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.cFlipDrive(0);
         }
         //Elevator Flipper Controls
-        if(gamepad2.x && elevatorServoPosition<=0.8){
-            elevatorServoPosition += 0.03;
+        if(gamepad2.x){
+            elevatorServoPosition = 0.8;
         }
-        if (gamepad2.y && elevatorServoPosition>=0){
-            elevatorServoPosition -= 0.03;
+        if (gamepad2.y){
+            elevatorServoPosition =0;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
@@ -209,7 +209,7 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("DistanceSensor", myRobot.getLeftDistanceSensor());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-        telemetry.addData("RangeSensor", myRobot.getRangeSensor());
+        telemetry.addData("RangeSensor", myRobot.getLeftDistanceSensor());
         telemetry.addData("TokenServoPosition", tokenServoPosition);
         myRobot.readEncoders();
         telemetry.update();
