@@ -45,9 +45,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name="TensorFlowTest", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+public class TensorFlowTest extends RoverRuckusAutonomousMethods {
 
     int strafeInches = 15;
     int reverseInches = -23;
@@ -56,6 +56,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
     public void runOpMode() {
 
         RoverRuckusClass myRobot = initialize();
+        myRobot.initTensorFlow();
         waitForStart();
         //Initialize
         SetPosition();
@@ -64,20 +65,8 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
         while (opModeIsActive()) {
 
             LandingFull(myRobot);
-
-            //Scan two particles and deduce where the gold one is
-            //Drive forward to get out of the way of the lander 2 seconds
-            // get a list of contours from the vision system
-            SampleFullProcess(myRobot);
-
-            myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, 20, 0.5,"Right");
-            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            sleep(100);
-            ClaimFull(myRobot);
-            myRobot.encoderTurn(135,40,5,0.5);
-            myRobot.driveUntilCrater(0.5);
-
+            myRobot.runTensorFlow();
+            myRobot.stopTensorFlow();
 
             // Show the elapsed game time and wheel power.
             break;

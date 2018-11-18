@@ -6,19 +6,31 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.*;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
+import java.util.List;
 import java.util.Locale;
 
 public class RoverRuckusClass {
+    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+    private static final String VUFORIA_KEY = "AcszqaP/////AAABmQPh2+SHAkBwsXAKy4LdjLEctzmZIadppxAnjn5ubFiLREbyOyViDtItmB2qAtRfbfJ1GRhhAXPEl992rkY/XW50xxWEVrQ+FGKMC1m6PDC1ropQyBiufMSvx81nz+XF6eSHp6Ct2rrT4YutN9a81bcvGVNA+4EfTu98lzP2HrPUiv0SMlQVq+ze6Fw107r8e7ULdv7dbdfxVtS0X+H4toGS+gxJFyWlgcdHmchQ++I7n8RdaBqoVgItHzjZDDo3lMbPkHIMwsTbWlBYJDBoNGMiFnIBUm1t0J6Yu45dldLZ8eeTPn7R9M9MkwYyWLmAr8Ijs0bxmqDuY4NgvmDqeCIzbfyH7uEximJiwZaGu58u";
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo, exservoback;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor;
@@ -250,7 +262,7 @@ public class RoverRuckusClass {
             }
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
-            telemetry.addData("distance", leftDistanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance", rightDistanceSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
     }
@@ -468,5 +480,89 @@ public class RoverRuckusClass {
             ret = Math.max(ret, Math.abs(x));
         }
         return ret;
+    }
+
+    //Tensorflow stuff
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia(HardwareMap hardwareMap) {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
+
+    /**
+     * Initialize the Tensor Flow Object Detection engine.
+     */
+    private void initTfod(HardwareMap hardwareMap) {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+    public void initTensorFlow (){
+        /** Activate Tensor Flow Object Detection. */
+        initVuforia(HardwareMap);
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod(HardwareMap);
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+        if (tfod != null) {
+            tfod.activate();
+        }
+    }
+
+    public void runTensorFlow () {
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                if (updatedRecognitions.size() == 3) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                        } else {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                        }
+                    }
+                }
+                telemetry.update();
+            }
+        }
+    }
+    public void stopTensorFlow(){
+        if (tfod != null) {
+            tfod.shutdown();
+        }
     }
 }

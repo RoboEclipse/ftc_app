@@ -7,7 +7,7 @@ public class RoverRuckusConstants {
     static public double leadScrewTime=5.1;
     static public int hookDetach = 3;
     static public int hookClear = 3;
-    static public int landerClear = 10;
+    static public int landerClear = 9;
     static public int knockOff = 5;
     static public double flipOutPower = 0.25;
     static public double flipInPower = -.5;
