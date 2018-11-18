@@ -203,7 +203,7 @@ public class RoverRuckusClass {
         }
     }
 
-    public void rangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
+    public void leftRangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
         int multiplier = -1;
         if (direction.equals("Right") || direction.equals("right")){
             multiplier = 1;
@@ -218,6 +218,8 @@ public class RoverRuckusClass {
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
             if(leftDistanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
+                br8kMotors();
+                multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 break;
             }
             readEncoders();
@@ -227,6 +229,31 @@ public class RoverRuckusClass {
         }
     }
 
+    public void rightRangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
+        int multiplier = -1;
+        if (direction.equals("Right") || direction.equals("right")){
+            multiplier = 1;
+        }
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(multiplier*ticks);
+        rf.setTargetPosition(-multiplier*ticks);
+        lr.setTargetPosition(-multiplier*ticks);
+        rr.setTargetPosition(multiplier*ticks);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy()) {
+            if(rightDistanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
+                br8kMotors();
+                multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+                break;
+            }
+            readEncoders();
+            telemetry.addData("gyroPosition", getHorizontalAngle());
+            telemetry.addData("distance", leftDistanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        }
+    }
 
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
@@ -286,13 +313,15 @@ public class RoverRuckusClass {
             if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
             }
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>20){
+            /*
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>25){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Left");
 
             }
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<10){
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<15){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Right");
             }
+            */
             if(     getVerticalAngle()-startingVerticalAngle>2
                     || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();

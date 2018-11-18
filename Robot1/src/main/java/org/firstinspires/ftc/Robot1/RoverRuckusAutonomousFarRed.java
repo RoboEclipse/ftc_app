@@ -29,21 +29,7 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import android.support.annotation.NonNull;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
-
-import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -85,7 +71,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             SampleFullProcess(myRobot);
 
             myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.rangeSensorStrafe(ticksPerInch*strafeInches, 15, 0.5,"Right");
+            myRobot.leftRangeSensorStrafe(ticksPerInch*strafeInches, 20, 0.5,"Right");
             myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             ClaimFull(myRobot);
