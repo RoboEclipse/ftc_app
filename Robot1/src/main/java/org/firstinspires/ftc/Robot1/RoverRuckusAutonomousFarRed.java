@@ -49,17 +49,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //@Disabled
 public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
 
-    int strafeInches = 15;
+    int strafeInches = 10;
     int reverseInches = -23;
 
     @Override
     public void runOpMode() {
 
         RoverRuckusClass myRobot = initialize();
-        waitForStart();
         //Initialize
-        SetPosition();
-        goldVision.disable();
+        tensorFlowSetPosition(myRobot);
+        waitForStart();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -69,7 +69,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
             SampleFullProcess(myRobot);
-
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Right");
             myRobot.encoderTurn(135,40,3,0.5);
             myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, 20, 0.5,"Right");
             myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);

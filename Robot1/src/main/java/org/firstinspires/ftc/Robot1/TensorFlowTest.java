@@ -56,7 +56,7 @@ public class TensorFlowTest extends RoverRuckusAutonomousMethods {
     public void runOpMode() {
 
         RoverRuckusClass myRobot = initialize();
-        myRobot.initTensorFlow();
+        myRobot.initTensorFlow(hardwareMap);
         waitForStart();
         //Initialize
         SetPosition();

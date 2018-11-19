@@ -55,7 +55,7 @@ public class RoverRuckusTeleOp extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
     double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-    double elevatorServoPosition = 0.75;
+    double elevatorServoPosition = .72;
     double speedMultiplier = 1;
     double tokenServoPosition = 0;
     double collectorServoPower=0.5;
@@ -120,11 +120,11 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.drive(theta,  speedMultiplier*0.5*v_theta, 0.5*v_rotation); //move robot
 
         //Lead Screw Controls
-
-        if(gamepad2.dpad_up){
+        myRobot.leadScrewDrive(gamepad2.right_stick_y);
+        if(gamepad1.left_bumper){
             myRobot.leadScrewDrive(1);
         }
-        else if(gamepad2.dpad_down){
+        else if(gamepad1.right_bumper && myRobot.returnLimitSwitch()){
             myRobot.leadScrewDrive(-1);
         }
         else{
@@ -132,21 +132,13 @@ public class RoverRuckusTeleOp extends OpMode
         }
 
 
-        if(gamepad1.left_bumper){
-            myRobot.leadScrewDrive(1);
-        }
-        else if(gamepad1.right_bumper){
-            myRobot.leadScrewDrive(-1);
-        }
-        else{
-            myRobot.leadScrewDrive(-gamepad2.right_stick_y);
-        }
+
 
 
         //Elevator Motor Controls
         myRobot.eMotorDrive(gamepad2.left_stick_y);
         if(gamepad2.left_stick_y  == 0){
-            myRobot.eMotorDrive(-.08);
+            myRobot.eMotorDrive(-.0);
         }
 
         //Collector Motor Controls
@@ -195,11 +187,11 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.cFlipDrive(0);
         }
         //Elevator Flipper Controls
-        if(gamepad2.x){
-            elevatorServoPosition = 0.8;
+        if(gamepad2.x && elevatorServoPosition<1){
+            elevatorServoPosition =.2;
         }
-        if (gamepad2.y){
-            elevatorServoPosition =0;
+        if (gamepad2.y && elevatorServoPosition>0){
+            elevatorServoPosition =.72;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);

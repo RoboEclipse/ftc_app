@@ -486,7 +486,7 @@ public class RoverRuckusClass {
     /**
      * Initialize the Vuforia localization engine.
      */
-    private void initVuforia(HardwareMap hardwareMap) {
+    public void initVuforia(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -504,7 +504,7 @@ public class RoverRuckusClass {
     /**
      * Initialize the Tensor Flow Object Detection engine.
      */
-    private void initTfod(HardwareMap hardwareMap) {
+    public void initTfod(HardwareMap hardwareMap) {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -512,12 +512,12 @@ public class RoverRuckusClass {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
-    public void initTensorFlow (){
+    public void initTensorFlow (HardwareMap hardwareMap){
         /** Activate Tensor Flow Object Detection. */
-        initVuforia(HardwareMap);
+        initVuforia(hardwareMap);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod(HardwareMap);
+            initTfod(hardwareMap);
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
@@ -526,7 +526,8 @@ public class RoverRuckusClass {
         }
     }
 
-    public void runTensorFlow () {
+    public String runTensorFlow () {
+        String output = "";
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -549,16 +550,27 @@ public class RoverRuckusClass {
                     if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
+                            output = "Left";
                         } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Right");
+                            output = "Right";
                         } else {
                             telemetry.addData("Gold Mineral Position", "Center");
+                            output = "Center";
                         }
                     }
                 }
                 telemetry.update();
             }
+            if(output != ""){
+                return output;
+            }
+            else{
+                return "Heck";
+            }
+
         }
+        return "boi";
     }
     public void stopTensorFlow(){
         if (tfod != null) {

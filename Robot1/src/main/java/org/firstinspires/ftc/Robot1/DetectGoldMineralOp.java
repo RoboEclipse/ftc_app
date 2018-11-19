@@ -73,6 +73,7 @@ public class DetectGoldMineralOp extends RoverRuckusAutonomousMethods
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
             SetPosition();
         }
         goldVision.disable();

@@ -54,11 +54,11 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
     public void runOpMode() {
         //Import classes
         RoverRuckusClass myRobot = initialize();
-        waitForStart();
         //Get mineral positions
-        SetPosition();
-        //Disable OpenCV
-        goldVision.disable();
+        myRobot.initTensorFlow(hardwareMap);
+        tensorFlowSetPosition(myRobot);
+        waitForStart();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {

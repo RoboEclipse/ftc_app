@@ -4,6 +4,8 @@ package org.firstinspires.ftc.Robot1;
 import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
@@ -26,7 +28,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     String position = "";
     DetectGoldMineral goldVision;
     @NonNull
-    public RoverRuckusClass initialize() {
+    public RoverRuckusClass oldInitialize() {
         telemetry.addData("Status", "Initialized");
         RoverRuckusClass myRobot = new RoverRuckusClass();
 
@@ -39,6 +41,13 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         telemetry.addData("isCalibrated", myRobot.isIMUCalibrated());
         telemetry.update();
+        return myRobot;
+    }
+    @NonNull
+    public RoverRuckusClass initialize() {
+        telemetry.addData("Status", "Initialized");
+        RoverRuckusClass myRobot = new RoverRuckusClass();
+        myRobot.initialize(hardwareMap, telemetry);
         return myRobot;
     }
 
@@ -88,6 +97,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             }
         }
         return contours;
+    }
+
+    public void tensorFlowSetPosition (RoverRuckusClass myRobot){
+        position = myRobot.runTensorFlow();
     }
 
     public void LandingFull(RoverRuckusClass myRobot) {
