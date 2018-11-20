@@ -19,6 +19,7 @@ public class RoverRuckusConfiguration {
     public static final String TeamMarkerServoName = "teamMarkerServo";
 
     //Sensors
+    public static final String cameraName = "TensorFlow";
     public static final String IMUNAme = "imu";
     public static final String RangeSensorName = "rangeSensor";
     public static final String TouchSensorName = "touchSensor";
