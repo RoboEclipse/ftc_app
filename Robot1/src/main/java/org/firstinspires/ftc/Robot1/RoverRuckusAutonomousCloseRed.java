@@ -48,8 +48,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name = "CloseRedFarBlueSilver", group = "Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
-    int extraStrafeInches = 14;
-    int strafeInches = -32;
+    int extraStrafeInches = 10;
+    int drivetoMarkerInches = -35;
     @Override
     public void runOpMode() {
         //Import classes
@@ -58,7 +58,8 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
         myRobot.initTensorFlow(hardwareMap);
         tensorFlowSetPosition(myRobot);
         waitForStart();
-
+        tensorFlowSetPosition(myRobot);
+        myRobot.stopTensorFlow();
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
@@ -69,14 +70,14 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Line up to wall
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
-            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*4, 20, 0.5, "Left");
-            myRobot.encoderTankDrive(strafeInches*RoverRuckusConstants.TICKS_PER_INCH, strafeInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.5, "Left");
+            myRobot.encoderTankDrive(drivetoMarkerInches *RoverRuckusConstants.TICKS_PER_INCH, drivetoMarkerInches *RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             //Place Marker
             myRobot.br8kMotors();
             ClaimFull(myRobot);
             //Park
-            Parking(myRobot, -45);
+            leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 
         }

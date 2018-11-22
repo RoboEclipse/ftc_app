@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.Robot1;
+package org.firstinspires.ftc.Robot3;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

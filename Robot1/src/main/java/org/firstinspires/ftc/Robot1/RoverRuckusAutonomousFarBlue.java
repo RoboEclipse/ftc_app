@@ -179,7 +179,7 @@ public class RoverRuckusAutonomousFarBlue extends LinearOpMode {
             sleep(2000);
             myRobot.encoderStrafeDrive(300,0.5,"Right");
 
-            myRobot.driveUntilCrater(-0.3);
+            myRobot.driveUntilCraterLeft(-0.3, 10);
 
 
             // Show the elapsed game time and wheel power.

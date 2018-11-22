@@ -4,7 +4,6 @@ package org.firstinspires.ftc.Robot1;
 import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
@@ -163,13 +162,13 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //aligned to gold particle 5 inches from the lander
         //Move far left
         if(position == "Left"){
-            myRobot.encoderStrafeDrive(ticksPerInch*3, 0.4, "Left");
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
         }
         if(position == "Center"){
-            myRobot.encoderStrafeDrive(ticksPerInch*3+ticksPerMineral, 0.4, "Left");
+            myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
         }
         if(position == "Right"){
-            myRobot.encoderStrafeDrive(ticksPerInch*3+2*ticksPerMineral,0.4,"Left");
+            myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
         }
         myRobot.leadScrewDrive(0);
     }
@@ -179,11 +178,19 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(1000);
     }
 
-    public void Parking(RoverRuckusClass myRobot, double angle) {
+    public void leftParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
         //Move sideways until you are an inch or two from the wall
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.driveUntilCrater(0.5);
+        myRobot.driveUntilCraterLeft(0.5, targetDistance);
+    }
+
+    public void rightParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
+        //Move sideways until you are an inch or two from the wall
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(angle,10,4,0.1);
+        }
+        myRobot.driveUntilCraterLeft(0.5, targetDistance);
     }
 }

@@ -305,7 +305,7 @@ public class RoverRuckusClass {
             telemetry.update();
         }
     }
-    public void driveUntilCrater(double speed){
+    public void driveUntilCraterLeft(double speed, double targetDistance){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();
         double startingThirdAngle = getThirdAngle();
@@ -326,11 +326,49 @@ public class RoverRuckusClass {
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
             }
             /*
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>25){
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>targetDistance+5){
+                encoderStrafeDrive((int)(leftDistanceSensor.getDistance(DistanceUnit.CM)-targetDistance), 0.5, "Left");
+
+            }
+            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<targetDistance-5){
+                encoderStrafeDrive((int)(targetDistance-leftDistanceSensor.getDistance(DistanceUnit.CM)), 0.5, "Right");
+            }
+            */
+            if(     getVerticalAngle()-startingVerticalAngle>2
+                    || getThirdAngle()-startingThirdAngle>2){
+                telemetry.update();
+                br8kMotors();
+                multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+                break;
+            }
+        }
+    }
+    public void driveUntilCraterRight(double speed, double targetDistance){
+        double startingHorizontalAngle = getHorizontalAngle();
+        double startingVerticalAngle = getVerticalAngle();
+        double startingThirdAngle = getThirdAngle();
+        int multiplier=1;
+        if(speed<0){
+            multiplier = -1;
+        }
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(multiplier*10000000);
+        lr.setTargetPosition(multiplier*10000000);
+        rf.setTargetPosition(multiplier*10000000);
+        rr.setTargetPosition(multiplier*10000000);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(speed, lf, lr, rf, rr);
+        while(anyBusy()){
+            if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
+                encoderTurn(startingHorizontalAngle, 10,3, 0.1);
+            }
+            /*
+            if(rightDistanceSensor.getDistance(DistanceUnit.CM)>targetDistance+5){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Left");
 
             }
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<15){
+            if(rightDistanceSensor.getDistance(DistanceUnit.CM)<targetDistance-5){
                 encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Right");
             }
             */

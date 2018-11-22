@@ -120,7 +120,6 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.drive(theta,  speedMultiplier*0.5*v_theta, 0.5*v_rotation); //move robot
 
         //Lead Screw Controls
-        myRobot.leadScrewDrive(gamepad2.right_stick_y);
         if(gamepad1.left_bumper){
             myRobot.leadScrewDrive(1);
         }
@@ -131,6 +130,9 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.leadScrewDrive(0);
         }
 
+        myRobot.leadScrewDrive(gamepad2.right_stick_y);
+
+
 
 
 
@@ -138,7 +140,7 @@ public class RoverRuckusTeleOp extends OpMode
         //Elevator Motor Controls
         myRobot.eMotorDrive(gamepad2.left_stick_y);
         if(gamepad2.left_stick_y  == 0){
-            myRobot.eMotorDrive(-.0);
+            myRobot.eMotorDrive(-.05);
         }
 
         //Collector Motor Controls
@@ -181,24 +183,24 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.cFlipDrive(0.25);
         }
         else if(gamepad2.b){
-            myRobot.cFlipDrive(-.5);
+            myRobot.cFlipDrive(-.7);
         }
         else {
             myRobot.cFlipDrive(0);
         }
         //Elevator Flipper Controls
         if(gamepad2.x && elevatorServoPosition<1){
-            elevatorServoPosition =.2;
+            elevatorServoPosition =1;
         }
         if (gamepad2.y && elevatorServoPosition>0){
-            elevatorServoPosition =.72;
+            elevatorServoPosition =.2;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
-        telemetry.addData("DistanceSensor", myRobot.getLeftDistanceSensor());
+        telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         telemetry.addData("RangeSensor", myRobot.getLeftDistanceSensor());

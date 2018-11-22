@@ -30,6 +30,12 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -45,51 +51,40 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name="WallAlignTest", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+public class WallAlignTest extends LinearOpMode {
 
-    int strafeInches = 15;
-    int reverseInches = -23;
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    private boolean left = true;
 
     @Override
     public void runOpMode() {
-
-        RoverRuckusClass myRobot = initialize();
-        //Initialize
-        tensorFlowSetPosition(myRobot);
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        RoverRuckusClass myRobot = new RoverRuckusClass();
+        myRobot.initialize(hardwareMap, telemetry);
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        tensorFlowSetPosition(myRobot);
-        myRobot.stopTensorFlow();
+        runtime.reset();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            LandingFull(myRobot);
-
-            //Scan two particles and deduce where the gold one is
-            //Drive forward to get out of the way of the lander 2 seconds
-            // get a list of contours from the vision system
-            SampleFullProcess(myRobot);
-            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Right");
-            myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.5,"Right");
-            myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            sleep(100);
-            ClaimFull(myRobot);
-            myRobot.encoderTurn(135,40,5,0.5);
-            rightParking(myRobot, 135, RoverRuckusConstants.wallDistance);
-
+            if(gamepad1.b){
+                left = false;
+            }
+            if(left){
+                myRobot.driveUntilCraterLeft(0.5,10);
+            }
+            else{
+                myRobot.driveUntilCraterRight(0.5,10);
+            }
 
             // Show the elapsed game time and wheel power.
-            break;
-
-
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Left: ", left);
+            telemetry.update();
         }
     }
-
-
-
-
-
-
 }
