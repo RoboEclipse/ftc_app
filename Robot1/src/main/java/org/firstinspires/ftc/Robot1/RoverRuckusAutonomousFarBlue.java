@@ -166,10 +166,10 @@ public class RoverRuckusAutonomousFarBlue extends LinearOpMode {
             //Drive forward more
             myRobot.encoderTankDrive(600,600,0.3);
             //Realign to the center of the depot
-            if(position == "Left"){
+            if(position.equals("Left")){
                 myRobot.encoderStrafeDrive(300, 0.3, "Right");
             }
-            if(position == "Right"){
+            if(position.equals("Right")){
                 myRobot.encoderStrafeDrive(300,0.3,"Left");
             }
             myRobot.encoderTurn(-45,20,3,0.1);
