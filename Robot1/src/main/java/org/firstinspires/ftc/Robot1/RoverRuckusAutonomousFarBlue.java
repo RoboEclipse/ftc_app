@@ -60,8 +60,8 @@ import java.util.Locale;
 @Disabled
 public class RoverRuckusAutonomousFarBlue extends LinearOpMode {
     //Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    String position = "";
+    ElapsedTime runtime = new ElapsedTime();
+    private String position = "";
     DetectGoldMineral goldVision;
 
     @Override
@@ -151,10 +151,10 @@ public class RoverRuckusAutonomousFarBlue extends LinearOpMode {
             //Drive forward to clear the lander
             myRobot.encoderTankDrive(400,400,0.3);
             //Drive sideways to line up with the gold particle 5 seconds
-            if(position == "Left"){
+            if(position.equals("Left")){
                 myRobot.encoderStrafeDrive(300, 0.3, "Left");
             }
-            if(position == "Right"){
+            if(position.equals("Right")){
                 myRobot.encoderStrafeDrive(300,0.3,"Right");
             }
             //myRobot.cFlipDrive(0.2);
