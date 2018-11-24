@@ -60,7 +60,6 @@ public class TensorFlowTest extends RoverRuckusAutonomousMethods {
         waitForStart();
         //Initialize
         SetPosition();
-        goldVision.disable();
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 

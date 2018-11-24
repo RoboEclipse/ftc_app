@@ -50,6 +50,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         return myRobot;
     }
 
+
     @NonNull
     public List<MatOfPoint> SetPosition() {
         // start the vision system
@@ -97,9 +98,13 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         return contours;
     }
-
-    public void tensorFlowSetPosition (RoverRuckusClass myRobot){
+    public void waitForStartTensorFlow(RoverRuckusClass myRobot) {
+        //Get mineral positions
+        waitForStart();
+        myRobot.initTensorFlow(hardwareMap);
+        sleep(2000);
         position = myRobot.runTensorFlow();
+        myRobot.stopTensorFlow();
     }
 
     public void LandingFull(RoverRuckusClass myRobot) {

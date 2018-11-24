@@ -57,10 +57,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
 
         RoverRuckusClass myRobot = initialize();
         //Initialize
-        tensorFlowSetPosition(myRobot);
-        waitForStart();
-        tensorFlowSetPosition(myRobot);
-        myRobot.stopTensorFlow();
+        waitForStartTensorFlow(myRobot);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -72,7 +69,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             SampleFullProcess(myRobot);
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Right");
             myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
+            myRobot.leftRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
             myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             ClaimFull(myRobot);

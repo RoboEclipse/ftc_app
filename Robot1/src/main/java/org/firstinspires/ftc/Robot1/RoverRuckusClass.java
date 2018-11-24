@@ -33,7 +33,7 @@ public class RoverRuckusClass {
     private TFObjectDetector tfod;
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo, exservoback;
-    private DistanceSensor leftDistanceSensor, rightDistanceSensor;
+    private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
@@ -60,6 +60,7 @@ public class RoverRuckusClass {
         exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
+        elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
         exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
@@ -139,11 +140,11 @@ public class RoverRuckusClass {
 
         if(power>0.51){
             exservo.setPower(.79);
-            exservoback.setPower(.03);
+            exservoback.setPower(.02);
         }
         else if(power<0.49){
             exservoback.setPower(-.79);
-            exservo.setPower(-.03);
+            exservo.setPower(-.02);
         }
         else{
             exservo.setPower(0);
@@ -416,6 +417,9 @@ public class RoverRuckusClass {
     public double getRightDistanceSensor(){
         return rightDistanceSensor.getDistance(DistanceUnit.CM);
     }
+    public double getElevatorDistanceSensor(){
+        return elevatorDistanceSensor.getDistance(DistanceUnit.CM);
+    }
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();
     }
@@ -604,11 +608,11 @@ public class RoverRuckusClass {
                 return output;
             }
             else{
-                return "Heck";
+                return "Center";
             }
 
         }
-        return "boi";
+        return "Center";
     }
     public void stopTensorFlow(){
         if (tfod != null) {
