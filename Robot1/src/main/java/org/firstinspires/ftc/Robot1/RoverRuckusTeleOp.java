@@ -89,7 +89,7 @@ public class RoverRuckusTeleOp extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop() throws NullPointerException{
 
         //Drive motor controls
         double lx = gamepad1.left_stick_x;
