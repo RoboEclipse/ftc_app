@@ -67,9 +67,9 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             //Drive forward to get out of the way of the lander 2 seconds
             // get a list of contours from the vision system
             SampleFullProcess(myRobot);
-            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Right");
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Left");
             myRobot.encoderTurn(135,40,3,0.5);
-            myRobot.leftRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
+            myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
             myRobot.encoderTankDrive(reverseInches*RoverRuckusConstants.TICKS_PER_INCH, reverseInches*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             sleep(100);
             ClaimFull(myRobot);
