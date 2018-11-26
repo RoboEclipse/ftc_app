@@ -28,4 +28,5 @@ public class RoverRuckusConfiguration {
     public static final String Right2MeterDistanceSensorName = "2mDistanceSensorRight";
     public static final String Elevator2MeterDistanceSensorName = "elevatorDistanceSensor";
     public static final String LimitSwitchName = "limitSwitch";
+    public static final String ColorSensorName = "colorSensor";
 }

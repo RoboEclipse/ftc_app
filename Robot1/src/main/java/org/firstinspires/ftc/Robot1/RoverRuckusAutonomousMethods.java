@@ -100,9 +100,13 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     }
     public void waitForStartTensorFlow(RoverRuckusClass myRobot) {
         //Get mineral positions
-        waitForStart();
+        while (!isStarted()) {
+           sleep(500);
+           telemetry.addData("Wait", "Cat");
+           telemetry.update();
+        }
         myRobot.initTensorFlow(hardwareMap);
-        sleep(2000);
+        sleep(1000);
         position = myRobot.runTensorFlow();
         myRobot.stopTensorFlow();
     }
@@ -198,4 +202,18 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         myRobot.driveUntilCraterLeft(0.5, targetDistance);
     }
+
+    public void newParking(RoverRuckusClass myRobot, double angle, double driveDistance){
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(angle,10,4,0.1);
+        }
+        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
+        myRobot.cFlipDrive(0.4);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        myRobot.exServoDrive(.89);
+        sleep(1000);
+        myRobot.exServoDrive(0);
+    }
+
 }

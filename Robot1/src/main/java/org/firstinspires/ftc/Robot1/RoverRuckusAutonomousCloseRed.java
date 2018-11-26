@@ -73,7 +73,8 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             myRobot.br8kMotors();
             ClaimFull(myRobot);
             //Park
-            leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
+            newParking(myRobot, -45, 65);
+            //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 
         }

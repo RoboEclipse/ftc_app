@@ -8,6 +8,7 @@
             <NeveRest60Gearmotor name="collectionRotationMotor" port="2" />
             <NeveRest60Gearmotor name="collectionFlipperMotor" port="3" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <REV_VL53L0X_RANGE_SENSOR name="elevatorDistanceSensor" port="0" bus="3" />
         </LynxModule>
         <LynxModule name="Expansion Hub 1" port="3">
             <NeveRest40Gearmotor name="leftf_motor" port="0" />

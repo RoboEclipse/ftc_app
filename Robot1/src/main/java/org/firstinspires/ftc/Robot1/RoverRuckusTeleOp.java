@@ -90,7 +90,7 @@ public class RoverRuckusTeleOp extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() throws NullPointerException{
+    public void loop(){
 
         //Drive motor controls
         double lx = gamepad1.left_stick_x;
@@ -127,20 +127,20 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad1.right_bumper && myRobot.returnLimitSwitch()){
             leadScrewPower = -1;
         }
-        else{
+        else if(-gamepad2.right_stick_y == 0){
             leadScrewPower = 0;
         }
-        leadScrewPower = -gamepad2.right_stick_y;
-        if(gamepad2.right_stick_y>0){
-            if(!myRobot.returnLimitSwitch()){
-                leadScrewPower = 0;
-                telemetry.addData("Meow", "Purr");
+        else{
+            leadScrewPower = -gamepad2.right_stick_y;
+            if(gamepad2.right_stick_y<0){
+                if(!myRobot.returnLimitSwitch()){
+                    leadScrewPower = 0;
+                    telemetry.addData("Meow", "Purr");
+                }
             }
         }
+
         myRobot.leadScrewDrive(leadScrewPower);
-
-
-
 
 
         //Elevator Motor Controls
@@ -156,7 +156,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         }
         if(myRobot.getElevatorDistanceSensor()<6 && gamepad2.left_stick_y>0){
-            elevatorPower = elevatorPower/2;
+            elevatorPower = 0;
         }
         myRobot.eMotorDrive(elevatorPower);
 
@@ -196,7 +196,16 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
-        if(gamepad2.a) {
+        if(gamepad1.x){
+            myRobot.cFlipDrive(1.0);
+        }
+        else if(gamepad1.y){
+            myRobot.cFlipDrive(-1.0);
+        }
+        else if(!gamepad2.a && !gamepad2.b){
+            myRobot.cMotorDrive(0);
+        }
+        else if(gamepad2.a) {
             myRobot.cFlipDrive(0.4);
         }
         else if(gamepad2.b){

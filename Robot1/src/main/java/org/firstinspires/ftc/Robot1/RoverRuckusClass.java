@@ -3,6 +3,7 @@ package org.firstinspires.ftc.Robot1;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -34,6 +35,7 @@ public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo, exservoback;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor;
+    private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
@@ -67,6 +69,7 @@ public class RoverRuckusClass {
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
+        colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
         lf.setDirection(DcMotor.Direction.REVERSE);
@@ -422,6 +425,12 @@ public class RoverRuckusClass {
     }
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();
+    }
+    public int getColorSensorRed(){
+        return colorSensor.red();
+    }
+    public int getColorSensorBlue(){
+        return colorSensor.blue();
     }
 
 
