@@ -22,7 +22,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     int landerClear = RoverRuckusConstants.landerClear;
     int knockOff = RoverRuckusConstants.knockOff;
     double idealAngle = 0;
-
     //Declare OpMode members.
     String position = "";
     DetectGoldMineral goldVision;
@@ -42,6 +41,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.update();
         return myRobot;
     }
+
     @NonNull
     public RoverRuckusClass initialize() {
         telemetry.addData("Status", "Initialized");
@@ -49,7 +49,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.initialize(hardwareMap, telemetry);
         return myRobot;
     }
-
 
     @NonNull
     public List<MatOfPoint> SetPosition() {
@@ -98,6 +97,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         return contours;
     }
+ 
     public void waitForStartTensorFlow(RoverRuckusClass myRobot) {
         //Get mineral positions
         while (!isStarted()) {
