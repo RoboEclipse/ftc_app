@@ -283,7 +283,7 @@ public class RoverRuckusClass {
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
             Log.d("colorSensorDrive: ", "Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
-            if(colorSensor.red()>200 || colorSensor.blue()>150){
+            if(colorSensor.red()>100 || colorSensor.blue()>100){
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 Log.d("colorSensorDrive: ", "Detected: Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
