@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.Robot3;
+package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -45,18 +45,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "CloseRedFarBlueSilverNoPark", group = "Linear Opmode")
+@Autonomous(name = "SilverDoubleSample", group = "Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousCloseRedNoPark extends RoverRuckusAutonomousMethods {
+public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMethods {
+    int extraStrafeInches = 10;
+    int drivetoMarkerInches = -35;
     @Override
     public void runOpMode() {
         //Import classes
         RoverRuckusClass myRobot = initialize();
-        waitForStart();
-        //Get mineral positions
-        SetPosition();
-        //Disable OpenCV
-        goldVision.disable();
+        waitForStartTensorFlow(myRobot);
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
@@ -65,19 +64,18 @@ public class RoverRuckusAutonomousCloseRedNoPark extends RoverRuckusAutonomousMe
             //Sample
             SampleFullProcess(myRobot);
             //Line up to wall
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * 14, 0.5, "Left");
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH*4, 0.5, "Left");
-            myRobot.encoderTankDrive(-32*RoverRuckusConstants.TICKS_PER_INCH, -32*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            sleep(100);
-            //Place Marker
+            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
+            doubleSampleClaimFull(myRobot, drivetoMarkerInches*RoverRuckusConstants.TICKS_PER_INCH+300, 0.5);
             ClaimFull(myRobot);
             //Park
-            myRobot.encoderTurn(-45,40,5,0.5);
-            myRobot.encoderTankDrive(5*ticksPerInch, 5*ticksPerInch, 0.5);
+            newParking(myRobot, -45, 65);
+            //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 
         }
 
     }
+
 }

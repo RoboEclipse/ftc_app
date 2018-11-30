@@ -105,7 +105,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         while (!isStarted()) {
            sleep(500);
             position = myRobot.runTensorFlow();
-            telemetry.addData("Wait", "Cat");
+            telemetry.addData("Wait", position);
            telemetry.update();
         }
 
@@ -190,6 +190,27 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.addData("Drop", "Blue" + myRobot.getColorSensorBlue() +"Red:" + myRobot.getColorSensorRed());
         telemetry.update();
         sleep(1000);
+    }
+    public void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks, double power){
+        myRobot.colorSensorDrive(maxTicks, power);
+        if(position == "Right"){
+            myRobot.encoderTankDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderStrafeDrive(5*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(5*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+            myRobot.encoderTankDrive(-10*RoverRuckusConstants.TICKS_PER_INCH, -10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+        }
+        else if (position == "Center"){
+            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+        }
+        else {
+            myRobot.encoderTankDrive(-18*RoverRuckusConstants.TICKS_PER_INCH, -18*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderStrafeDrive(15*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(15*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+            myRobot.encoderTankDrive(18*RoverRuckusConstants.TICKS_PER_INCH, 18*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+
+        }
+
     }
 
     public void leftParking(RoverRuckusClass myRobot, double angle, double targetDistance) {

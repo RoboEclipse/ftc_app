@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.Robot1;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -270,7 +272,25 @@ public class RoverRuckusClass {
             telemetry.update();
         }
     }
-
+    public void colorSensorDrive(int ticks, double power){
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(ticks);
+        rf.setTargetPosition(ticks);
+        lr.setTargetPosition(ticks);
+        rr.setTargetPosition(ticks);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy()) {
+            Log.d("colorSensorDrive: ", "Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
+            if(colorSensor.red()>200 || colorSensor.blue()>150){
+                br8kMotors();
+                multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+                Log.d("colorSensorDrive: ", "Detected: Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
+                break;
+            }
+        }
+    }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
         double currentDegrees = getHorizontalAngle();
@@ -297,9 +317,10 @@ public class RoverRuckusClass {
             //telemetry.addData("gyroPosition", getHorizontalAngle());
 
             double adoptivelySlowdownSpeed = speed;
-            if(getHorizontalAngle()<degrees+close && getHorizontalAngle()>degrees-close) {
+            double angle = getHorizontalAngle();
+            if(angle < (degrees + close) && angle > (degrees - close)) {
                 adoptivelySlowdownSpeed = 0.1; //tankDrive(0.1, 0.1);
-                if (getHorizontalAngle() < degrees + enuff && getHorizontalAngle() > degrees - enuff) {
+                if (angle < (degrees + enuff) && angle > (degrees - enuff)) {
                     telemetry.update();
                     br8kMotors();
                     multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -307,9 +328,11 @@ public class RoverRuckusClass {
                 }
             }
             multiSetPower(adoptivelySlowdownSpeed, lf, lr, rf, rr);
+            Log.d("EncoderTurn", Double.toString(angle) + "speed" + adoptivelySlowdownSpeed);
             telemetry.update();
         }
     }
+
     public void driveUntilCraterLeft(double speed, double targetDistance){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();
