@@ -290,15 +290,15 @@ public class RoverRuckusClass {
         }
 
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
-        multiSetPower(speed, lf, lr, rf, rr);
 
         //This part needs to be different though
         while (anyBusy()) {
             //telemetry.addData("encoderPosition", getEncoderPosition());
             //telemetry.addData("gyroPosition", getHorizontalAngle());
 
+            double adoptivelySlowdownSpeed = speed;
             if(getHorizontalAngle()<degrees+close && getHorizontalAngle()>degrees-close) {
-                tankDrive(0.1, 0.1);
+                adoptivelySlowdownSpeed = 0.1; //tankDrive(0.1, 0.1);
                 if (getHorizontalAngle() < degrees + enuff && getHorizontalAngle() > degrees - enuff) {
                     telemetry.update();
                     br8kMotors();
@@ -306,6 +306,7 @@ public class RoverRuckusClass {
                     break;
                 }
             }
+            multiSetPower(adoptivelySlowdownSpeed, lf, lr, rf, rr);
             telemetry.update();
         }
     }

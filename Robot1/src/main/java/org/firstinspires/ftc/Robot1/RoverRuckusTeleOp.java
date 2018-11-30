@@ -157,6 +157,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
         if(myRobot.getElevatorDistanceSensor()<6 && gamepad2.left_stick_y>0){
             elevatorPower = 0;
+            telemetry.addData("DriveOptimization", "PowerCut");
         }
         myRobot.eMotorDrive(elevatorPower);
 
@@ -197,13 +198,13 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
         if(gamepad1.x){
-            myRobot.cFlipDrive(1.0);
+            myRobot.cFlipDrive(.4);
         }
         else if(gamepad1.y){
-            myRobot.cFlipDrive(-1.0);
+            myRobot.cFlipDrive(-.8);
         }
         else if(!gamepad2.a && !gamepad2.b){
-            myRobot.cMotorDrive(0);
+            myRobot.cFlipDrive(0);
         }
         else if(gamepad2.a) {
             myRobot.cFlipDrive(0.4);
@@ -211,9 +212,7 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad2.b){
             myRobot.cFlipDrive(-.8);
         }
-        else {
-            myRobot.cFlipDrive(0);
-        }
+
         //Elevator Flipper Controls
         if(gamepad2.x && elevatorServoPosition<1){
             elevatorServoPosition =1;
