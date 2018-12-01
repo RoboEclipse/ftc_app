@@ -127,6 +127,7 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad1.right_bumper && myRobot.returnLimitSwitch()){
             leadScrewPower = -1;
         }
+        //Cut this
         else if(-gamepad2.right_stick_y == 0){
             leadScrewPower = 0;
         }

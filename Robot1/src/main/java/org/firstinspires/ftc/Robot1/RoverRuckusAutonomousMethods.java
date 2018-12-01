@@ -190,7 +190,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.markerServoDrive(1);
         telemetry.addData("Drop", "Blue" + myRobot.getColorSensorBlue() +"Red:" + myRobot.getColorSensorRed());
         telemetry.update();
-        sleep(1000);
+        sleep(1500);
     }
 
     public void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks, double power){

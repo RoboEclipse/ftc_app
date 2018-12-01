@@ -636,7 +636,19 @@ public class RoverRuckusClass {
                     }
                 }
                 telemetry.update();
+            }/*
+            else if (updatedRecognitions.size()<=2){
+                for (Recognition recognition : updatedRecognitions) {
+                    int goldMineralX = -1;
+                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                        goldMineralX = (int) recognition.getLeft();
+                    }
+                    if(goldMineralX != -1){
+
+                    }
+                }
             }
+            */
             if(output != ""){
                 return output;
             }
@@ -646,6 +658,14 @@ public class RoverRuckusClass {
 
         }
         return "Center";
+    }
+    public void getImageSize(){
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        for(Recognition recognition : updatedRecognitions){
+            telemetry.addData("ImageWidth: ",recognition.getImageWidth());
+            telemetry.addData("ImageLength: ",recognition.getImageHeight());
+        }
+        telemetry.update();
     }
     public void stopTensorFlow(){
         if (tfod != null) {
