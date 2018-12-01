@@ -69,11 +69,12 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
             myRobot.encoderTankDrive(drivetoMarkerInches *RoverRuckusConstants.TICKS_PER_INCH, drivetoMarkerInches *RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             // The robot is breaking in the enclosed block
-            // -------------------------------------------
-            sleep(100);
-            //Place Marker
-            myRobot.br8kMotors();
-            // -------------------------------------------
+            // Use for debug purposes
+            /* -------------------------------------------+*/sleep(100);
+            //                                            |
+            //Place Marker                                |
+            myRobot.br8kMotors();//                       |
+            // -------------------------------------------+
             ClaimFull(myRobot);
             //Park
             newParking(myRobot, -45, 65);
