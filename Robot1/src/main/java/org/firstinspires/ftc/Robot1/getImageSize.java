@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="GetImageSize", group="Linear Opmode")
 //@Disabled
-public class getImageSize extends LinearOpMode {
+public class getImageSize extends RoverRuckusAutonomousMethods {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,7 +62,7 @@ public class getImageSize extends LinearOpMode {
         telemetry.update();
         RoverRuckusClass myRobot = new RoverRuckusClass();
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        waitForStartTensorFlow(myRobot);
         runtime.reset();
 
 

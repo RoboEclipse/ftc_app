@@ -92,7 +92,6 @@ public class RoverRuckusClass {
         imuSettings.loggingTag          = "IMU";
         imuSettings.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu.initialize(imuSettings);
         /*
         imu.startAccelerationIntegration(
                 new Position(),
@@ -109,6 +108,7 @@ public class RoverRuckusClass {
         rr.setPower(rightPower);
         rf.setPower(rightPower);
     }
+
     public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -127,6 +127,7 @@ public class RoverRuckusClass {
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
     }
+
     public void extendLeadScrew(double runtime){
         ElapsedTime time = new ElapsedTime();
         leadScrew.setPower(1);
@@ -137,10 +138,12 @@ public class RoverRuckusClass {
         }
         leadScrew.setPower(0);
     }
+
     public void eMotorDrive(double power)
     {
         emotor.setPower(power);
     }
+
     public void exServoDrive(double power){
 
         if(power>0.51){
@@ -179,7 +182,6 @@ public class RoverRuckusClass {
     public boolean returnLimitSwitch(){
         return limitSwitch.getState();
     }
-
 
     //Encoder stuff
     public void readEncoders(){
@@ -261,17 +263,20 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
-            if(rightDistanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
+            double currentDistanceInCM = rightDistanceSensor.getDistance(DistanceUnit.CM);
+            Log.d("rightRangeSensorStrafe", "Distance "+ currentDistanceInCM + " Goal: " + distanceCM);
+            if(currentDistanceInCM < distanceCM){
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 break;
             }
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
-            telemetry.addData("distance", rightDistanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance", currentDistanceInCM);
             telemetry.update();
         }
     }
+
     public void colorSensorDrive(int ticks, double power){
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -660,12 +665,33 @@ public class RoverRuckusClass {
         return "Center";
     }
     public void getImageSize(){
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        for(Recognition recognition : updatedRecognitions){
-            telemetry.addData("ImageWidth: ",recognition.getImageWidth());
-            telemetry.addData("ImageLength: ",recognition.getImageHeight());
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                if (updatedRecognitions.size() == 3) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData("Width", recognition.getImageWidth());
+                        telemetry.addData("Height", recognition.getImageHeight());
+                    }
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                        } else {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                        }
+                    }
+                }
+                telemetry.update();
+            }
         }
-        telemetry.update();
     }
     public void stopTensorFlow(){
         if (tfod != null) {

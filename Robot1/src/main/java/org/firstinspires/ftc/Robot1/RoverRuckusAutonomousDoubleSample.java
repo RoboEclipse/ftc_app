@@ -71,7 +71,9 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
             if(Math.abs(myRobot.getHorizontalAngle()+45)>10){
                 myRobot.encoderTurn(-45,10,3,0.5);
             }
-            myRobot.leftRangeSensorStrafe(1000, RoverRuckusConstants.wallDistance, 0.5, "Left");
+            if(myRobot.getLeftDistanceSensor()>RoverRuckusConstants.wallDistance){
+                myRobot.leftRangeSensorStrafe(1000, RoverRuckusConstants.wallDistance, 0.5, "Left");
+            }
             //Park
             newParking(myRobot, -45, RoverRuckusConstants.park);
             //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);

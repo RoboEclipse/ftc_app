@@ -46,7 +46,6 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
         waitForStartTensorFlow(myRobot);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             LandingFull(myRobot);
             SampleFullProcess(myRobot);
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Left");

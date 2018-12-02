@@ -187,6 +187,8 @@ public class RoverRuckusTeleOp extends OpMode
             collectorServoPower = 0.5;
             myRobot.exServoDrive(collectorServoPower);
         }
+
+
         /*
         myRobot.exServoDrive(.99*gamepad2.right_stick_y);
         */
@@ -220,6 +222,9 @@ public class RoverRuckusTeleOp extends OpMode
         }
         if (gamepad2.y && elevatorServoPosition>0){
             elevatorServoPosition = 0.5;
+        }
+        if(gamepad2.right_trigger>.5){
+            elevatorServoPosition = 0.6;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);

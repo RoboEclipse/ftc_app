@@ -9,8 +9,8 @@ public class RoverRuckusConstants {
     static public int hookClear = 3;
     static public double landerClear = 8.5;
     static public int knockOff = 6;
-    static public int wallDistance = 8;
-    static public int park = 40;
+    static public int wallDistance = 10;
+    static public int park = 45;
     static public double flipOutPower = 0.25;
     static public double flipInPower = -.5;
 }
