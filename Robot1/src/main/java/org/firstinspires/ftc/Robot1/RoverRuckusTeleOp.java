@@ -226,6 +226,10 @@ public class RoverRuckusTeleOp extends OpMode
         if(gamepad2.right_trigger>.5){
             elevatorServoPosition = 0.6;
         }
+        if(gamepad2.left_trigger>.5){
+            myRobot.elevatorServoDrive(0.4);
+            elevatorServoPosition = 0.5;
+        }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
 

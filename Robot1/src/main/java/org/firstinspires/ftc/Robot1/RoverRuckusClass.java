@@ -640,20 +640,34 @@ public class RoverRuckusClass {
                         }
                     }
                 }
-                telemetry.update();
-            }/*
-            else if (updatedRecognitions.size()<=2){
-                for (Recognition recognition : updatedRecognitions) {
-                    int goldMineralX = -1;
-                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                        goldMineralX = (int) recognition.getLeft();
-                    }
-                    if(goldMineralX != -1){
-
+                else {
+                    for (Recognition recognition : updatedRecognitions) {
+                        int goldMineralX = -1;
+                        int oneThirdImageSize = recognition.getImageWidth()/3;
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                        }
+                        if(goldMineralX != -1){
+                            if(goldMineralX<oneThirdImageSize){
+                                output = "Left";
+                                telemetry.addData("Gold Mineral Position", "Left");
+                            }
+                            else if(goldMineralX<2*oneThirdImageSize){
+                                output = "Center";
+                                telemetry.addData("Gold Mineral Position", "Center");
+                            }
+                            else{
+                                output = "Right";
+                                telemetry.addData("Gold Mineral Position", "Right");
+                            }
+                            break;
+                        }
                     }
                 }
+                telemetry.update();
             }
-            */
+
+
             if(output != ""){
                 return output;
             }
