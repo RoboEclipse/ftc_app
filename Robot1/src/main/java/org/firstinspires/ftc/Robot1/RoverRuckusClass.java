@@ -243,14 +243,16 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<distanceCM){
+            double currentDistanceInCM = leftDistanceSensor.getDistance(DistanceUnit.CM);
+            Log.d("leftRangeSensorStrafe", "Distance "+ currentDistanceInCM + " Goal: " + distanceCM);
+            if(currentDistanceInCM < distanceCM){
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 break;
             }
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
-            telemetry.addData("distance", leftDistanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance", currentDistanceInCM);
             telemetry.update();
         }
     }

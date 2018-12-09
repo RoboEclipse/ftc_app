@@ -240,7 +240,9 @@ public class RoverRuckusTeleOp extends OpMode
         if(gamepad2.left_trigger>.5){
             elevatorServoPosition = 0.4;
         }
-
+        if(elevatorDistance<800 && elevatorDistance>20){
+            elevatorServoPosition = 0.7;
+        }
         myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
