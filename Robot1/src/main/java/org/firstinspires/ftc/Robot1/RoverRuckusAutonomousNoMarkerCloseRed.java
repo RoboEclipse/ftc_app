@@ -45,9 +45,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "CloseRedFarBlueSilver", group = "Linear Opmode")
+@Autonomous(name = "CloseRedFarBlueSilverNoMarker", group = "Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
+public class RoverRuckusAutonomousNoMarkerCloseRed extends RoverRuckusAutonomousMethods {
     int extraStrafeInches = 10;
     int drivetoMarkerInches = -35;
     @Override
@@ -55,7 +55,6 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
         //Import classes
         RoverRuckusClass myRobot = initialize();
         waitForStartTensorFlow(myRobot);
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
@@ -67,17 +66,10 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
             myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
-            myRobot.colorSensorDrive(ticksPerInch*drivetoMarkerInches, 0.5);
-            //Place Marker
-            myRobot.br8kMotors();
-            ClaimFull(myRobot);
-            myRobot.encoderTurn(-45,40,5,0.5);
-            myRobot.encoderTankDrive(RoverRuckusConstants.park/2, RoverRuckusConstants.park/2, 0.5);
-            if(myRobot.getLeftDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
-                myRobot.leftRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.5, "Right");
-            }
-            newParking(myRobot, 135, RoverRuckusConstants.park/2);
-            //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
+            //myRobot.colorSensorDrive(ticksPerInch*drivetoMarkerInches, 0.5);
+            //Park
+            //newParking(myRobot, -45, RoverRuckusConstants.park);
+            leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 
         }

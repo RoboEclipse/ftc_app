@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -146,19 +148,22 @@ public class RoverRuckusTeleOp extends OpMode
 
         //Elevator Motor Controls
         double elevatorPower = 1;
-
+        double elevatorDistance = myRobot.getElevatorDistanceSensor();
         elevatorPower = gamepad2.left_stick_y;
         if(gamepad2.left_stick_y  == 0){
-            if(myRobot.getElevatorDistanceSensor()>30){
+            if(elevatorDistance>30){
                 elevatorPower = -0.1;
             }
             else{
                 elevatorPower = -0.05;
             }
         }
-        if(myRobot.getElevatorDistanceSensor()<6 && gamepad2.left_stick_y>0){
+        if(elevatorDistance<6 && gamepad2.left_stick_y>0){
             elevatorPower = 0;
             telemetry.addData("DriveOptimization", "PowerCut");
+        }
+        if(elevatorPower>0){
+            elevatorServoPosition = 1;
         }
         myRobot.eMotorDrive(elevatorPower);
 
@@ -200,49 +205,59 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
+        double cFlipPower=0;
         if(gamepad1.x){
-            myRobot.cFlipDrive(.4);
+            cFlipPower = 0.4;
         }
         else if(gamepad1.y){
-            myRobot.cFlipDrive(-.8);
+            cFlipPower = -0.8;
         }
         else if(!gamepad2.a && !gamepad2.b){
-            myRobot.cFlipDrive(0);
+            cFlipPower = 0;
         }
         else if(gamepad2.a) {
-            myRobot.cFlipDrive(0.4);
+            cFlipPower = 0.4;
         }
         else if(gamepad2.b){
-            myRobot.cFlipDrive(-0.8);
+            cFlipPower = -0.8;
         }
+        if(elevatorDistance>10 && elevatorDistance<800 && cFlipPower>0){
+            cFlipPower = 0;
+        }
+        myRobot.cFlipDrive(cFlipPower);
 
         //Elevator Flipper Controls
         if(gamepad2.x && elevatorServoPosition<1){
             elevatorServoPosition =1;
         }
         if (gamepad2.y && elevatorServoPosition>0){
-            elevatorServoPosition = 0.5;
+            elevatorServoPosition = 0.45;
         }
         if(gamepad2.right_trigger>.5){
             elevatorServoPosition = 0.6;
         }
+
         if(gamepad2.left_trigger>.5){
-            myRobot.elevatorServoDrive(0.4);
-            elevatorServoPosition = 0.5;
+            elevatorServoPosition = 0.4;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
+
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
-        telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
-        telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
+        //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
+        //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-        telemetry.addData("ElevatorSensor", myRobot.getElevatorDistanceSensor() + "Elevator Power: " + elevatorPower);
+        telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
         telemetry.addData("TokenServoPosition", tokenServoPosition);
         myRobot.readEncoders();
         telemetry.update();
+        Log.d("exServoPower, ", ""+collectorServoPower);
+        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
+        Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+        Log.d("TokenServoPosition", tokenServoPosition+ "");
     }
 
     /*

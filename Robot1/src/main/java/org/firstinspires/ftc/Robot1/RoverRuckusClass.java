@@ -65,7 +65,7 @@ public class RoverRuckusClass {
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
-        exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
+        //exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
@@ -148,16 +148,22 @@ public class RoverRuckusClass {
 
         if(power>0.51){
             exservo.setPower(.79);
-            exservoback.setPower(.02);
+            //exservoback.setPower(.02);
         }
         else if(power<0.49){
-            exservoback.setPower(-.79);
-            exservo.setPower(-.02);
+            //exservoback.setPower(-.79);
+            //exservo.setPower(-.02);
+            exservo.setPower(-.79);
         }
+        else{
+            exservo.setPower(0);
+        }
+        /*
         else{
             exservo.setPower(0);
             exservoback.setPower(0);
         }
+        */
 
     }
     public void markerServoDrive(double position){

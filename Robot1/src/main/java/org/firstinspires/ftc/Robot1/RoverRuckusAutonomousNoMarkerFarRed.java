@@ -31,11 +31,9 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.opencv.core.Mat;
-
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name="FarRedCloseBlueGoldenNoMarker", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+public class RoverRuckusAutonomousNoMarkerFarRed extends RoverRuckusAutonomousMethods {
 
     int strafeInches = 15;
     int reverseInches = -26;
@@ -53,15 +51,11 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Left");
             myRobot.encoderTurn(135,40,3,0.5);
             myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
-            myRobot.colorSensorDrive(ticksPerInch*reverseInches, 0.5);
-            ClaimFull(myRobot);
-            myRobot.encoderTurn(135,40,5,0.5);
-            myRobot.encoderTankDrive(RoverRuckusConstants.park/2, RoverRuckusConstants.park/2, 0.5);
-            if(myRobot.getRightDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
-                myRobot.rightRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.5, "Right");
-            }
-            newParking(myRobot, 135, RoverRuckusConstants.park/2);
-            //rightParking(myRobot, 135, RoverRuckusConstants.wallDistance);
+            //myRobot.colorSensorDrive(ticksPerInch*reverseInches, 0.5);
+            //ClaimFull(myRobot);
+            //myRobot.encoderTurn(135,40,5,0.5);
+            //newParking(myRobot, 135, RoverRuckusConstants.park);
+            rightParking(myRobot, 135, RoverRuckusConstants.wallDistance);
 
 
             // Show the elapsed game time and wheel power.

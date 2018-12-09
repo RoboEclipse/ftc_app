@@ -209,11 +209,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
         }
         else {
-            myRobot.encoderTankDrive(-7*RoverRuckusConstants.TICKS_PER_INCH, -7*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDrive(-8*RoverRuckusConstants.TICKS_PER_INCH, -8*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
             ClaimFull(myRobot);
             myRobot.encoderStrafeDrive(27*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
             myRobot.leftRangeSensorStrafe(28*RoverRuckusConstants.TICKS_PER_INCH, 8, 0.5, "Left");
-            myRobot.encoderTankDrive(7*RoverRuckusConstants.TICKS_PER_INCH, 7*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 8*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
 
         }
 
@@ -246,6 +246,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.exServoDrive(.89);
         sleep(1000);
         myRobot.exServoDrive(0.5);
+        myRobot.cMotorDrive(-1);
+        sleep(2000);
+        myRobot.cMotorDrive(0);
     }
 
 }
