@@ -13,4 +13,5 @@ public class RoverRuckusConstants {
     static public int park = 45;
     static public double flipOutPower = 0.25;
     static public double flipInPower = -.5;
+    static public int tolerance = 2;
 }

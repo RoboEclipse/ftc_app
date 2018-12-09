@@ -50,6 +50,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
     int extraStrafeInches = 10;
     int drivetoMarkerInches = -35;
+    int tolerance = RoverRuckusConstants.tolerance;
     @Override
     public void runOpMode() {
         //Import classes
@@ -65,13 +66,13 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             SampleFullProcess(myRobot);
             //Line up to wall
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
-            myRobot.encoderTurn(-45, 30, 3, 0.4);
+            myRobot.encoderTurn(-45, 30, tolerance, 0.4);
             myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
             myRobot.colorSensorDrive(ticksPerInch*drivetoMarkerInches, 0.5);
             //Place Marker
             myRobot.br8kMotors();
             ClaimFull(myRobot);
-            myRobot.encoderTurn(-45,40,5,0.5);
+            myRobot.encoderTurn(-45,40,tolerance,0.5);
             myRobot.encoderTankDrive(RoverRuckusConstants.park/2, RoverRuckusConstants.park/2, 0.5);
             if(myRobot.getLeftDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
                 myRobot.leftRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.5, "Right");
