@@ -198,10 +198,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.colorSensorDrive(maxTicks, power);
         if(position == "Right"){
             ClaimFull(myRobot);
-            myRobot.encoderTankDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
-            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
-            myRobot.encoderTankDrive(-10*RoverRuckusConstants.TICKS_PER_INCH, -10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDrive(12*RoverRuckusConstants.TICKS_PER_INCH, 10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderStrafeDrive(6*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(6*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+            myRobot.encoderTankDrive(-12*RoverRuckusConstants.TICKS_PER_INCH, -10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
         }
         else if (position == "Center"){
             ClaimFull(myRobot);
