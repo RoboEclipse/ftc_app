@@ -174,10 +174,10 @@ public class RoverRuckusTeleOp extends OpMode
         boolean extenderLimitSwitch = myRobot.isExtenderLimitSwitchNOTPressed();
         //Collector Motor Controls
         if(gamepad2.left_bumper){
-            myRobot.cMotorDrive(1);
+            myRobot.cMotorDrive(0.8);
         }
         else if(gamepad2.right_bumper){
-            myRobot.cMotorDrive(-1);
+            myRobot.cMotorDrive(-0.8);
             myRobot.resetCFlipEncoder();
         }
         else{
