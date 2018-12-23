@@ -33,7 +33,7 @@ public abstract class RoverRackusAutonomousMethods extends LinearOpMode {
     @NonNull
     public RoverRuckusClass oldInitialize() {
         telemetry.addData("Status", "Initialized");
-        RoverRuckusClass myRobot = new RoverRuckusClass();
+        RoverRackusClass myRobot = new RoverRackusClass();
 
         myRobot.initialize(hardwareMap, telemetry);
 
@@ -48,7 +48,7 @@ public abstract class RoverRackusAutonomousMethods extends LinearOpMode {
     }
 
     @NonNull
-    public RoverRuckusClass initialize() {
+    public RoverRackusClass initialize() {
         telemetry.addData("Status", "Initialized");
         RoverRuckusClass myRobot = new RoverRuckusClass();
         myRobot.initialize(hardwareMap, telemetry);
