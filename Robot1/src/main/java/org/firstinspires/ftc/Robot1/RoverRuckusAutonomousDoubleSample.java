@@ -50,6 +50,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMethods {
     int extraStrafeInches = 10;
     int drivetoMarkerInches = -35;
+    boolean right = false;
     @Override
     public void runOpMode() {
         //Import classes
@@ -67,12 +68,15 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
             myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
-            doubleSampleClaimFull(myRobot, drivetoMarkerInches*RoverRuckusConstants.TICKS_PER_INCH+300, 0.5);
+            doubleSampleClaimFull(myRobot, drivetoMarkerInches*RoverRuckusConstants.TICKS_PER_INCH, 0.3);
             if(Math.abs(myRobot.getHorizontalAngle()+45)>10){
                 myRobot.encoderTurn(-45,10,3,0.5);
             }
-            if(myRobot.getLeftDistanceSensor()>RoverRuckusConstants.wallDistance){
+            if(myRobot.getLeftDistanceSensor()>RoverRuckusConstants.wallDistance+5){
                 myRobot.leftRangeSensorStrafe(1000, RoverRuckusConstants.wallDistance, 0.3, "Left");
+            }
+            if(myRobot.getLeftDistanceSensor()<RoverRuckusConstants.wallDistance-5){
+                myRobot.rightRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.3, "Right");
             }
             //Park
             newParking(myRobot, -45, RoverRuckusConstants.park);

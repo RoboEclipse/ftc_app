@@ -62,6 +62,7 @@ public class RoverRuckusTeleOp extends OpMode
     double tokenServoPosition = 0;
     double collectorServoPower=0.5;
     double leadScrewPower = 0;
+    boolean cFlipCheck = false;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -126,7 +127,7 @@ public class RoverRuckusTeleOp extends OpMode
         if(gamepad1.left_bumper){
             leadScrewPower = 1;
         }
-        else if(gamepad1.right_bumper && myRobot.returnLimitSwitch()){
+        else if(gamepad1.right_bumper && myRobot.isElevatorLimitSwitchNOTPressed()){
             leadScrewPower = -1;
         }
         //Cut this
@@ -136,7 +137,7 @@ public class RoverRuckusTeleOp extends OpMode
         else{
             leadScrewPower = -gamepad2.right_stick_y;
             if(gamepad2.right_stick_y<0){
-                if(!myRobot.returnLimitSwitch()){
+                if(!myRobot.isElevatorLimitSwitchNOTPressed()){
                     leadScrewPower = 0;
                     telemetry.addData("Meow", "Purr");
                 }
@@ -162,17 +163,22 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorPower = 0;
             telemetry.addData("DriveOptimization", "PowerCut");
         }
-        if(elevatorPower>0){
+        if(elevatorDistance<40 && elevatorDistance>20 && gamepad2.left_stick_y<0){
+            elevatorServoPosition = 0.7;
+        }
+        if(elevatorPower>0 && elevatorDistance<40){
             elevatorServoPosition = 1;
         }
         myRobot.eMotorDrive(elevatorPower);
 
+        boolean extenderLimitSwitch = myRobot.isExtenderLimitSwitchNOTPressed();
         //Collector Motor Controls
         if(gamepad2.left_bumper){
-            myRobot.cMotorDrive(1.0);
+            myRobot.cMotorDrive(0.8);
         }
         else if(gamepad2.right_bumper){
-            myRobot.cMotorDrive(-1.0);
+            myRobot.cMotorDrive(-0.8);
+            myRobot.resetCFlipEncoder();
         }
         else{
             myRobot.cMotorDrive(0);
@@ -206,6 +212,7 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
         double cFlipPower=0;
+        int cFlipEncoder = myRobot.getCFlipEncoder();
         if(gamepad1.x){
             cFlipPower = 0.4;
         }
@@ -221,8 +228,24 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad2.b){
             cFlipPower = -0.8;
         }
-        if(elevatorDistance>10 && elevatorDistance<800 && cFlipPower>0){
-            cFlipPower = 0;
+
+        if(gamepad2.dpad_left && gamepad2.dpad_right){
+            cFlipCheck = false;
+        }
+        if((Math.abs(cFlipEncoder)>RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)){
+            /*
+            if(elevatorDistance>10 && elevatorDistance<800){
+                cFlipPower = 0;
+                telemetry.addData("StoppedFlipElevatorDistance", elevatorDistance);
+                Log.d("StopFlip","cFlipEncoder" + Math.abs(cFlipEncoder) + "Elevator too High?" + elevatorDistance);
+            }
+
+            if(extenderLimitSwitch){
+                cFlipPower = 0;
+                telemetry.addData("StoppedFlipLimitSwitch", cFlipEncoder);
+                Log.d("StopFlip","ExtenderLimitSwitch:"+extenderLimitSwitch + "cFlipEncoder" + Math.abs(cFlipEncoder));
+            }
+            */
         }
         myRobot.cFlipDrive(cFlipPower);
 
@@ -240,9 +263,7 @@ public class RoverRuckusTeleOp extends OpMode
         if(gamepad2.left_trigger>.5){
             elevatorServoPosition = 0.4;
         }
-        if(elevatorDistance<800 && elevatorDistance>20){
-            elevatorServoPosition = 0.7;
-        }
+
         myRobot.elevatorServoDrive(elevatorServoPosition);
 
         // Show the elapsed game time and wheel power.
@@ -254,12 +275,16 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
         telemetry.addData("TokenServoPosition", tokenServoPosition);
+        telemetry.addData("cFlipEncoder", cFlipEncoder);
+        telemetry.addData("cFlipCheck", cFlipCheck);
+        telemetry.addData("cFlipPwer", cFlipPower);
         myRobot.readEncoders();
         telemetry.update();
         Log.d("exServoPower, ", ""+collectorServoPower);
         Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
         Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
-        Log.d("TokenServoPosition", tokenServoPosition+ "");
+        Log.d("TokenServoPosition", ""+tokenServoPosition);
+        Log.d("cFlipEncoder", ""+cFlipEncoder);
     }
 
     /*

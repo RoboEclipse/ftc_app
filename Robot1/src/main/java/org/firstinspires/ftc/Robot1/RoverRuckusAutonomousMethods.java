@@ -164,6 +164,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
         sleep(100);
         myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
+        myRobot.leadScrewDrive(0);
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(0,10,4,0.1);
         }
@@ -184,7 +185,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(position == "Right"){
             myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
         }
-        myRobot.leadScrewDrive(0);
+
     }
 
     public void ClaimFull(RoverRuckusClass myRobot){
@@ -196,24 +197,27 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
     public void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks, double power){
         myRobot.colorSensorDrive(maxTicks, power);
+        myRobot.br8kMotors();
         if(position == "Right"){
             ClaimFull(myRobot);
-            myRobot.encoderTankDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
-            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
-            myRobot.encoderStrafeDrive(10*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
-            myRobot.encoderTankDrive(-10*RoverRuckusConstants.TICKS_PER_INCH, -10*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDriveInches(13, 0.5);
+            myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+            myRobot.encoderTankDriveInches(-13, 0.5);
         }
         else if (position == "Center"){
             ClaimFull(myRobot);
-            myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderTankDriveInches(2, 0.3);
+            myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
             myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+            myRobot.encoderTankDriveInches(-2,0.5);
         }
         else {
-            myRobot.encoderTankDrive(-8*RoverRuckusConstants.TICKS_PER_INCH, -8*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDriveInches(-6, 0.5);
             ClaimFull(myRobot);
-            myRobot.encoderStrafeDrive(27*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+            myRobot.encoderStrafeDrive(27*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
             myRobot.leftRangeSensorStrafe(28*RoverRuckusConstants.TICKS_PER_INCH, 8, 0.5, "Left");
-            myRobot.encoderTankDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 8*RoverRuckusConstants.TICKS_PER_INCH, 0.5);
+            myRobot.encoderTankDriveInches(6, 0.5);
 
         }
 
@@ -244,10 +248,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(1000);
         myRobot.cFlipDrive(0);
         myRobot.exServoDrive(.89);
-        sleep(1000);
+        sleep(500);
         myRobot.exServoDrive(0.5);
         myRobot.cMotorDrive(-1);
-        sleep(2000);
+        sleep(1000);
         myRobot.cMotorDrive(0);
     }
 

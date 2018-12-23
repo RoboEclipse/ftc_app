@@ -72,12 +72,14 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Place Marker
             myRobot.br8kMotors();
             ClaimFull(myRobot);
-            myRobot.encoderTurn(-45,40,tolerance,0.5);
-            myRobot.encoderTankDrive(RoverRuckusConstants.park/2, RoverRuckusConstants.park/2, 0.5);
+
+            myRobot.encoderTurn(-45,40, tolerance,0.4);
+
+            myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.5);
             if(myRobot.getLeftDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
                 myRobot.leftRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.5, "Right");
             }
-            newParking(myRobot, 135, RoverRuckusConstants.park/2);
+            newParking(myRobot, -45, RoverRuckusConstants.park/2);
             //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 

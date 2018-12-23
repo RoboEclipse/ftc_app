@@ -7,6 +7,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -43,7 +44,7 @@ public class RoverRuckusClass {
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
-    private DigitalChannel limitSwitch;
+    private DigitalChannel elevatorLimitSwitch, extenderLimitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
     int TICKS_PER_ROTATION = 1120;
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
@@ -68,13 +69,15 @@ public class RoverRuckusClass {
         //exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
-        limitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
+        elevatorLimitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
+        extenderLimitSwitch = hardwareMap.digitalChannel.get(config.ExtenderLimitSwitchName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
         lf.setDirection(DcMotor.Direction.REVERSE);
+        cmotor.setDirection(DcMotor.Direction.REVERSE);
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -131,7 +134,7 @@ public class RoverRuckusClass {
     public void extendLeadScrew(double runtime){
         ElapsedTime time = new ElapsedTime();
         leadScrew.setPower(1);
-        while(limitSwitch.getState()==true){
+        while(elevatorLimitSwitch.getState()==true){
             if(time.seconds() > runtime){
                 break;
             }
@@ -185,13 +188,23 @@ public class RoverRuckusClass {
     public void elevatorServoDrive(double position){
         elevatorServo.setPosition(position);
     }
-    public boolean returnLimitSwitch(){
-        return limitSwitch.getState();
+    public boolean isElevatorLimitSwitchNOTPressed(){
+        return elevatorLimitSwitch.getState();
     }
 
     //Encoder stuff
     public void readEncoders(){
         telemetry.addData("Encoders", "lf: " + lf.getCurrentPosition() + " lr: " + lr.getCurrentPosition() + " rf: " +rf.getCurrentPosition() + " rr: "+ rr.getCurrentPosition());
+    }
+    public int getCFlipEncoder(){
+        return cflip.getCurrentPosition();
+    }
+    public void resetCFlipEncoder(){
+        cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cflip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    public void encoderTankDriveInches(double inches, double power) {
+        encoderTankDrive((int)(inches * TICKS_PER_INCH),(int)(inches*TICKS_PER_INCH), power);
     }
     public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
         multiSetPower(0.0, lf, lr, rf, rr);
@@ -296,7 +309,7 @@ public class RoverRuckusClass {
         multiSetPower(power, lf, lr, rf, rr);
         while (anyBusy()) {
             Log.d("colorSensorDrive: ", "Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
-            if(colorSensor.red()>100 || colorSensor.blue()>100){
+            if(colorSensor.red()>90 || colorSensor.blue()>80){
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 Log.d("colorSensorDrive: ", "Detected: Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
@@ -341,7 +354,7 @@ public class RoverRuckusClass {
                 }
             }
             multiSetPower(adoptivelySlowdownSpeed, lf, lr, rf, rr);
-            Log.d("EncoderTurn", Double.toString(angle) + "speed" + adoptivelySlowdownSpeed);
+            Log.d("EncoderTurn", Double.toString(angle)+ "target:" + Double.toString(degrees) + "speed" + adoptivelySlowdownSpeed);
             telemetry.update();
         }
     }
@@ -469,7 +482,9 @@ public class RoverRuckusClass {
     public int getColorSensorBlue(){
         return colorSensor.blue();
     }
-
+    public boolean isExtenderLimitSwitchNOTPressed(){
+        return extenderLimitSwitch.getState();
+    }
 
     //Space savers
     private void multiSetMode (DcMotor.RunMode mode, DcMotor... ms){
