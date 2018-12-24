@@ -171,7 +171,6 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.eMotorDrive(elevatorPower);
 
-        boolean extenderLimitSwitch = myRobot.isExtenderLimitSwitchNOTPressed();
         //Collector Motor Controls
         if(gamepad2.left_bumper){
             myRobot.cMotorDrive(0.8);
@@ -271,6 +270,7 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
+        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
         telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
