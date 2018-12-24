@@ -134,4 +134,6 @@ public class DogeTeleOp extends OpMode
     public void stop() {
     }
 
+    public static class NewRobotConfiguration {
+    }
 }

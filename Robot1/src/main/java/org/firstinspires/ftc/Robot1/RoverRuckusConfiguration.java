@@ -29,6 +29,6 @@ public class RoverRuckusConfiguration {
     public static final String Elevator2MeterDistanceSensorName = "elevatorDistanceSensor";
     public static final String Extender2MeterDistanceSensorName = "extenderDistanceSensor";
     public static final String LimitSwitchName = "limitSwitch";
-    public static final String ExtenderLimitSwitchName = "extenderLimitSwitch";
+    public static final String ExtenderLimitSwitchName = "limitSwitch2";
     public static final String ColorSensorName = "colorSensor";
 }
