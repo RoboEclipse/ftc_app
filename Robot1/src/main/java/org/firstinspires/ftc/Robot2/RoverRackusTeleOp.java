@@ -15,6 +15,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
     double collectorServoPower = 0.5;
     double leadScrewPower = 0;
     boolean cFlipCheck = false;
+    private String elevatorDistance;
 
     /*
      * Code to run ONCE when the driver hits INIT
