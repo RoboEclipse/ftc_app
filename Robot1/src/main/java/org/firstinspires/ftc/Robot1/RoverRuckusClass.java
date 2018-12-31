@@ -694,6 +694,9 @@ public class RoverRuckusClass {
                         }
                     }
                 }
+                if(output == "" && updatedRecognitions.size()==2){
+
+                }
                 telemetry.update();
             }
             if(output != ""){
@@ -743,20 +746,28 @@ public class RoverRuckusClass {
         }
     }
     ElapsedTime time = new ElapsedTime();
+    double extendExtender = -1;
+    double raiseCollector = -0.8;
+    double lowerCollector = 0.4;
+    double runCollector = 1;
+    double raiseElevator = -1;
     public int autoDump(int stage){
         //Assume collector is down and reset encoders
         if(stage==0){
             cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            exServoDrive(1);
+            cflip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             Log.d("AutoDumpState", "Retract Power: " + "-0.8");
-            cFlipDrive(-0.8);
+            cFlipDrive(raiseCollector);
             stage++;
         }
         // Lift collector halfway off ground
         else if(stage==1){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
-            if(currentPosition>TICKS_PER_ROTATION/6){
+            if(getExtenderDistanceSensor()>5){
+                exServoDrive(extendExtender);
+            }
+            if(currentPosition<-TICKS_PER_ROTATION/6){
                 cFlipDrive(0);
                 stage++;
             }
@@ -765,8 +776,8 @@ public class RoverRuckusClass {
         else if(stage==2){
             double extenderDistance = getExtenderDistanceSensor();
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
-            if(extenderDistance<=3){
-                cFlipDrive(-0.8);
+            if(extenderDistance<=5){
+                cFlipDrive(raiseCollector);
                 exServoDrive(0.5);
                 stage++;
                 Log.d("AutoDumpState", "Extender Retracted");
@@ -776,17 +787,18 @@ public class RoverRuckusClass {
         else if(stage==3){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-            if(currentPosition>TICKS_PER_ROTATION/3){
+            if(currentPosition<-TICKS_PER_ROTATION/3){
                 cFlipDrive(0);
                 stage++;
                 //Reset the timer
                 time.reset();
+                cMotorDrive(runCollector);
             }
         }
         //Rotate collector until timer reaches 200 milliseconds
         else if(stage == 4){
-            cMotorDrive(0.5);
             if(time.milliseconds() > 200){
+                cMotorDrive(0);
                 Log.d("AutoDumpState", "Rotated");
                 stage ++;
             }
@@ -794,17 +806,20 @@ public class RoverRuckusClass {
         //Lower down collector to get ready
         else if(stage == 5){
             int currentPosition = cflip.getCurrentPosition();
-            cFlipDrive(0.4);
-            if(currentPosition<TICKS_PER_ROTATION/6){
-                Log.d("State", "Lowered");
+            cFlipDrive(lowerCollector);
+            Log.d("AutoDumpState", "LoweringCollector: " + currentPosition);
+            if(currentPosition<-TICKS_PER_ROTATION/6){
+                Log.d("AutoDumpState", "Lowered");
                 cFlipDrive(0);
+                eMotorDrive(raiseElevator);
                 stage++;
             }
         }
         //Raise up basket and reset
         else if(stage==6){
-            eMotorDrive(-1);
-            if(getElevatorDistanceSensor() > 50){
+            double elevatorDistance = getElevatorDistanceSensor();
+            Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
+            if(elevatorDistance > 57){
                 Log.d("State", "Raised");
                 eMotorDrive(0);
                 stage = 0;
