@@ -642,31 +642,34 @@ public class RoverRuckusClass {
                     int goldMineralX = -1;
                     int silverMineral1X = -1;
                     int silverMineral2X = -1;
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                        } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                        } else {
-                            silverMineral2X = (int) recognition.getLeft();
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getLeft();
+                            } else if (silverMineral1X == -1) {
+                                silverMineral1X = (int) recognition.getLeft();
+                            } else {
+                                silverMineral2X = (int) recognition.getLeft();
+                            }
                         }
-                    }
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                            output = "Left";
-                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                            output = "Right";
-                        } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                            output = "Center";
-                        }
+                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                            if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position3", "Left");
+                                output = "Left";
+                                Log.d("Order: ", "Gold, White, White");
+                            } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position3", "Right");
+                                output = "Right";
+                                Log.d("Order: ", "White, White, Gold");
+                            } else {
+                                telemetry.addData("Gold Mineral Position3", "Center");
+                                output = "Center";
+                                Log.d("Order: ", "White, Gold, White");
+                            }
                     }
                 }
                 else {
+                    int goldMineralX = -1;
                     for (Recognition recognition : updatedRecognitions) {
-                        int goldMineralX = -1;
                         int oneThirdImageSize = recognition.getImageWidth()/3;
                         if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                             goldMineralX = (int) recognition.getLeft();
@@ -675,44 +678,17 @@ public class RoverRuckusClass {
                             if(goldMineralX<oneThirdImageSize){
                                 output = "Left";
                                 telemetry.addData("Gold Mineral Position", "Left");
+                                Log.d("Order: ", "Gold, ?, ?");
                             }
                             else if(goldMineralX<2*oneThirdImageSize){
                                 output = "Center";
                                 telemetry.addData("Gold Mineral Position", "Center");
+                                Log.d("Order: ", "?, Gold, ?");
                             }
                             else{
                                 output = "Right";
                                 telemetry.addData("Gold Mineral Position", "Right");
-                            }
-                            break;
-                        }
-                    }
-                }
-                if(updatedRecognitions.size() == 2){
-                    for (Recognition recognition : updatedRecognitions) {
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
-                        int oneThirdImageSize = recognition.getImageWidth()/3;
-                        if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
-                            if(silverMineral1X == -1){
-                                silverMineral1X = (int) recognition.getLeft();
-                            }
-                            else if (silverMineral2X == -1){
-                                silverMineral2X = (int) recognition.getLeft();
-                            }
-                        }
-                        if(silverMineral1X != -1 && silverMineral2X != 1){
-                            if(silverMineral1X<2*oneThirdImageSize && silverMineral2X<2*oneThirdImageSize){
-                                output = "Right";
-                                telemetry.addData("Gold Mineral Position", "Right");
-                            }
-                            else if(silverMineral1X>oneThirdImageSize && silverMineral2X>oneThirdImageSize){
-                                output = "Left";
-                                telemetry.addData("Gold Mineral Position", "Left");
-                            }
-                            else{
-                                output = "Center";
-                                telemetry.addData("Gold Mineral Position", "Center");
+                                Log.d("Order: ", "?, ?, Gold");
                             }
                             break;
                         }
@@ -720,13 +696,13 @@ public class RoverRuckusClass {
                 }
                 telemetry.update();
             }
-
-
             if(output != ""){
                 return output;
             }
             else{
-                return "Center";
+                Log.d("Order: ", "?, ?, ?");
+                telemetry.addData("Gold Mineral Position:Assumed", "Left");
+                return "Left";
             }
 
         }
@@ -766,44 +742,76 @@ public class RoverRuckusClass {
             tfod.shutdown();
         }
     }
+    ElapsedTime time = new ElapsedTime();
     public int autoDump(int stage){
-        ElapsedTime time = new ElapsedTime();
-        double storage = 0;
+        //Assume collector is down and reset encoders
         if(stage==0){
             cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            stage++;
-        }
-        else if(stage==1){
+            exServoDrive(1);
+            Log.d("AutoDumpState", "Retract Power: " + "-0.8");
             cFlipDrive(-0.8);
-            if(cflip.getCurrentPosition()>TICKS_PER_ROTATION/3){
-                stage++;
-            }
-        }
-        else if(stage == 2){
-            storage = time.milliseconds();
             stage++;
         }
-        else if(stage == 3){
-            cFlipDrive(0);
-            cMotorDrive(0.5);
-            if(time.milliseconds()-storage>200){
-                stage ++;
-            }
-        }
-        else if(stage == 4){
-            cFlipDrive(0.4);
-            if(cflip.getCurrentPosition()<100){
+        // Lift collector halfway off ground
+        else if(stage==1){
+            int currentPosition = cflip.getCurrentPosition();
+            Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
+            if(currentPosition>TICKS_PER_ROTATION/6){
                 cFlipDrive(0);
                 stage++;
             }
         }
-        else if(stage==5){
+        // Retract the extender
+        else if(stage==2){
+            double extenderDistance = getExtenderDistanceSensor();
+            Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
+            if(extenderDistance<=3){
+                cFlipDrive(-0.8);
+                exServoDrive(0.5);
+                stage++;
+                Log.d("AutoDumpState", "Extender Retracted");
+            }
+        }
+        // Retract flipper to dump minerials into basket
+        else if(stage==3){
+            int currentPosition = cflip.getCurrentPosition();
+            Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
+            if(currentPosition>TICKS_PER_ROTATION/3){
+                cFlipDrive(0);
+                stage++;
+                //Reset the timer
+                time.reset();
+            }
+        }
+        //Rotate collector until timer reaches 200 milliseconds
+        else if(stage == 4){
+            cMotorDrive(0.5);
+            if(time.milliseconds() > 200){
+                Log.d("AutoDumpState", "Rotated");
+                stage ++;
+            }
+        }
+        //Lower down collector to get ready
+        else if(stage == 5){
+            int currentPosition = cflip.getCurrentPosition();
+            cFlipDrive(0.4);
+            if(currentPosition<TICKS_PER_ROTATION/6){
+                Log.d("State", "Lowered");
+                cFlipDrive(0);
+                stage++;
+            }
+        }
+        //Raise up basket and reset
+        else if(stage==6){
             eMotorDrive(-1);
-            if(getElevatorDistanceSensor()>50){
+            if(getElevatorDistanceSensor() > 50){
+                Log.d("State", "Raised");
                 eMotorDrive(0);
                 stage = 0;
             }
         }
+
+        telemetry.addData("Stage", stage);
         return stage;
     }
 }

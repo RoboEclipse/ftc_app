@@ -62,6 +62,7 @@ public class RoverRuckusTeleOp extends OpMode
     double tokenServoPosition = 0;
     double collectorServoPower=0.5;
     double leadScrewPower = 0;
+    int stage = 0;
     boolean cFlipCheck = false;
     /*
      * Code to run ONCE when the driver hits INIT
@@ -227,10 +228,15 @@ public class RoverRuckusTeleOp extends OpMode
         else if(gamepad2.b){
             cFlipPower = -0.8;
         }
-
-        if(gamepad2.dpad_left && gamepad2.dpad_right){
-            cFlipCheck = false;
+        if(gamepad2.dpad_left || stage != 0){
+            stage = myRobot.autoDump(stage);
         }
+        if(gamepad2.dpad_right){
+            stage = 0;
+        }
+        //if(gamepad2.dpad_left && gamepad2.dpad_right){
+            cFlipCheck = false;
+        //}
         if((Math.abs(cFlipEncoder)>RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)){
             /*
             if(elevatorDistance>10 && elevatorDistance<800){
@@ -277,7 +283,7 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("TokenServoPosition", tokenServoPosition);
         telemetry.addData("cFlipEncoder", cFlipEncoder);
         telemetry.addData("cFlipCheck", cFlipCheck);
-        telemetry.addData("cFlipPwer", cFlipPower);
+        telemetry.addData("cFlipPower", cFlipPower);
         myRobot.readEncoders();
         telemetry.update();
         Log.d("exServoPower, ", ""+collectorServoPower);
