@@ -27,6 +27,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
 
 public class RoverRuckusClass {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -37,14 +38,14 @@ public class RoverRuckusClass {
     private TFObjectDetector tfod;
     private DcMotor lf, lr, rf, rr, leadScrew, cmotor, cflip, emotor;
     private CRServo exservo, exservoback;
-    private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor;
+    private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
-    private DigitalChannel elevatorLimitSwitch, extenderLimitSwitch;
+    private DigitalChannel elevatorLimitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
     int TICKS_PER_ROTATION = 1120;
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
@@ -66,11 +67,11 @@ public class RoverRuckusClass {
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
+        extenderDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Extender2MeterDistanceSensorName);
         //exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
         elevatorLimitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
-        extenderLimitSwitch = hardwareMap.digitalChannel.get(config.ExtenderLimitSwitchName);
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
@@ -482,8 +483,8 @@ public class RoverRuckusClass {
     public int getColorSensorBlue(){
         return colorSensor.blue();
     }
-    public boolean isExtenderLimitSwitchNOTPressed(){
-        return extenderLimitSwitch.getState();
+    public double getExtenderDistanceSensor(){
+        return extenderDistanceSensor.getDistance(DistanceUnit.CM);
     }
 
     //Space savers
@@ -687,6 +688,36 @@ public class RoverRuckusClass {
                         }
                     }
                 }
+                if(updatedRecognitions.size() == 2){
+                    for (Recognition recognition : updatedRecognitions) {
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+                        int oneThirdImageSize = recognition.getImageWidth()/3;
+                        if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                            if(silverMineral1X == -1){
+                                silverMineral1X = (int) recognition.getLeft();
+                            }
+                            else if (silverMineral2X == -1){
+                                silverMineral2X = (int) recognition.getLeft();
+                            }
+                        }
+                        if(silverMineral1X != -1 && silverMineral2X != 1){
+                            if(silverMineral1X<2*oneThirdImageSize && silverMineral2X<2*oneThirdImageSize){
+                                output = "Right";
+                                telemetry.addData("Gold Mineral Position", "Right");
+                            }
+                            else if(silverMineral1X>oneThirdImageSize && silverMineral2X>oneThirdImageSize){
+                                output = "Left";
+                                telemetry.addData("Gold Mineral Position", "Left");
+                            }
+                            else{
+                                output = "Center";
+                                telemetry.addData("Gold Mineral Position", "Center");
+                            }
+                            break;
+                        }
+                    }
+                }
                 telemetry.update();
             }
 
@@ -734,5 +765,45 @@ public class RoverRuckusClass {
         if (tfod != null) {
             tfod.shutdown();
         }
+    }
+    public int autoDump(int stage){
+        ElapsedTime time = new ElapsedTime();
+        double storage = 0;
+        if(stage==0){
+            cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            stage++;
+        }
+        else if(stage==1){
+            cFlipDrive(-0.8);
+            if(cflip.getCurrentPosition()>TICKS_PER_ROTATION/3){
+                stage++;
+            }
+        }
+        else if(stage == 2){
+            storage = time.milliseconds();
+            stage++;
+        }
+        else if(stage == 3){
+            cFlipDrive(0);
+            cMotorDrive(0.5);
+            if(time.milliseconds()-storage>200){
+                stage ++;
+            }
+        }
+        else if(stage == 4){
+            cFlipDrive(0.4);
+            if(cflip.getCurrentPosition()<100){
+                cFlipDrive(0);
+                stage++;
+            }
+        }
+        else if(stage==5){
+            eMotorDrive(-1);
+            if(getElevatorDistanceSensor()>50){
+                eMotorDrive(0);
+                stage = 0;
+            }
+        }
+        return stage;
     }
 }
