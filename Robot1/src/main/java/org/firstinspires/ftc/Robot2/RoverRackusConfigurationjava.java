@@ -7,4 +7,6 @@ public class RoverRackusConfigurationjava {
     public static final String RightRearMotorName = "rightb_motor";
     public static final String LeadScrewMotorName = "leadScrewMotor";
     public static final String doubleExtenderMotorName = "doubleExtenderMotor";
+    public static final String basketDumpingMechanism = "basketDumpingMotor";
+    
 }
