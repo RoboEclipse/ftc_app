@@ -262,8 +262,6 @@ public abstract class RoverRackusTeleOp extends OpMode {
         Log.d("cFlipEncoder", "" + cFlipEncoder);
     }
 
-}
-
     /*
      * Code to run ONCE after the driver hits STOP
      */

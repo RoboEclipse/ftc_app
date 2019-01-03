@@ -278,8 +278,8 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.dpad_right) {
             stage = 0;
         }
-        if(stage==6){
-            elevatorServoPosition=0.7;
+        if(stage == 7){
+            elevatorServoPosition = 0.7;
         }
         telemetry.update();
         // Show the elapsed game time and wheel power.
