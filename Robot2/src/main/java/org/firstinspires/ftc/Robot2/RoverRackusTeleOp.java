@@ -17,6 +17,8 @@ public abstract class RoverRackusTeleOp extends OpMode {
     boolean cFlipCheck = false;
     private String elevatorDistance;
     private String cFlipEncoder;
+    private String cFlipPower;
+    
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -253,7 +255,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
         telemetry.addData("TokenServoPosition", tokenServoPosition);
         telemetry.addData("cFlipEncoder", cFlipEncoder);
         telemetry.addData("cFlipCheck", cFlipCheck);
-        telemetry.addData("cFlipPwer", cFlipPower);
+        telemetry.addData("cFlipPower", cFlipPower);
         myRobot.readEncoders();
         telemetry.update();
         Log.d("exServoPower, ", "" + collectorServoPower);
