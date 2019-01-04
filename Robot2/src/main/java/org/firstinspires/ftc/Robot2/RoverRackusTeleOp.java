@@ -99,7 +99,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
         } else {
             speedMultiplier = 1;
         }
-        theta = Math.atan2(lx, ly);
+        double theta = Math.atan2(lx, ly);
         v_theta = Math.sqrt(lx * lx + ly * ly);
         v_rotation = gamepad1.right_stick_x;
 
