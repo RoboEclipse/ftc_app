@@ -38,4 +38,6 @@ public class RoverRackusClass {
         }
         screwUpPower.setPower(0);
     }
+    public void readEncoders(){
+    }
 }
