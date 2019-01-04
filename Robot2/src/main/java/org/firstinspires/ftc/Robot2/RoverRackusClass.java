@@ -38,6 +38,9 @@ public class RoverRackusClass {
         }
         screwUpPower.setPower(0);
     }
+    public void drive(double angle, double speed, double rotations){
+
+    }
     public void readEncoders(){
     }
 }

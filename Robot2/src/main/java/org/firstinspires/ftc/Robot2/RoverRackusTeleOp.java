@@ -41,6 +41,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
     public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     public int leadScrewTime=5000;
     RoverRackusConfiguration config = new RoverRackusConfiguration();
+    
 
 
     /*
@@ -82,6 +83,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
         //Drive motor controls
         double lx = gamepad1.left_stick_x;
         double ly = -gamepad1.left_stick_y;
+        double speedMultiplier;
         if (gamepad1.dpad_up) {
             ly = 1;
             speedMultiplier = 0.5;
