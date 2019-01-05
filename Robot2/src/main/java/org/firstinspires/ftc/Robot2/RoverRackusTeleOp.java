@@ -40,8 +40,10 @@ public abstract class RoverRackusTeleOp extends OpMode {
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     public int leadScrewTime=5000;
+    private double v_theta;
+    private double v_rotation;
     RoverRackusConfiguration config = new RoverRackusConfiguration();
-    
+    private double leadScrewPower;
 
 
     /*

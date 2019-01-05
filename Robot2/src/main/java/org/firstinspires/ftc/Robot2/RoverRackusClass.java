@@ -17,6 +17,9 @@ public class RoverRackusClass {
 
     public void initialize(HardwareMap hardwareMap, Telemetry telemetry) {
     }
+    public boolean isElevatorLimitSwitchNOTPressed(){
+        return elevatorLimitSwitch.getState();
+    }
 
     public void elevatorServoDrive(double elevatorServoPosition) {
     }
