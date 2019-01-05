@@ -40,12 +40,14 @@ public abstract class RoverRackusTeleOp extends OpMode {
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     public int leadScrewTime=5000;
-    private double v_theta;
-    private double v_rotation;
+    private static double v_theta = 0;
+    private static double v_rotation;
     RoverRackusConfiguration config = new RoverRackusConfiguration();
-    private double leadScrewPower;
-
-
+    private static double leadScrewPower = 1.0;
+    private double tokenServoPosition = 0;
+    public double elevatorServoPosition;
+    private double collectorServoPower = 0.7;
+    private double cFlipEncoder = cflip.getCurrentPosition();
     /*
      * Code to run ONCE when the driver hits INIT
      */
