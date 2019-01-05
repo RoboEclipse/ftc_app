@@ -137,10 +137,10 @@ public abstract class RoverRackusTeleOp extends OpMode {
 
         //Elevator Motor Controls
         double elevatorPower = 1;
-        /*
-        Checks distance moved up
+
+        //Checks distance moved up
         double elevatorDistance = myRobot.getElevatorDistanceSensor();
-        */
+
         elevatorPower = gamepad2.left_stick_y;
 
 

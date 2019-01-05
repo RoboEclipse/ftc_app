@@ -9,7 +9,7 @@ public class RoverRackusConfiguration {
     public static final String LeadScrewMotorName = "leadScrewMotor";
     public static final String doubleExtenderMotorName = "doubleExtenderMotor";
     public static final String basketDumpingMechanismMotorName = "basketDumpingMotor";
-    public static final String intakeMchanismMotorName = "collectorMotor";
+    public static final String intakeMchanismMotorName = "cMotor";
     // Servo Names
     public static final String collectionBasket = "cBasketMotor";
 
