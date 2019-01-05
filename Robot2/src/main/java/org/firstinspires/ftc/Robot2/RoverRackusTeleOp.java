@@ -45,7 +45,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
     RoverRackusConfiguration config = new RoverRackusConfiguration();
     private static double leadScrewPower = 1.0;
     private double tokenServoPosition = 0;
-    public double elevatorServoPosition;
+    public double elevatorServoPosition = elevatorServo.getPosition();
     private double collectorServoPower = 0.7;
     private double cFlipEncoder = cflip.getCurrentPosition();
     /*
