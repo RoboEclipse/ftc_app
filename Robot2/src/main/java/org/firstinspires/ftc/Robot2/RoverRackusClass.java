@@ -16,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.util.Locale;
+
 public class RoverRackusClass {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -41,7 +43,9 @@ public class RoverRackusClass {
     RoverRackusConfiguration config = new RoverRackusConfiguration();
     private DcMotor cMotor;
     private DcMotor screwUpPower;
-
+    private double direction;
+    private double velocity;
+    private double rotationVelocity;
 
     public void getHorizontalAngle() {
     
@@ -76,8 +80,52 @@ public class RoverRackusClass {
         }
         screwUpPower.setPower(0);
     }
-    public void drive(double angle, double speed, double rotations){
+    private static class Wheels {
+        public double lf, lr, rf, rr;
 
+        public Wheels(double lf, double rf, double lr, double rr) {
+            this.lf = lf;
+            this.rf = rf;
+            this.lr = lr;
+            this.rr = rr;
+        }
+    }
+    private RoverRackusClass.Wheels getWheels(double direction, double velocity, double rotationVelocity) {
+        final double vd = velocity;
+        final double td = direction;
+        final double vt = rotationVelocity;
+
+        double s = Math.sin(td + Math.PI / 4.0);
+        double c = Math.cos(td + Math.PI / 4.0);
+        double m = Math.max(Math.abs(s), Math.abs(c));
+        s /= m;
+        c /= m;
+
+        final double v1 = vd * s + vt;
+        final double v2 = vd * c - vt;
+        final double v3 = vd * c + vt;
+        final double v4 = vd * s - vt;
+
+        // Ensure that none of the values go over 1.0. If none of the provided values are
+        // over 1.0, just scale by 1.0 and keep all values.
+        double scale = ma(1.0, v1, v2, v3, v4);
+
+        return new RoverRackusClass.Wheels(v1 / scale, v2 / scale, v3 / scale, v4 / scale);
+    }
+    private static double ma(double ... xs) {
+        double ret = 0.0;
+        for (double x : xs) {
+            ret = Math.max(ret, Math.abs(x));
+        }
+        return ret;
+    }
+    public void drive(double angle, double speed, double rotations){
+        RoverRackusClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
+        lf.setPower(w.lf);
+        rf.setPower(w.rf);
+        lr.setPower(w.lr);
+        rr.setPower(w.rr);
+        telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
     }
     public void readEncoders(){
     }
