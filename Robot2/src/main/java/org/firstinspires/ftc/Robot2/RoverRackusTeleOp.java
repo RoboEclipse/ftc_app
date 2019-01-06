@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -48,6 +47,8 @@ public abstract class RoverRackusTeleOp extends OpMode {
     public double elevatorServoPosition = elevatorServo.getPosition();
     private double collectorServoPower = 0.7;
     private double cFlipEncoder = cflip.getCurrentPosition();
+    private double cFlipPower = cflip.getPower();
+    private boolean cFlipCheck = cflip.isBusy();
     /*
      * Code to run ONCE when the driver hits INIT
      */
