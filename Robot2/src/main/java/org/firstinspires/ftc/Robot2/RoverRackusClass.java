@@ -34,7 +34,7 @@ public class RoverRackusClass {
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
-    private DigitalChannel elevatorLimitSwitch;
+    private DigitalChannel elevatorLimitSwitch, exLimitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
     int TICKS_PER_ROTATION = 1120;
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
@@ -47,6 +47,7 @@ public class RoverRackusClass {
     private double direction;
     private double velocity;
     private double rotationVelocity;
+
     public boolean isExtenderLimitSwitchNOTPressed()
     {
         if(!(extenderDistanceSensor.getDistance(DistanceUnit.CM) <= 0.5)) {
@@ -71,6 +72,7 @@ public class RoverRackusClass {
         return elevatorDistanceSensor.getDistance(DistanceUnit.CM);
     }
     public void elevatorServoDrive(double elevatorServoPosition) {
+
     }
     public void cMotorDrive(double power)
     {
@@ -78,7 +80,8 @@ public class RoverRackusClass {
     }
     // Not Working
     public void resetCFlipEncoder(){
-        cflip.setMode()
+        cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cflip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void leadScrewDrive(double power)
     {
@@ -93,6 +96,19 @@ public class RoverRackusClass {
             }
         }
         screwUpPower.setPower(0);
+    }
+    public void exServoDrive(double power)
+    {
+        if(power>0.51){
+            exservo.setPower(.79);
+            //exservoback.setPower(.02);
+        }
+        else if(power<0.49){
+            exservo.setPower(-.79);
+        }
+        else{
+            exservo.setPower(0);
+        }
     }
     private static class Wheels {
         public double lf, lr, rf, rr;
