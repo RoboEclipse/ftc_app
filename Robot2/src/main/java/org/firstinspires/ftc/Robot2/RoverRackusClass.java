@@ -83,10 +83,12 @@ public class RoverRackusClass {
         cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         cflip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public void leadScrewDrive(double power)
     {
         screwUpPower.setPower(power);
     }
+
     public void extendLeadScrew(double runtime){
         ElapsedTime time = new ElapsedTime();
         screwUpPower.setPower(1);
@@ -97,6 +99,7 @@ public class RoverRackusClass {
         }
         screwUpPower.setPower(0);
     }
+
     public void exServoDrive(double power)
     {
         if(power>0.51){
@@ -120,6 +123,7 @@ public class RoverRackusClass {
             this.rr = rr;
         }
     }
+
     private RoverRackusClass.Wheels getWheels(double direction, double velocity, double rotationVelocity) {
         final double vd = velocity;
         final double td = direction;
@@ -156,6 +160,16 @@ public class RoverRackusClass {
         lr.setPower(w.lr);
         rr.setPower(w.rr);
         telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
+    }
+    public void markerServoDrive(double positron)
+    {
+        markerServo.setPosition(positron);
+    }
+    public int getCFlipEncoder(){
+        return cflip.getCurrentPosition();
+    }
+    public void cFlipDrive(double power){
+        cMotor.setPower(0.6);
     }
     public void readEncoders(){
     }

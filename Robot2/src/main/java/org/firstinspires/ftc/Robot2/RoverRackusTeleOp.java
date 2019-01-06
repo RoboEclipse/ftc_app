@@ -187,7 +187,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
 
         //Collector Extender Controls
         myRobot.exServoDrive(gamepad2.right_stick_y);
-        /*
+
         if(gamepad2.dpad_up){
             collectorServoPower = 0.89;
             myRobot.exServoDrive(collectorServoPower);
@@ -199,17 +199,17 @@ public abstract class RoverRackusTeleOp extends OpMode {
             collectorServoPower = 0.5;
             myRobot.exServoDrive(collectorServoPower);
         }
-        */
 
-        /*
+
+
         myRobot.exServoDrive(.99*gamepad2.right_stick_y);
-        */
+
         if (gamepad1.right_trigger > 0.7 && tokenServoPosition <= 1) {
             tokenServoPosition += 0.03;
         } else if (gamepad1.left_trigger > 0.7 && tokenServoPosition >= 0) {
             tokenServoPosition -= 0.03;
         }
-        /*
+
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
         double cFlipPower=0;
@@ -234,8 +234,8 @@ public abstract class RoverRackusTeleOp extends OpMode {
             cFlipCheck = false;
         }
 
-        if((Math.abs(cFlipEncoder)>RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)){
-            /*
+        if((Math.abs(cFlipEncoder)>RoverRackusConstance.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)){
+
             if(elevatorDistance>10 && elevatorDistance<800){
                 cFlipPower = 0;
                 telemetry.addData("StoppedFlipElevatorDistance", elevatorDistance);
@@ -251,7 +251,7 @@ public abstract class RoverRackusTeleOp extends OpMode {
         }
 
         myRobot.cFlipDrive(cFlipPower);
-        */
+
 
         //Elevator Flipper Controls
         if (gamepad2.x && elevatorServoPosition < 1) {
