@@ -33,6 +33,7 @@ public class RoverRackusClass {
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
+    private DcMotor cbasket;
     private Orientation angles;
     private DigitalChannel elevatorLimitSwitch, exLimitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
