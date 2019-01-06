@@ -25,7 +25,7 @@ public class RoverRackusClass {
     private static final String VUFORIA_KEY = "AcszqaP/////AAABmQPh2+SHAkBwsXAKy4LdjLEctzmZIadppxAnjn5ubFiLREbyOyViDtItmB2qAtRfbfJ1GRhhAXPEl992rkY/XW50xxWEVrQ+FGKMC1m6PDC1ropQyBiufMSvx81nz+XF6eSHp6Ct2rrT4YutN9a81bcvGVNA+4EfTu98lzP2HrPUiv0SMlQVq+ze6Fw107r8e7ULdv7dbdfxVtS0X+H4toGS+gxJFyWlgcdHmchQ++I7n8RdaBqoVgItHzjZDDo3lMbPkHIMwsTbWlBYJDBoNGMiFnIBUm1t0J6Yu45dldLZ8eeTPn7R9M9MkwYyWLmAr8Ijs0bxmqDuY4NgvmDqeCIzbfyH7uEximJiwZaGu58u";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-    private DcMotor lf, lr, rf, rr, leadScrew, cflip, emotor;
+    private DcMotor lf, lr, rf, rr, leadScrew, cflip;
     private CRServo exservo, exservoback;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor;
@@ -42,10 +42,21 @@ public class RoverRackusClass {
     public int leadScrewTime=5000;
     RoverRackusConfiguration config = new RoverRackusConfiguration();
     private DcMotor cMotor;
+    private DcMotor eMotor;
     private DcMotor screwUpPower;
     private double direction;
     private double velocity;
     private double rotationVelocity;
+    public boolean isExtenderLimitSwitchNOTPressed()
+    {
+        if(!(extenderDistanceSensor.getDistance(DistanceUnit.CM) <= 0.5)) {
+            return true;
+        }
+        return false;
+    }
+    public void eMotorDrive(double power){
+        eMotor.setPower(power);
+    }
 
     public void getHorizontalAngle() {
     
@@ -65,7 +76,10 @@ public class RoverRackusClass {
     {
         cMotor.setPower(power);
     }
-
+    // Not Working
+    public void resetCFlipEncoder(){
+        cflip.setMode()
+    }
     public void leadScrewDrive(double power)
     {
         screwUpPower.setPower(power);

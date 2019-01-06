@@ -147,8 +147,8 @@ public abstract class RoverRackusTeleOp extends OpMode {
         elevatorPower = gamepad2.left_stick_y;
 
 
-        /*
-        Take this all in one chunk
+
+
 
         if(gamepad2.left_stick_y  == 0){
             if(elevatorDistance>30){
@@ -183,10 +183,10 @@ public abstract class RoverRackusTeleOp extends OpMode {
         else{
             myRobot.cMotorDrive(0);
         }
-        */
+
 
         //Collector Extender Controls
-        //myRobot.exServoDrive(gamepad2.right_stick_y);
+        myRobot.exServoDrive(gamepad2.right_stick_y);
         /*
         if(gamepad2.dpad_up){
             collectorServoPower = 0.89;
