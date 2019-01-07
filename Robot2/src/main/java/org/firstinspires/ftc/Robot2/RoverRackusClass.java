@@ -33,7 +33,7 @@ public class RoverRackusClass {
     private Telemetry telemetry;
     private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
-    private DcMotor cbasket;
+    private Servo cbasket;
     private Orientation angles;
     private DigitalChannel elevatorLimitSwitch, exLimitSwitch;
     public static final int ENCODERS_CLOSE_ENOUGH = 10;
@@ -123,6 +123,9 @@ public class RoverRackusClass {
             this.lr = lr;
             this.rr = rr;
         }
+    }
+    public void cbasketflip(double positron){
+        cbasket.setPosition(positron);
     }
 
     private RoverRackusClass.Wheels getWheels(double direction, double velocity, double rotationVelocity) {
