@@ -31,4 +31,9 @@ public class RoverRuckusConfiguration {
     public static final String LimitSwitchName = "limitSwitch";
     public static final String ExtenderLimitSwitchName = "limitSwitch2";
     public static final String ColorSensorName = "colorSensor";
+
+    //New Collector System
+    public static final String cFlipServoName = "cFlipServo";
+    public static final String cServoLeftName = "cServoLeft";
+    public static final String cServoRightName = "cServoRight";
 }

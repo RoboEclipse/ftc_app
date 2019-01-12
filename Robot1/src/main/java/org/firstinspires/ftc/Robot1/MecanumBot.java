@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -40,7 +41,6 @@ class MecanumBot {
     private ModernRoboticsTouchSensor modernRoboticsTouchSensor;
     private ModernRoboticsI2cRangeSensor rangesensor;
     private Servo jewelServo, flicker, RelicArmServo, RelicHandServo, topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, topMiddleServo;
-
     private static final double TICKS_PER_INCH = 1120 * (16. / 24.) / (Math.PI * 4.0);
     private static final double TICKS_PER_CM = TICKS_PER_INCH / 2.54;
     private static final double ENCODER_DRIVE_POWER = 0.3;

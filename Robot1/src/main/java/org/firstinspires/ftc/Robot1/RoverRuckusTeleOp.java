@@ -64,6 +64,7 @@ public class RoverRuckusTeleOp extends OpMode
     double leadScrewPower = 0;
     int stage = 0;
     boolean cFlipCheck = false;
+    boolean fast = false;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -122,169 +123,185 @@ public class RoverRuckusTeleOp extends OpMode
         v_theta = Math.sqrt(lx * lx + ly * ly);
         v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  speedMultiplier*0.6*v_theta, 0.5*v_rotation); //move robot
+        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation); //move robot
         if(stage == 0) {
-            //Lead Screw Controls
-            if (gamepad1.left_bumper) {
-                leadScrewPower = 1;
-            } else if (gamepad1.right_bumper && myRobot.isElevatorLimitSwitchNOTPressed()) {
-                leadScrewPower = -1;
-            }
-            //Cut this
-            else if (-gamepad2.right_stick_y == 0) {
-                leadScrewPower = 0;
-            } else {
-                leadScrewPower = -gamepad2.right_stick_y;
-                if (gamepad2.right_stick_y < 0) {
-                    if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
-                        leadScrewPower = 0;
-                        telemetry.addData("Meow", "Purr");
-                    }
-                }
-            }
-
-            myRobot.leadScrewDrive(leadScrewPower);
-
-
-            //Elevator Motor Controls
-            double elevatorPower = 1;
-            double elevatorDistance = myRobot.getElevatorDistanceSensor();
-            elevatorPower = gamepad2.left_stick_y;
-            if (gamepad2.left_stick_y == 0) {
-                if (elevatorDistance > 30) {
-                    elevatorPower = -0.1;
-                } else {
-                    elevatorPower = -0.05;
-                }
-            }
-            if (elevatorDistance < 6 && gamepad2.left_stick_y > 0) {
-                elevatorPower = 0;
-                telemetry.addData("DriveOptimization", "PowerCut");
-            }
-            if (elevatorDistance < 40 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
-                elevatorServoPosition = 0.7;
-            }
-            if (elevatorPower > 0 && elevatorDistance < 40) {
-                elevatorServoPosition = 1;
-            }
-            myRobot.eMotorDrive(elevatorPower);
-
-            //Collector Motor Controls
-            if (gamepad2.left_bumper) {
-                myRobot.cMotorDrive(0.8);
-            } else if (gamepad2.right_bumper) {
-                myRobot.cMotorDrive(-0.8);
-                myRobot.resetCFlipEncoder();
-            } else {
-                myRobot.cMotorDrive(0);
-            }
-
-            //Collector Extender Controls
-            //myRobot.exServoDrive(gamepad2.right_stick_y);
-
-            if (gamepad2.dpad_up) {
-                collectorServoPower = 0.89;
-                myRobot.exServoDrive(collectorServoPower);
-            } else if (gamepad2.dpad_down) {
-                collectorServoPower = 0.11;
-                myRobot.exServoDrive(collectorServoPower);
-            } else {
-                collectorServoPower = 0.5;
-                myRobot.exServoDrive(collectorServoPower);
-            }
-
-
-            /*
-            myRobot.exServoDrive(.99*gamepad2.right_stick_y);
-            */
-            if (gamepad1.right_trigger > 0.7 && tokenServoPosition <= 1) {
-                tokenServoPosition += 0.03;
-            } else if (gamepad1.left_trigger > 0.7 && tokenServoPosition >= 0) {
-                tokenServoPosition -= 0.03;
-            }
-            myRobot.markerServoDrive(tokenServoPosition);
-            //Collector Flipper Controls
-            double cFlipPower = 0;
-            int cFlipEncoder = myRobot.getCFlipEncoder();
-            if (gamepad1.x) {
-                cFlipPower = 0.4;
-            } else if (gamepad1.y) {
-                cFlipPower = -0.8;
-            } else if (!gamepad2.a && !gamepad2.b) {
-                cFlipPower = 0;
-            } else if (gamepad2.a) {
-                cFlipPower = 0.4;
-            } else if (gamepad2.b) {
-                cFlipPower = -0.8;
-            }
-            //if(gamepad2.dpad_left && gamepad2.dpad_right){
-            cFlipCheck = false;
-            //}
-            if ((Math.abs(cFlipEncoder) > RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)) {
-                /*
-                if(elevatorDistance>10 && elevatorDistance<800){
-                    cFlipPower = 0;
-                    telemetry.addData("StoppedFlipElevatorDistance", elevatorDistance);
-                    Log.d("StopFlip","cFlipEncoder" + Math.abs(cFlipEncoder) + "Elevator too High?" + elevatorDistance);
-                }
-
-                if(extenderLimitSwitch){
-                    cFlipPower = 0;
-                    telemetry.addData("StoppedFlipLimitSwitch", cFlipEncoder);
-                    Log.d("StopFlip","ExtenderLimitSwitch:"+extenderLimitSwitch + "cFlipEncoder" + Math.abs(cFlipEncoder));
-                }
-                */
-            }
-            myRobot.cFlipDrive(cFlipPower);
-
-            //Elevator Flipper Controls
-            if (gamepad2.x && elevatorServoPosition < 1) {
-                elevatorServoPosition = 1;
-            }
-            if (gamepad2.y && elevatorServoPosition > 0) {
-                elevatorServoPosition = 0.45;
-            }
-            if (gamepad2.right_trigger > .5) {
-                elevatorServoPosition = 0.6;
-            }
-
-            if (gamepad2.left_trigger > .5) {
-                elevatorServoPosition = 0.4;
-            }
-
-            myRobot.elevatorServoDrive(elevatorServoPosition);
-
-            telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
-            //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
-            //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
-            telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
-            telemetry.addData("exServoPower", collectorServoPower);
-            telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-            telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
-            telemetry.addData("TokenServoPosition", tokenServoPosition);
-            telemetry.addData("cFlipEncoder", cFlipEncoder);
-            telemetry.addData("cFlipCheck", cFlipCheck);
-            telemetry.addData("cFlipPower", cFlipPower);
-            myRobot.readEncoders();
-            Log.d("exServoPower, ", ""+collectorServoPower);
-            Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
-            Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
-            Log.d("TokenServoPosition", ""+tokenServoPosition);
-            Log.d("cFlipEncoder", ""+cFlipEncoder);
+            driver2Manual();
+            fast = false;
         }
+        else {
+            if (gamepad2.dpad_right) {
+                stage = 0;
+            }
+            if(gamepad2.y){
+                fast = true;
+            }
+            if(gamepad2.x){
+                fast = false;
+            }
+        }
+
         if (gamepad2.dpad_left || stage != 0) {
-            stage = myRobot.autoDump(stage);
+            stage = myRobot.autoDump(stage, fast);
         }
-        if (gamepad2.dpad_right) {
-            stage = 0;
-        }
-        if(stage == 7){
+        if(stage == 8 && !fast){
             elevatorServoPosition = 0.7;
+        }
+        else if (stage == 8){
+            elevatorServoPosition = 0.45;
         }
         telemetry.update();
         // Show the elapsed game time and wheel power.
 
 
+    }
+
+    private void driver2Manual() {
+        //Lead Screw Controls
+        if (gamepad1.left_bumper) {
+            leadScrewPower = 1;
+        } else if (gamepad1.right_bumper && myRobot.isElevatorLimitSwitchNOTPressed()) {
+            leadScrewPower = -1;
+        }
+        //Cut this
+        else if (-gamepad2.right_stick_y == 0) {
+            leadScrewPower = 0;
+        } else {
+            leadScrewPower = -gamepad2.right_stick_y;
+            if (gamepad2.right_stick_y < 0) {
+                if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
+                    leadScrewPower = 0;
+                    telemetry.addData("Meow", "Purr");
+                }
+            }
+        }
+
+        myRobot.leadScrewDrive(leadScrewPower);
+
+        //Elevator Motor Controls
+        double elevatorPower = 1;
+        double elevatorDistance = myRobot.getElevatorDistanceSensor();
+        elevatorPower = gamepad2.left_stick_y;
+        if (gamepad2.left_stick_y == 0) {
+            if (elevatorDistance > 30) {
+                elevatorPower = -0.1;
+            } else {
+                elevatorPower = -0.05;
+            }
+        }
+        if (elevatorDistance < 6 && gamepad2.left_stick_y > 0) {
+            elevatorPower = 0;
+            telemetry.addData("DriveOptimization", "PowerCut");
+        }
+        if (elevatorDistance < 40 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
+            elevatorServoPosition = 0.7;
+        }
+        if (elevatorPower > 0 && elevatorDistance < 40) {
+            elevatorServoPosition = 1;
+        }
+        myRobot.eMotorDrive(elevatorPower);
+
+        //Collector Motor Controls
+        if (gamepad2.left_bumper) {
+            myRobot.cMotorDrive(0.8);
+        } else if (gamepad2.right_bumper) {
+            myRobot.cMotorDrive(-0.8);
+            myRobot.resetCFlipEncoder();
+        } else {
+            myRobot.cMotorDrive(0);
+        }
+
+        //Collector Extender Controls
+        //myRobot.exServoDrive(gamepad2.right_stick_y);
+
+        if (gamepad2.dpad_up) {
+            collectorServoPower = 0.89;
+            myRobot.exServoDrive(collectorServoPower);
+        } else if (gamepad2.dpad_down) {
+            collectorServoPower = 0.11;
+            myRobot.exServoDrive(collectorServoPower);
+        } else {
+            collectorServoPower = 0.5;
+            myRobot.exServoDrive(collectorServoPower);
+        }
+
+
+            /*
+            myRobot.exServoDrive(.99*gamepad2.right_stick_y);
+            */
+        if (gamepad1.x && tokenServoPosition <= 1) {
+            tokenServoPosition += 0.03;
+        } else if (gamepad1.y && tokenServoPosition >= 0) {
+            tokenServoPosition -= 0.03;
+        }
+        myRobot.markerServoDrive(tokenServoPosition);
+        //Collector Flipper Controls
+        double cFlipPower = 0;
+        int cFlipEncoder = myRobot.getCFlipEncoder();
+        if (gamepad1.right_trigger > 0.7) {
+            cFlipPower = 0.4;
+        } else if (gamepad1.left_trigger > 0.7) {
+            cFlipPower = -0.8;
+        } else if (!gamepad2.a && !gamepad2.b) {
+            cFlipPower = 0;
+        } else if (gamepad2.a) {
+            cFlipPower = 0.4;
+        } else if (gamepad2.b) {
+            cFlipPower = -0.8;
+        }
+        //if(gamepad2.dpad_left && gamepad2.dpad_right){
+        cFlipCheck = false;
+        //}
+        if ((Math.abs(cFlipEncoder) > RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)) {
+            /*
+            if(elevatorDistance>10 && elevatorDistance<800){
+                cFlipPower = 0;
+                telemetry.addData("StoppedFlipElevatorDistance", elevatorDistance);
+                Log.d("StopFlip","cFlipEncoder" + Math.abs(cFlipEncoder) + "Elevator too High?" + elevatorDistance);
+            }
+
+            if(extenderLimitSwitch){
+                cFlipPower = 0;
+                telemetry.addData("StoppedFlipLimitSwitch", cFlipEncoder);
+                Log.d("StopFlip","ExtenderLimitSwitch:"+extenderLimitSwitch + "cFlipEncoder" + Math.abs(cFlipEncoder));
+            }
+            */
+        }
+        myRobot.cFlipDrive(cFlipPower);
+
+        //Elevator Flipper Controls
+        if (gamepad2.x && elevatorServoPosition < 1) {
+            elevatorServoPosition = 1;
+        }
+        if (gamepad2.y && elevatorServoPosition > 0) {
+            elevatorServoPosition = 0.45;
+        }
+        if (gamepad2.right_trigger > .5) {
+            elevatorServoPosition = 0.6;
+        }
+
+        if (gamepad2.left_trigger > .5) {
+            elevatorServoPosition = 0.4;
+        }
+
+        myRobot.elevatorServoDrive(elevatorServoPosition);
+
+        telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
+        //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
+        //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
+        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
+        telemetry.addData("exServoPower", collectorServoPower);
+        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
+        telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+        telemetry.addData("TokenServoPosition", tokenServoPosition);
+        telemetry.addData("cFlipEncoder", cFlipEncoder);
+        telemetry.addData("cFlipCheck", cFlipCheck);
+        telemetry.addData("cFlipPower", cFlipPower);
+        myRobot.readEncoders();
+        Log.d("exServoPower, ", ""+collectorServoPower);
+        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
+        Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+        Log.d("TokenServoPosition", ""+tokenServoPosition);
+        Log.d("cFlipEncoder", ""+cFlipEncoder);
     }
 
     /*

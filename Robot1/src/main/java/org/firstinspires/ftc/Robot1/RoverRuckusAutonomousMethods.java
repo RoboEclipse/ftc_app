@@ -2,8 +2,10 @@ package org.firstinspires.ftc.Robot1;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
@@ -253,7 +255,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cMotorDrive(-1);
         sleep(1000);
         myRobot.cMotorDrive(0);
-        myRobot.autoDump(0);
+        for(int stage = 0; stage <=8; stage++){
+            myRobot.autoDump(stage,  false);
+        }
     }
 
 }
