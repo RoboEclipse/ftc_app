@@ -41,7 +41,7 @@ public class RoverRackusClass {
     public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     public int leadScrewTime=5000;
-    RoverRackusConfiguration config = new RoverRackusConfiguration();
+    public RoverRackusConfiguration config = new RoverRackusConfiguration();
     private DcMotor cMotor;
     private DcMotor eMotor;
     private DcMotor screwUpPower;
@@ -114,6 +114,7 @@ public class RoverRackusClass {
             exservo.setPower(0);
         }
     }
+    
     private static class Wheels {
         public double lf, lr, rf, rr;
 
