@@ -114,7 +114,7 @@ public class RoverRackusClass {
             exservo.setPower(0);
         }
     }
-    
+
     private static class Wheels {
         public double lf, lr, rf, rr;
 
@@ -176,6 +176,5 @@ public class RoverRackusClass {
     public void cFlipDrive(double power){
         cMotor.setPower(0.6);
     }
-    public void readEncoders(){
-    }
+    public void readEncoders(){}
 }
