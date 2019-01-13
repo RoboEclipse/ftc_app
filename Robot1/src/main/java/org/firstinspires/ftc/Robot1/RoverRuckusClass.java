@@ -138,7 +138,8 @@ public class RoverRuckusClass {
     }
     public void cMotorDrive(double power)
     {
-        cmotor.setPower(power);
+        cServo1.setPower(power);
+        cServo2.setPower(-power);
     }
 
     public void leadScrewDrive(double power){
@@ -164,16 +165,16 @@ public class RoverRuckusClass {
     public void exServoDrive(double power){
 
         if(power>0.51){
-            exservo.setPower(.79);
+            exMotor.setPower(.79);
             //exservoback.setPower(.02);
         }
         else if(power<0.49){
             //exservoback.setPower(-.79);
             //exservo.setPower(-.02);
-            exservo.setPower(-.79);
+            exMotor.setPower(-.79);
         }
         else{
-            exservo.setPower(0);
+            exMotor.setPower(0);
         }
         /*
         else{
