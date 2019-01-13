@@ -296,16 +296,20 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
         telemetry.addData("exServoPower", collectorServoPower);
         telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-        telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+
+        String elevatorData = "Dist:"+elevatorDistance + " Power:" + elevatorPower + "EncoderValue" +eMotorEncoder + "ElevatorServo:" + elevatorServoPosition;
+        telemetry.addData("Elevator ", elevatorData);
+        Log.d("Elevator", elevatorData);
+        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
         telemetry.addData("TokenServoPosition", tokenServoPosition);
-        telemetry.addData("ElevatorDistance", "Elevator Extension" + elevatorDistance);
-        telemetry.addData("cFlipEncoder", cFlipEncoder);
-        telemetry.addData("cFlipCheck", cFlipCheck);
-        telemetry.addData("cFlipPower", cFlipPower);
+
+        String flipperData = "cFlipEncoder: " + cFlipEncoder + "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
+        telemetry.addData("cFlip: ", flipperData);
+        Log.d("cFlipper", flipperData);
+
         myRobot.readEncoders();
         Log.d("exServoPower, ", ""+collectorServoPower);
-        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
-        Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+
         Log.d("TokenServoPosition", ""+tokenServoPosition);
         Log.d("cFlipEncoder", ""+cFlipEncoder);
     }
