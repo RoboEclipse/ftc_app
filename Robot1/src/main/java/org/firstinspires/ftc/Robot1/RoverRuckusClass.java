@@ -36,8 +36,8 @@ public class RoverRuckusClass {
     private static final String VUFORIA_KEY = "AcszqaP/////AAABmQPh2+SHAkBwsXAKy4LdjLEctzmZIadppxAnjn5ubFiLREbyOyViDtItmB2qAtRfbfJ1GRhhAXPEl992rkY/XW50xxWEVrQ+FGKMC1m6PDC1ropQyBiufMSvx81nz+XF6eSHp6Ct2rrT4YutN9a81bcvGVNA+4EfTu98lzP2HrPUiv0SMlQVq+ze6Fw107r8e7ULdv7dbdfxVtS0X+H4toGS+gxJFyWlgcdHmchQ++I7n8RdaBqoVgItHzjZDDo3lMbPkHIMwsTbWlBYJDBoNGMiFnIBUm1t0J6Yu45dldLZ8eeTPn7R9M9MkwYyWLmAr8Ijs0bxmqDuY4NgvmDqeCIzbfyH7uEximJiwZaGu58u";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-    private DcMotor lf, lr, rf, rr, leadScrew,exMotor, cflip, emotor;
-    private CRServo exservo, exservoback, cServo1, cServo2;
+    private DcMotor lf, lr, rf, rr, leadScrew,  exMotor, cflip, emotor;
+    private CRServo exservoback, cServo1, cServo2;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
@@ -95,7 +95,7 @@ public class RoverRuckusClass {
         }
         else{
             cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
-            cServo1 = hardwareMap.dcMotor.get(config.CollectorMotorName);
+            cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
             cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             cmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             cmotor.setDirection(DcMotor.Direction.REVERSE);
