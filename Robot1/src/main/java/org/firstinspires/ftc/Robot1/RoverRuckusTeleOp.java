@@ -200,6 +200,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.eMotorDrive(elevatorPower);
 
+
         //Collector Motor Controls
         /*
         if (gamepad2.left_bumper) {
@@ -233,6 +234,9 @@ public class RoverRuckusTeleOp extends OpMode
             collectorServoPower = 0.5;
             myRobot.exServoDrive(collectorServoPower);
         }
+        if(elevatorDistance < 3){
+            myRobot.resetElevatorEncoder();
+        }
 
 
             /*
@@ -247,6 +251,7 @@ public class RoverRuckusTeleOp extends OpMode
         //Collector Flipper Controls
         double cFlipPower = 0;
         int cFlipEncoder = myRobot.getCFlipEncoder();
+        int eMotorEncoder = myRobot.getElevatorEncoder();
         if (gamepad1.right_trigger > 0.7) {
             cFlipPower = 0.4;
         } else if (gamepad1.left_trigger > 0.7) {
@@ -298,20 +303,23 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
-        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
-        telemetry.addData("exServoPower", collectorServoPower);
-        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
-        telemetry.addData("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
+
+        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor() + "exServoPower" +collectorServoPower);
+        String elevatorData = "Dist:"+elevatorDistance + " Power:" + elevatorPower + "EncoderValue" +eMotorEncoder + "ElevatorServo:" + elevatorServoPosition;
+        telemetry.addData("Elevator ", elevatorData);
+        Log.d("Elevator", elevatorData + "ElevatorServoPosition:" + elevatorServoPosition);
+
         telemetry.addData("TokenServoPosition", tokenServoPosition);
-        telemetry.addData("cFlipEncoder", cFlipEncoder);
-        telemetry.addData("cFlipCheck", cFlipCheck);
-        telemetry.addData("cFlipPower", cFlipPower);
+        Log.d("TokenServoPosition", ""+tokenServoPosition);
+
+        String flipperData = "cFlipEncoder: " + cFlipEncoder + "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
+        telemetry.addData("cFlip: ", flipperData);
+        Log.d("cFlipper", flipperData);
+
         myRobot.readEncoders();
         Log.d("exServoPower, ", ""+collectorServoPower);
-        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
-        Log.d("ElevatorSensor", elevatorDistance + "Elevator Power: " + elevatorPower);
-        Log.d("TokenServoPosition", ""+tokenServoPosition);
-        Log.d("cFlipEncoder", ""+cFlipEncoder);
+
+
     }
 
     /*
