@@ -293,15 +293,14 @@ public class RoverRuckusTeleOp extends OpMode
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
-        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor());
-        telemetry.addData("exServoPower", collectorServoPower);
-        telemetry.addData("ElevatorServoPosition", elevatorServoPosition);
 
+        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor() + "exServoPower" +collectorServoPower);
         String elevatorData = "Dist:"+elevatorDistance + " Power:" + elevatorPower + "EncoderValue" +eMotorEncoder + "ElevatorServo:" + elevatorServoPosition;
         telemetry.addData("Elevator ", elevatorData);
-        Log.d("Elevator", elevatorData);
-        Log.d("ElevatorServoPosition", ""+elevatorServoPosition);
+        Log.d("Elevator", elevatorData + "ElevatorServoPosition:" + elevatorServoPosition);
+
         telemetry.addData("TokenServoPosition", tokenServoPosition);
+        Log.d("TokenServoPosition", ""+tokenServoPosition);
 
         String flipperData = "cFlipEncoder: " + cFlipEncoder + "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
         telemetry.addData("cFlip: ", flipperData);
@@ -310,8 +309,7 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.readEncoders();
         Log.d("exServoPower, ", ""+collectorServoPower);
 
-        Log.d("TokenServoPosition", ""+tokenServoPosition);
-        Log.d("cFlipEncoder", ""+cFlipEncoder);
+
     }
 
     /*
