@@ -68,7 +68,7 @@ public class RoverRuckusClass {
         markerServo = hardwareMap.servo.get(config.TeamMarkerServoName);
 
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
-        exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
+        exMotor = hardwareMap.dcMotor.get(config.ExtenderMotorName);
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
@@ -95,10 +95,9 @@ public class RoverRuckusClass {
         }
         else{
             cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
-            cmotor = hardwareMap.dcMotor.get(config.CollectorMotorName);
+            cServo1 = hardwareMap.crservo.get(config.CollectorServo1Name);
+            cServo2 = hardwareMap.crservo.get(config.CollectorServo2Name);
             cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            cmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            cmotor.setDirection(DcMotor.Direction.REVERSE);
         }
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
