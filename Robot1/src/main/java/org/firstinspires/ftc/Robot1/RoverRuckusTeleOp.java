@@ -201,10 +201,20 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.eMotorDrive(elevatorPower);
 
         //Collector Motor Controls
+        /*
         if (gamepad2.left_bumper) {
             myRobot.cMotorDrive(0.8);
         } else if (gamepad2.right_bumper) {
             myRobot.cMotorDrive(-0.8);
+            myRobot.resetCFlipEncoder();
+        } else {
+            myRobot.cMotorDrive(0);
+        }
+        */
+        if (gamepad2.left_bumper) {
+            myRobot.newCMotor(0.79);
+        } else if (gamepad2.right_bumper) {
+            myRobot.cMotorDrive(-0.79);
             myRobot.resetCFlipEncoder();
         } else {
             myRobot.cMotorDrive(0);
