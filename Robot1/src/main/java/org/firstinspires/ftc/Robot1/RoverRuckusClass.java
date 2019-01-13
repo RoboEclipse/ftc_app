@@ -213,6 +213,13 @@ public class RoverRuckusClass {
     public int getCFlipEncoder(){
         return cflip.getCurrentPosition();
     }
+    public int getElevatorEncoder(){
+        return emotor.getCurrentPosition();
+    }
+    public void resetElevatorEncoder() {
+        emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
     public void resetCFlipEncoder(){
         cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         cflip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
