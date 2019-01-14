@@ -119,6 +119,9 @@ public class RoverRuckusClass {
         imu.initialize(imuSettings);
 
     }
+    public void newExMotor(double power){
+        exMotor.setPower(power);
+    }
     public void tankDrive(double leftPower, double rightPower){
         lf.setPower(leftPower);
         lr.setPower(leftPower);
