@@ -79,6 +79,9 @@ public class RoverRuckusClass {
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
+        cServoLeft = hardwareMap.crservo.get(config.cServoLeftName);
+        cServoRight = hardwareMap.crservo.get(config.cServoRightName);
+        cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
         lf.setDirection(DcMotor.Direction.REVERSE);
@@ -88,11 +91,8 @@ public class RoverRuckusClass {
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        if(newCollectorSystem){
-            cFlipServo = hardwareMap.servo.get(config.cFlipServoName);
-            cServoLeft = hardwareMap.crservo.get(config.cServoLeftName);
-            cServoRight = hardwareMap.crservo.get(config.cServoRightName);
-        }
+        cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*
         else{
             cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
             cServo1 = hardwareMap.dcMotor.get(config.CollectorMotorName);
@@ -100,6 +100,7 @@ public class RoverRuckusClass {
             cmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             cmotor.setDirection(DcMotor.Direction.REVERSE);
         }
+        */
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -138,7 +139,7 @@ public class RoverRuckusClass {
     }
     public void cMotorDrive(double power)
     {
-        cmotor.setPower(power);
+        //cmotor.setPower(power);
     }
 
     public void leadScrewDrive(double power){
@@ -954,5 +955,8 @@ public class RoverRuckusClass {
     public void newCMotor(double power){
         cServoRight.setPower(power);
         cServoLeft.setPower(power);
+    }
+    public void newExMotor(double power){
+        exMotor.setPower(power);
     }
 }

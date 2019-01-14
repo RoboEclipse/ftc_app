@@ -225,11 +225,13 @@ public class RoverRuckusTeleOp extends OpMode
         //myRobot.exServoDrive(gamepad2.right_stick_y);
 
         if (gamepad2.dpad_up) {
-            collectorServoPower = 0.89;
-            myRobot.exServoDrive(collectorServoPower);
+            //collectorServoPower = 0.89;
+            //myRobot.exServoDrive(collectorServoPower);
+            myRobot.newExMotor(0.3);
         } else if (gamepad2.dpad_down) {
-            collectorServoPower = 0.11;
-            myRobot.exServoDrive(collectorServoPower);
+            //collectorServoPower = 0.11;
+            //myRobot.exServoDrive(collectorServoPower);
+            myRobot.newExMotor(-0.3);
         } else {
             collectorServoPower = 0.5;
             myRobot.exServoDrive(collectorServoPower);
