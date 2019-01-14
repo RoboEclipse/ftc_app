@@ -8,7 +8,8 @@ public class RoverRuckusConfiguration {
     public static final String RightRearMotorName = "rightb_motor";
     public static final String LeadScrewMotorName = "leadScrewMotor";
     public static final String ElevatorMotorName = "elevatorMotor";
-    public static final String CollectorMotorName = "collectionRotationMotor";
+    public static final String CollectorServo1Name = "collectionRotationServo1";
+    public static final String CollectorServo2Name = "collectionRotationServo2";
     public static final String CollectionFlipperName = "collectionFlipperMotor";
     //ElevatorMotor is actually a continuous rotation servo
     public static final String ExtenderMotorName = "extenderServo";
