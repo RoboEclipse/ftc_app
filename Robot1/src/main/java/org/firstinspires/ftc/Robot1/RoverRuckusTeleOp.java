@@ -62,7 +62,9 @@ public class RoverRuckusTeleOp extends OpMode
     double tokenServoPosition = 0;
     double collectorServoPower=0.5;
     double leadScrewPower = 0;
+    double exMotorPower = 0;
     int stage = 0;
+    double cServoPower = 0;
     boolean cFlipCheck = false;
     boolean fast = false;
     /*
@@ -88,7 +90,6 @@ public class RoverRuckusTeleOp extends OpMode
     @Override
     public void start() {
         runtime.reset();
-        myRobot.exServoDrive(0);
     }
 
     /*
@@ -213,37 +214,29 @@ public class RoverRuckusTeleOp extends OpMode
         }
         */
         if (gamepad2.left_bumper) {
-            myRobot.newCMotor(0.79);
+            cServoPower = 0.5;
         } else if (gamepad2.right_bumper) {
-            myRobot.cMotorDrive(-0.79);
+            cServoPower = -0.5;
             myRobot.resetCFlipEncoder();
         } else {
-            myRobot.cMotorDrive(0);
+            cServoPower = 0;
         }
+        myRobot.cServoPower(cServoPower);
 
         //Collector Extender Controls
-        //myRobot.exServoDrive(gamepad2.right_stick_y);
-
         if (gamepad2.dpad_up) {
-            //collectorServoPower = 0.89;
-            //myRobot.exServoDrive(collectorServoPower);
-            myRobot.newExMotor(0.3);
+            exMotorPower = -0.6;
         } else if (gamepad2.dpad_down) {
-            //collectorServoPower = 0.11;
-            //myRobot.exServoDrive(collectorServoPower);
-            myRobot.newExMotor(-0.3);
+            exMotorPower = 0.6;
         } else {
-            collectorServoPower = 0.5;
-            myRobot.exServoDrive(collectorServoPower);
+            exMotorPower = 0;
+            //collectorServoPower = 0.5;
+            //myRobot.exServoDrive(collectorServoPower);
         }
+        myRobot.newExMotor(exMotorPower);
         if(elevatorDistance < 3){
             myRobot.resetElevatorEncoder();
         }
-
-
-            /*
-            myRobot.exServoDrive(.99*gamepad2.right_stick_y);
-            */
         if (gamepad1.x && tokenServoPosition <= 1) {
             tokenServoPosition += 0.03;
         } else if (gamepad1.y && tokenServoPosition >= 0) {
@@ -306,21 +299,24 @@ public class RoverRuckusTeleOp extends OpMode
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
 
-        telemetry.addData("extenderDistanceSensor", myRobot.getExtenderDistanceSensor() + "exServoPower" +collectorServoPower);
-        String elevatorData = "Dist:"+elevatorDistance + " Power:" + elevatorPower + "EncoderValue" +eMotorEncoder + "ElevatorServo:" + elevatorServoPosition;
+        String extenderData =  myRobot.getExtenderDistanceSensor() + "exMotorPower: " + exMotorPower;
+        telemetry.addData("extender: at ", extenderData);
+        Log.d("extender System, ", ""+extenderData);
+
+        String elevatorData = "Dist:"+elevatorDistance + " Power:" + elevatorPower + "Encoder" + eMotorEncoder + " Servo:" + elevatorServoPosition;
         telemetry.addData("Elevator ", elevatorData);
         Log.d("Elevator", elevatorData + "ElevatorServoPosition:" + elevatorServoPosition);
 
         telemetry.addData("TokenServoPosition", tokenServoPosition);
         Log.d("TokenServoPosition", ""+tokenServoPosition);
 
-        String flipperData = "cFlipEncoder: " + cFlipEncoder + "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
+        String flipperData = "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
         telemetry.addData("cFlip: ", flipperData);
         Log.d("cFlipper", flipperData);
 
         myRobot.readEncoders();
-        Log.d("exServoPower, ", ""+collectorServoPower);
 
+        telemetry.addData("collectorServoPower", cServoPower);
 
     }
 

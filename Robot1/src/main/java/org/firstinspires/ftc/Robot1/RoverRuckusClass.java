@@ -37,7 +37,7 @@ public class RoverRuckusClass {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
     private DcMotor lf, lr, rf, rr, leadScrew,exMotor, cflip, emotor;
-    private CRServo exservo, exservoback, cServo1, cServo2;
+    private CRServo exservo, exservoback, cServo1, cServo2, cServo;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
@@ -68,7 +68,8 @@ public class RoverRuckusClass {
         markerServo = hardwareMap.servo.get(config.TeamMarkerServoName);
 
         emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
-        exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
+        //exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
+        exMotor = hardwareMap.dcMotor.get(config.ExtenderMotorName);
         leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
         elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
@@ -79,8 +80,9 @@ public class RoverRuckusClass {
         //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
         leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
-        cServoLeft = hardwareMap.crservo.get(config.cServoLeftName);
-        cServoRight = hardwareMap.crservo.get(config.cServoRightName);
+        //cServoLeft = hardwareMap.crservo.get(config.cServoLeftName);
+        //cServoRight = hardwareMap.crservo.get(config.cServoRightName);
+        cServo = hardwareMap.crservo.get(config.cServoName);
         cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
@@ -780,10 +782,10 @@ public class RoverRuckusClass {
         }
     }
     ElapsedTime time = new ElapsedTime();
-    double extendExtender = -1;
+    double extendExtender = -0.8;
     double raiseCollector = -1;
     double lowerCollector = 0.5;
-    double runCollector = -1;
+    double runCollector = -0.79;
     double raiseElevator = -1;
     double elevatorServoPosition;
     public int autoDump(int stage, boolean fast){
@@ -800,7 +802,7 @@ public class RoverRuckusClass {
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
             if(getExtenderDistanceSensor()>1){
-                exServoDrive(extendExtender);
+                exMotor.setPower(extendExtender);
             }
                 if(currentPosition<-TICKS_PER_ROTATION/3){
                 cFlipDrive(0);
@@ -813,7 +815,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
             if(extenderDistance<=1.5){
                 cFlipDrive(raiseCollector);
-                exServoDrive(0.5);
+                exMotor.setPower(extendExtender);
                 stage++;
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -827,7 +829,7 @@ public class RoverRuckusClass {
                 stage++;
                 //Reset the timer
                 time.reset();
-                cMotorDrive(runCollector);
+                cServo.setPower(runCollector);
             }
         }
         //Rotate collector until timer reaches 200 milliseconds
@@ -952,8 +954,10 @@ public class RoverRuckusClass {
     public void newCFlip(double increment, double position){
         cFlipServo.setPosition(position+increment);
     }
-    public void newCMotor(double power){
-        cServoRight.setPower(power);
-        cServoLeft.setPower(power);
+    public void cServoPower(double power){
+        cServo.setPower(power);
+    }
+    public void newExMotor(double power){
+        exMotor.setPower(power);
     }
 }
