@@ -51,7 +51,7 @@ public class RoverRuckusClass {
     private int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     private int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     private int leadScrewTime=5000;
-    private RoverRuckusConfiguration config = new RoverRuckusConfiguration();
+    private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff
     private Servo cFlipServo;
