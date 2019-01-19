@@ -960,7 +960,4 @@ public class RoverRuckusClass {
     public void cServoPower(double power){
         cServo.setPower(power);
     }
-    public void newExMotor(double power){
-        exMotor.setPower(power);
-    }
 }
