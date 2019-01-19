@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    public static boolean newCollectorSystem = false;
+    private static boolean newCollectorSystem = false;
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -46,12 +46,12 @@ public class RoverRuckusClass {
     private BNO055IMU imu;
     private Orientation angles;
     private DigitalChannel elevatorLimitSwitch;
-    public static final int ENCODERS_CLOSE_ENOUGH = 10;
-    int TICKS_PER_ROTATION = 1120;
-    public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
-    public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
-    public int leadScrewTime=5000;
-    RoverRuckusConfiguration config = new RoverRuckusConfiguration();
+    private static final int ENCODERS_CLOSE_ENOUGH = 10;
+    private int TICKS_PER_ROTATION = 1120;
+    private int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+    private int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
+    private int leadScrewTime=5000;
+    private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff
     private Servo cFlipServo;
@@ -120,6 +120,9 @@ public class RoverRuckusClass {
         imuSettings.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(imuSettings);
 
+    }
+    public void newExMotor(double power){
+        exMotor.setPower(power);
     }
     public void tankDrive(double leftPower, double rightPower){
         lf.setPower(leftPower);
@@ -935,7 +938,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Initial Elevator Servo");
             elevatorServoPosition = 0.7;
             elevatorServoDrive(elevatorServoPosition);
-            eMotorDrive(raiseElevator/2);
+            eMotorDrive(raiseElevator/2.0);
             if(time.milliseconds()>1000){
                 Log.d("AutoDumpState", "AutoStop");
             }
@@ -956,8 +959,5 @@ public class RoverRuckusClass {
     }
     public void cServoPower(double power){
         cServo.setPower(power);
-    }
-    public void newExMotor(double power){
-        exMotor.setPower(power);
     }
 }
