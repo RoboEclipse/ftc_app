@@ -938,7 +938,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Initial Elevator Servo");
             elevatorServoPosition = 0.7;
             elevatorServoDrive(elevatorServoPosition);
-            eMotorDrive(raiseElevator/2);
+            eMotorDrive(raiseElevator/2.0);
             if(time.milliseconds()>1000){
                 Log.d("AutoDumpState", "AutoStop");
             }
