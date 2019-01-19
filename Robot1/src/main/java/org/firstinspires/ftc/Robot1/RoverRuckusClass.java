@@ -782,10 +782,10 @@ public class RoverRuckusClass {
         }
     }
     ElapsedTime time = new ElapsedTime();
-    double extendExtender = -0.8;
+    double retractExtender = 0.8;
     double raiseCollector = -1;
     double lowerCollector = 0.5;
-    double runCollector = -0.79;
+    double runCollector = 0.79;
     double raiseElevator = -1;
     double elevatorServoPosition;
     public int autoDump(int stage, boolean fast){
@@ -802,9 +802,9 @@ public class RoverRuckusClass {
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
             if(getExtenderDistanceSensor()>1){
-                exMotor.setPower(extendExtender);
+                exMotor.setPower(retractExtender);
             }
-                if(currentPosition<-TICKS_PER_ROTATION/3){
+            if(currentPosition<-TICKS_PER_ROTATION/3){
                 cFlipDrive(0);
                 stage++;
             }
@@ -813,9 +813,9 @@ public class RoverRuckusClass {
         else if(stage==2){
             double extenderDistance = getExtenderDistanceSensor();
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
-            if(extenderDistance<=1.5){
+            if(extenderDistance<=5){
                 cFlipDrive(raiseCollector);
-                exMotor.setPower(extendExtender);
+                exMotor.setPower(0);
                 stage++;
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -835,7 +835,7 @@ public class RoverRuckusClass {
         //Rotate collector until timer reaches 200 milliseconds
         else if(stage == 4){
             if(time.milliseconds() > 600 || fast){
-                cMotorDrive(0);
+                cServo.setPower(0);
                 Log.d("AutoDumpState", "Rotated");
                 stage ++;
             }
@@ -894,7 +894,7 @@ public class RoverRuckusClass {
         int currentPosition = cflip.getCurrentPosition();
         Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
         if(getExtenderDistanceSensor()>1){
-            exServoDrive(extendExtender);
+            exServoDrive(retractExtender);
         }
         if(currentPosition<-TICKS_PER_ROTATION/3){
             cFlipDrive(0);
