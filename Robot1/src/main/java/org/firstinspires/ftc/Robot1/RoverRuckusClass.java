@@ -46,11 +46,11 @@ public class RoverRuckusClass {
     private BNO055IMU imu;
     private Orientation angles;
     private DigitalChannel elevatorLimitSwitch;
-    public static final int ENCODERS_CLOSE_ENOUGH = 10;
-    int TICKS_PER_ROTATION = 1120;
-    public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
-    public int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
-    public int leadScrewTime=5000;
+    private static final int ENCODERS_CLOSE_ENOUGH = 10;
+    private int TICKS_PER_ROTATION = 1120;
+    private int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+    private int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
+    private int leadScrewTime=5000;
     RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff
