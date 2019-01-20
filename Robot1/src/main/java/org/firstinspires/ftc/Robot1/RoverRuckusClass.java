@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class RoverRuckusClass {
-    private static boolean newCollectorSystem = false;
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -876,6 +875,9 @@ public class RoverRuckusClass {
             if(elevatorDistance>50) {
                 if(fast && elevatorServoPosition==0.45){
                     elevatorServoPosition = 0.45;
+                }
+                else{
+                    elevatorServoPosition = 0.7;
                 }
                 Log.d("State", "Raised");
                 eMotorDrive(0);
