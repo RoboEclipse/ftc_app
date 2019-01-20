@@ -56,17 +56,17 @@ public class RoverRuckusTeleOp extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
-    private double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     private double elevatorServoPosition = 1;
-    private double speedMultiplier = 1;
-    double tokenServoPosition = 0;
-    double collectorServoPower=0.5;
-    double leadScrewPower = 0;
-    double exMotorPower = 0;
-    int stage = 0;
-    double cServoPower = 0;
-    boolean cFlipCheck = false;
-    boolean fast = false;
+    private double tokenServoPosition = 0;
+    private int stage = 0;
+    private boolean fast = false;
+    //private double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
+    //private double speedMultiplier = 1;
+    //double leadScrewPower = 0;
+    //private double exMotorPower = 0;
+    //private double cServoPower = 0;
+    //private boolean cFlipCheck = false;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -101,6 +101,7 @@ public class RoverRuckusTeleOp extends OpMode
         //Drive motor controls
         double lx = gamepad1.left_stick_x;
         double ly = -gamepad1.left_stick_y;
+        double speedMultiplier = 1;
         if(gamepad1.dpad_up){
             ly=1;
             speedMultiplier = 0.5;
@@ -117,12 +118,9 @@ public class RoverRuckusTeleOp extends OpMode
             lx =1;
             speedMultiplier = 0.5;
         }
-        else {
-            speedMultiplier = 1;
-        }
-        theta = Math.atan2(lx, ly);
-        v_theta = Math.sqrt(lx * lx + ly * ly);
-        v_rotation = gamepad1.right_stick_x;
+        double theta = Math.atan2(lx, ly);
+        double v_theta = Math.sqrt(lx * lx + ly * ly);
+        double v_rotation = gamepad1.right_stick_x;
 
         myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation); //move robot
         if(stage == 0) {
@@ -157,17 +155,15 @@ public class RoverRuckusTeleOp extends OpMode
     }
 
     private void driver2Manual() {
+        double leadScrewPower = -gamepad2.right_stick_y;
         //Lead Screw Controls
         if (gamepad1.left_bumper) {
             leadScrewPower = 1;
         } else if (gamepad1.right_bumper && myRobot.isElevatorLimitSwitchNOTPressed()) {
             leadScrewPower = -1;
         }
-        //Cut this
-        else if (-gamepad2.right_stick_y == 0) {
-            leadScrewPower = 0;
-        } else {
-            leadScrewPower = -gamepad2.right_stick_y;
+        else {
+
             if (gamepad2.right_stick_y < 0) {
                 if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
                     leadScrewPower = 0;
@@ -179,9 +175,8 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.leadScrewDrive(leadScrewPower);
 
         //Elevator Motor Controls
-        double elevatorPower = 1;
         double elevatorDistance = myRobot.getElevatorDistanceSensor();
-        elevatorPower = gamepad2.left_stick_y;
+        double elevatorPower = gamepad2.left_stick_y;
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
                 elevatorPower = -0.1;
@@ -213,25 +208,21 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.cMotorDrive(0);
         }
         */
+        double cServoPower = 0;
         if (gamepad2.left_bumper) {
             cServoPower = 0.79;
         } else if (gamepad2.right_bumper) {
             cServoPower = -0.79;
             myRobot.resetCFlipEncoder();
-        } else {
-            cServoPower = 0;
         }
         myRobot.cServoPower(cServoPower);
 
         //Collector Extender Controls
+        double exMotorPower = 0;
         if (gamepad2.dpad_up) {
             exMotorPower = -0.6;
         } else if (gamepad2.dpad_down) {
             exMotorPower = 0.6;
-        } else {
-            exMotorPower = 0;
-            //collectorServoPower = 0.5;
-            //myRobot.exServoDrive(collectorServoPower);
         }
         myRobot.newExMotor(exMotorPower);
         if(elevatorDistance < 3){
@@ -258,11 +249,11 @@ public class RoverRuckusTeleOp extends OpMode
         } else if (gamepad2.b) {
             cFlipPower = -0.8;
         }
-        //if(gamepad2.dpad_left && gamepad2.dpad_right){
+        /*
+        if(gamepad2.dpad_left && gamepad2.dpad_right){
         cFlipCheck = false;
-        //}
+        }
         if ((Math.abs(cFlipEncoder) > RoverRuckusConstants.TICKS_PER_ROTATION / 4) && (cFlipPower > 0)) {
-            /*
             if(elevatorDistance>10 && elevatorDistance<800){
                 cFlipPower = 0;
                 telemetry.addData("StoppedFlipElevatorDistance", elevatorDistance);
@@ -274,8 +265,8 @@ public class RoverRuckusTeleOp extends OpMode
                 telemetry.addData("StoppedFlipLimitSwitch", cFlipEncoder);
                 Log.d("StopFlip","ExtenderLimitSwitch:"+extenderLimitSwitch + "cFlipEncoder" + Math.abs(cFlipEncoder));
             }
-            */
         }
+        */
         myRobot.cFlipDrive(cFlipPower);
 
         //Elevator Flipper Controls
