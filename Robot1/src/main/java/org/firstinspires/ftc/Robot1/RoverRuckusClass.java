@@ -57,7 +57,6 @@ public class RoverRuckusClass {
     private Servo cFlipServo;
     private CRServo cServoLeft, cServoRight;
     //New collector stuff end
-
     public void initialize(com.qualcomm.robotcore.hardware.HardwareMap hardwareMap, Telemetry telemetry_){
         telemetry = telemetry_;
         lf = hardwareMap.dcMotor.get(config.LeftFrontMotorName);
