@@ -164,7 +164,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
         else {
 
-            if (gamepad2.right_stick_y < 0) {
+            if (leadScrewPower > 0) {
                 if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
                     leadScrewPower = 0;
                     telemetry.addData("Meow", "Purr");

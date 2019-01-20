@@ -36,7 +36,7 @@ public class RoverRuckusClass {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
     private DcMotor lf, lr, rf, rr, leadScrew,exMotor, cflip, emotor;
-    private CRServo exservo, exservoback, cServo1, cServo2, cServo;
+    private CRServo cServo;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
@@ -139,11 +139,6 @@ public class RoverRuckusClass {
         rf.setPower(rfPower);
         rr.setPower(rrPower);
     }
-    public void cMotorDrive(double power)
-    {
-        cServo1.setPower(power);
-        cServo2.setPower(-power);
-    }
 
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
@@ -152,7 +147,7 @@ public class RoverRuckusClass {
     public void extendLeadScrew(double runtime){
         ElapsedTime time = new ElapsedTime();
         leadScrew.setPower(1);
-        while(elevatorLimitSwitch.getState()==true){
+        while(elevatorLimitSwitch.getState()){
             if(time.seconds() > runtime){
                 break;
             }
@@ -802,7 +797,7 @@ public class RoverRuckusClass {
         else if(stage==1){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
-            if(getExtenderDistanceSensor()>1){
+            if(getExtenderDistanceSensor()<15){
                 exMotor.setPower(retractExtender);
             }
             if(currentPosition<-TICKS_PER_ROTATION/3){
@@ -814,7 +809,7 @@ public class RoverRuckusClass {
         else if(stage==2){
             double extenderDistance = getExtenderDistanceSensor();
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
-            if(extenderDistance<=5){
+            if(extenderDistance>=16){
                 cFlipDrive(raiseCollector);
                 exMotor.setPower(0);
                 stage++;
@@ -893,67 +888,6 @@ public class RoverRuckusClass {
         }
         telemetry.addData("Stage", stage);
         return stage;
-    }
-    public void autoAutoDump(){
-        int currentPosition = cflip.getCurrentPosition();
-        Log.d("AutoDumpState", "Collector Lifted: " + currentPosition);
-        if(getExtenderDistanceSensor()>1){
-            exServoDrive(retractExtender);
-        }
-        if(currentPosition<-TICKS_PER_ROTATION/3){
-            cFlipDrive(0);
-        }
-
-        // Retract the extender
-        double extenderDistance = getExtenderDistanceSensor();
-        Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
-        if(extenderDistance<=1.5){
-            cFlipDrive(raiseCollector);
-            exServoDrive(0.5);
-            Log.d("AutoDumpState", "Extender Retracted");
-        }
-        Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-        if(currentPosition<-TICKS_PER_ROTATION){
-            cFlipDrive(0);
-            //Reset the timer
-            time.reset();
-            cMotorDrive(runCollector);
-        }
-        //Rotate collector until timer reaches 200 milliseconds
-        if(time.milliseconds() > 600){
-            cMotorDrive(0);
-            Log.d("AutoDumpState", "Rotated");
-        }
-        cFlipDrive(lowerCollector);
-        Log.d("AutoDumpState", "LoweringCollector: " + currentPosition);
-        if(currentPosition>-2*TICKS_PER_ROTATION/3){
-            Log.d("AutoDumpState", "Lowered");
-            cFlipDrive(0);
-            eMotorDrive(raiseElevator);
-            time.reset();
-        }
-        //Raise up basket and reset
-        double elevatorDistance = getElevatorDistanceSensor();
-        Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
-        if(elevatorDistance > 40){
-            Log.d("AutoDumpState", "Initial Elevator Servo");
-            elevatorServoPosition = 0.7;
-            elevatorServoDrive(elevatorServoPosition);
-            eMotorDrive(raiseElevator/2.0);
-            if(time.milliseconds()>1000){
-                Log.d("AutoDumpState", "AutoStop");
-            }
-        }
-        if(elevatorDistance>45) {
-            if(elevatorServoPosition==0.45){
-                elevatorServoPosition = 0.45;
-            }
-            Log.d("State", "Raised");
-            eMotorDrive(0);
-        }
-        if(time.milliseconds()>1000){
-            Log.d("AutoDumpState", "AutoStop");
-        }
     }
     public void newCFlip(double increment, double position){
         cFlipServo.setPosition(position+increment);
