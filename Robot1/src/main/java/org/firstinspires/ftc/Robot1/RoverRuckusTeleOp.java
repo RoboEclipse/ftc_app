@@ -60,6 +60,7 @@ public class RoverRuckusTeleOp extends OpMode
     private double tokenServoPosition = 0;
     private int stage = 0;
     private boolean fast = false;
+    private boolean slow = false;
     //private double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     //private double speedMultiplier = 1;
     //double leadScrewPower = 0;
@@ -115,14 +116,15 @@ public class RoverRuckusTeleOp extends OpMode
             speedMultiplier = 0.5;
         }
         else if(gamepad1.dpad_right){
-            lx =1;
+            lx=1;
             speedMultiplier = 0.5;
         }
         double theta = Math.atan2(lx, ly);
         double v_theta = Math.sqrt(lx * lx + ly * ly);
         double v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation); //move robot
+        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation*.8); //move robot
+
         if(stage == 0) {
             driver2Manual();
             fast = false;
@@ -163,11 +165,10 @@ public class RoverRuckusTeleOp extends OpMode
             leadScrewPower = -1;
         }
         else {
-
             if (leadScrewPower > 0) {
                 if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
                     leadScrewPower = 0;
-                    telemetry.addData("Meow", "Purr");
+                    telemetry.addData("LeadScrewAutoStopped", "True");
                 }
             }
         }
@@ -177,57 +178,38 @@ public class RoverRuckusTeleOp extends OpMode
         //Elevator Motor Controls
         double elevatorDistance = myRobot.getElevatorDistanceSensor();
         double elevatorPower = gamepad2.left_stick_y;
-        if (gamepad2.left_stick_y == 0) {
-            if (elevatorDistance > 30) {
-                elevatorPower = -0.1;
-            } else {
-                elevatorPower = -0.05;
-            }
-        }
-        if (elevatorDistance < 6 && gamepad2.left_stick_y > 0) {
-            elevatorPower = 0;
-            telemetry.addData("DriveOptimization", "PowerCut");
-        }
-        if (elevatorDistance < 46 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
-            elevatorServoPosition = 0.7;
-        }
-        if (elevatorPower > 0 && elevatorDistance < 40) {
-            elevatorServoPosition = 1;
-        }
-        myRobot.eMotorDrive(elevatorPower);
+        elevatorPower = elevatorTeleOp(elevatorDistance, elevatorPower);
 
-
-        //Collector Motor Controls
-        /*
-        if (gamepad2.left_bumper) {
-            myRobot.cMotorDrive(0.8);
-        } else if (gamepad2.right_bumper) {
-            myRobot.cMotorDrive(-0.8);
-            myRobot.resetCFlipEncoder();
-        } else {
-            myRobot.cMotorDrive(0);
-        }
-        */
+        //Collector Servo Control
         double cServoPower = 0;
         if (gamepad2.left_bumper) {
-            cServoPower = 0.79;
-        } else if (gamepad2.right_bumper) {
             cServoPower = -0.79;
+        } else if (gamepad2.right_bumper) {
+            cServoPower = 0.79;
             myRobot.resetCFlipEncoder();
         }
-        myRobot.cServoPower(cServoPower);
+        myRobot.cServoDrive(cServoPower);
 
         //Collector Extender Controls
+        double extenderDistance = myRobot.getExtenderDistanceSensor();
         double exMotorPower = 0;
+        int extenderEncoder = myRobot.getExtenderEncoder();
         if (gamepad2.dpad_up) {
-            exMotorPower = -0.6;
-        } else if (gamepad2.dpad_down) {
             exMotorPower = 0.6;
+            if(extenderDistance<=2){
+                exMotorPower = 0.3;
+                telemetry.addData("Slow", "true");
+                myRobot.resetExtenderEncoder();
+            }
+        } else if (gamepad2.dpad_down) {
+            exMotorPower = -0.6;
+            if(extenderDistance>23){
+                exMotorPower = -0.3;
+                telemetry.addData("Slow", "true");
+            }
         }
         myRobot.newExMotor(exMotorPower);
-        if(elevatorDistance < 3){
-            myRobot.resetElevatorEncoder();
-        }
+
         if (gamepad1.x && tokenServoPosition <= 1) {
             tokenServoPosition += 0.03;
         } else if (gamepad1.y && tokenServoPosition >= 0) {
@@ -245,7 +227,7 @@ public class RoverRuckusTeleOp extends OpMode
         } else if (!gamepad2.a && !gamepad2.b) {
             cFlipPower = 0;
         } else if (gamepad2.a) {
-            cFlipPower = 0.6;
+            cFlipPower = 0.4;
         } else if (gamepad2.b) {
             cFlipPower = -0.8;
         }
@@ -283,7 +265,7 @@ public class RoverRuckusTeleOp extends OpMode
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
         //telemetry.addData("colorSensor", "Red: " + myRobot.getColorSensorRed() + " Blue: " + myRobot.getColorSensorBlue());
 
-        String extenderData =  myRobot.getExtenderDistanceSensor() + "exMotorPower: " + exMotorPower;
+        String extenderData =  extenderDistance + "exMotorPower: " + exMotorPower+ "Encoder: " + extenderEncoder;
         telemetry.addData("extender: at ", extenderData);
         Log.d("extender System, ", ""+extenderData);
 
@@ -302,6 +284,36 @@ public class RoverRuckusTeleOp extends OpMode
 
         telemetry.addData("collectorServoPower", cServoPower);
 
+    }
+
+    private double elevatorTeleOp(double elevatorDistance, double elevatorPower) {
+        //Set holding powers
+        if (gamepad2.left_stick_y == 0) {
+            if (elevatorDistance > 30) {
+                elevatorPower = -0.1;
+            } else {
+                elevatorPower = -0.05;
+            }
+        }
+        //Stop motor from going too low
+        if (elevatorDistance < 10 && gamepad2.left_stick_y > 0) {
+            elevatorPower = 0;
+            telemetry.addData("DriveOptimization", "PowerCutForElevator");
+            Log.d("DriveOptimization", "PowerCutForElevator");
+        }
+        if (elevatorDistance < 46 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
+            elevatorServoPosition = 0.7;
+        }
+        if (elevatorPower > 0 && elevatorDistance < 40) {
+            elevatorServoPosition = 1;
+        }
+
+        myRobot.eMotorDrive(elevatorPower);
+
+        if(elevatorDistance < 3){
+            myRobot.resetElevatorEncoder();
+        }
+        return elevatorPower;
     }
 
     /*

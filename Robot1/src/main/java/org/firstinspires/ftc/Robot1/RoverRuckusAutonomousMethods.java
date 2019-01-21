@@ -252,11 +252,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.exServoDrive(.89);
         sleep(500);
         myRobot.exServoDrive(0.5);
-        myRobot.cMotorDrive(-1);
+        myRobot.cServoDrive(0.79);
         sleep(1000);
-        myRobot.cMotorDrive(0);
+        myRobot.cServoDrive(0);
         myRobot.cFlipDrive(-0.1);
-
         for(int stage = 0; stage <=4; stage++){
             myRobot.autoDump(stage,  false);
         }
