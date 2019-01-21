@@ -60,7 +60,6 @@ public class RoverRuckusTeleOp extends OpMode
     private double tokenServoPosition = 0;
     private int stage = 0;
     private boolean fast = false;
-    private boolean slow = false;
     //private double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
     //private double speedMultiplier = 1;
     //double leadScrewPower = 0;
