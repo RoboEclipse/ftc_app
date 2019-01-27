@@ -41,20 +41,16 @@ public class RoverRuckusClass {
     private ColorSensor colorSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
-    private com.qualcomm.robotcore.hardware.HardwareMap HardwareMap;
     private BNO055IMU imu;
     private Orientation angles;
     private DigitalChannel elevatorLimitSwitch;
     private static final int ENCODERS_CLOSE_ENOUGH = 10;
-    private int TICKS_PER_ROTATION = 1120;
-    private int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+
+
     //private int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
     //private int leadScrewTime=5000;
     private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
-    //New collector stuff
-    private Servo cFlipServo;
-    private CRServo cServoLeft, cServoRight;
     //New collector stuff end
     public void initialize(com.qualcomm.robotcore.hardware.HardwareMap hardwareMap, Telemetry telemetry_){
         telemetry = telemetry_;
@@ -102,7 +98,7 @@ public class RoverRuckusClass {
         }
         */
 
-        BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();;
+        BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         imuSettings.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imuSettings.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -129,7 +125,7 @@ public class RoverRuckusClass {
         rr.setPower(rightPower);
         rf.setPower(rightPower);
     }
-
+/*
     public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -140,7 +136,7 @@ public class RoverRuckusClass {
         rf.setPower(rfPower);
         rr.setPower(rrPower);
     }
-
+*/
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
     }
@@ -190,6 +186,7 @@ public class RoverRuckusClass {
     {
         cflip.setPower(power);
     }
+    /*
     public void singleDrive(double power, DcMotor motor){
         motor.setPower(power);
     }
@@ -199,6 +196,7 @@ public class RoverRuckusClass {
         rf.setPower(-power);
         rr.setPower(power);
     }
+    */
     public void elevatorServoDrive(double position){
         elevatorServo.setPosition(position);
     }
@@ -225,6 +223,7 @@ public class RoverRuckusClass {
         cflip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void encoderTankDriveInches(double inches, double power) {
+        int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
         encoderTankDrive((int)(inches * TICKS_PER_INCH),(int)(inches*TICKS_PER_INCH), power);
     }
     public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
@@ -380,7 +379,7 @@ public class RoverRuckusClass {
         }
     }
 
-    public void driveUntilCraterLeft(double speed, double targetDistance){
+    public void driveUntilCraterLeft(double speed /*, double targetDistance*/){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();
         double startingThirdAngle = getThirdAngle();
@@ -418,7 +417,7 @@ public class RoverRuckusClass {
             }
         }
     }
-    public void driveUntilCraterRight(double speed, double targetDistance){
+    public void driveUntilCraterRight(double speed/*, double targetDistance*/){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();
         double startingThirdAngle = getThirdAngle();
@@ -544,7 +543,7 @@ public class RoverRuckusClass {
     }
     public String getEncoderPosition()
     {
-        return String.format("lf: %d,rf: %d, lr:%d, rr:%d",
+        return String.format( "lf: %d,rf: %d, lr:%d, rr:%d",
                 lf.getCurrentPosition(),
                 rf.getCurrentPosition(),
                 lr.getCurrentPosition(),
@@ -566,7 +565,7 @@ public class RoverRuckusClass {
         telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
     }
     public boolean isElevatorLimitSwitchIsNOTPressed(){
-        if(!(extenderDistanceSensor.getDistance(DistanceUnit.CM) <= 0.5)) {
+        if(extenderDistanceSensor.getDistance(DistanceUnit.CM) > 0.5) {
             return true;
         }
         return false;
@@ -779,14 +778,15 @@ public class RoverRuckusClass {
         }
     }
     ElapsedTime time = new ElapsedTime();
-    double retractExtender = -0.5;
-    double raiseCollector = -1;
-    double lowerCollector = 0.4;
-    double runCollector = 0.79;
-    double raiseElevator = -1;
-    double elevatorServoPosition;
-    double targetDistance = 27;
+    private double elevatorServoPosition;
     public int autoDump(int stage, boolean fast){
+        double retractExtender = -0.5;
+        double raiseCollector = -1;
+        double lowerCollector = 0.4;
+        double runCollector = 0.79;
+        double raiseElevator = -1;
+        double targetDistance = 27;
+        int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
         if(stage==0){
             cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -802,7 +802,7 @@ public class RoverRuckusClass {
             if(getExtenderDistanceSensor()<targetDistance){
                 exMotor.setPower(retractExtender);
             }
-            if(currentPosition<-TICKS_PER_ROTATION/3){
+            if(currentPosition<-TICKS_PER_ROTATION/4){
                 cFlipDrive(0);
                 stage++;
             }
@@ -813,7 +813,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
             if(extenderDistance>=targetDistance){
                 cFlipDrive(raiseCollector);
-                exMotor.setPower(0);
+                exMotor.setPower(-0.05);
                 stage++;
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -824,6 +824,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
             if(currentPosition<-TICKS_PER_ROTATION){
                 cFlipDrive(0);
+                exMotor.setPower(0);
                 stage++;
                 //Reset the timer
                 time.reset();
@@ -832,7 +833,7 @@ public class RoverRuckusClass {
         }
         //Rotate collector until timer reaches 200 milliseconds
         else if(stage == 4){
-            if(time.milliseconds() > 600 || fast){
+            if(time.milliseconds() > 400 || fast){
                 cServo.setPower(0);
                 Log.d("AutoDumpState", "Rotated");
                 stage ++;
@@ -890,9 +891,6 @@ public class RoverRuckusClass {
         }
         telemetry.addData("Stage", stage);
         return stage;
-    }
-    public void newCFlip(double increment, double position){
-        cFlipServo.setPosition(position+increment);
     }
     public void cServoDrive(double power){
         cServo.setPower(power);

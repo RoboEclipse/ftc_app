@@ -129,7 +129,7 @@ public class RoverRuckusTeleOp extends OpMode
             fast = false;
         }
         else {
-            if (gamepad2.dpad_right && gamepad2.right_trigger<0.7) {
+            if (gamepad2.dpad_right || gamepad2.right_trigger>0.99) {
                 stage = 0;
             }
             if(gamepad2.y){
@@ -140,7 +140,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         }
 
-        if (gamepad2.dpad_left || gamepad2.left_trigger>0.7 || stage != 0) {
+        if (gamepad2.left_trigger>0.99 || stage != 0) {
             stage = myRobot.autoDump(stage, fast);
         }
         if(stage == 8 && !fast){

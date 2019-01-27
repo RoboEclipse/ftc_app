@@ -75,10 +75,10 @@ public class WallAlignTest extends LinearOpMode {
                 left = false;
             }
             if(left){
-                myRobot.driveUntilCraterLeft(0.5,10);
+                myRobot.driveUntilCraterLeft(0.5);
             }
             else{
-                myRobot.driveUntilCraterRight(0.5,10);
+                myRobot.driveUntilCraterRight(0.5);
             }
 
             // Show the elapsed game time and wheel power.

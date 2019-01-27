@@ -230,7 +230,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.driveUntilCraterLeft(0.5, targetDistance);
+        myRobot.driveUntilCraterLeft(0.5);
     }
 
     public void rightParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
@@ -238,7 +238,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.driveUntilCraterLeft(0.5, targetDistance);
+        myRobot.driveUntilCraterLeft(0.5);
     }
 
     public void newParking(RoverRuckusClass myRobot, double angle, double driveDistance){
@@ -255,13 +255,15 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cServoDrive(0.79);
         sleep(1000);
         myRobot.cServoDrive(0);
-        myRobot.cFlipDrive(-0.1);
-        for(int stage = 0; stage <=4; stage++){
-            myRobot.autoDump(stage,  false);
+        int stage = 0;
+        while(stage<=4){
+            stage = myRobot.autoDump(stage,  false);
         }
+
         myRobot.cFlipDrive(0.4);
         sleep(1000);
         myRobot.cFlipDrive(0);
+
     }
 
 }
