@@ -139,16 +139,16 @@ public class RoverRuckusTeleOp extends OpMode
                 fast = false;
             }
         }
-
-        if (gamepad2.left_trigger>0.99 || stage != 0) {
-            stage = myRobot.autoDump(stage, fast);
-        }
         if(stage == 8 && !fast){
             elevatorServoPosition = 0.7;
         }
         else if (stage == 8){
             elevatorServoPosition = 0.45;
         }
+        if (gamepad2.left_trigger>0.99 || stage != 0) {
+            stage = myRobot.autoDump(stage, fast);
+        }
+
         telemetry.update();
         // Show the elapsed game time and wheel power.
 

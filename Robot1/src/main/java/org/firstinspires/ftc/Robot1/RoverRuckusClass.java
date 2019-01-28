@@ -780,7 +780,7 @@ public class RoverRuckusClass {
     ElapsedTime time = new ElapsedTime();
     private double elevatorServoPosition;
     public int autoDump(int stage, boolean fast){
-        double retractExtender = -0.5;
+        double retractExtender = -1;
         double raiseCollector = -1;
         double lowerCollector = 0.4;
         double runCollector = 0.79;

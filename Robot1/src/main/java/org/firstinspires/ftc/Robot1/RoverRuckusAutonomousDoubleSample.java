@@ -73,10 +73,10 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
                 myRobot.encoderTurn(-45,10,3,0.5);
             }
             if(myRobot.getLeftDistanceSensor()>RoverRuckusConstants.wallDistance+5){
-                myRobot.leftRangeSensorStrafe(1000, RoverRuckusConstants.wallDistance, 0.3, "Left");
+                myRobot.leftRangeSensorStrafe(200, RoverRuckusConstants.wallDistance, 0.3, "Left");
             }
             if(myRobot.getLeftDistanceSensor()<RoverRuckusConstants.wallDistance-5){
-                myRobot.rightRangeSensorStrafe(1000,RoverRuckusConstants.wallDistance, 0.3, "Right");
+                myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.3, "Right");
             }
             //Park
             newParking(myRobot, -45, RoverRuckusConstants.park);

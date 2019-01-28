@@ -30,6 +30,12 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -37,54 +43,37 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ *
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all linear OpModes contain.
- * <p>
+ *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "CloseRedFarBlueSilver", group = "Linear Opmode")
+@Autonomous(name="newParkingTest", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
-    int extraStrafeInches = 10;
-    int drivetoMarkerInches = -35;
-    int tolerance = RoverRuckusConstants.tolerance;
+public class NewParkingTest extends RoverRuckusAutonomousMethods {
+
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void runOpMode() {
-        //Import classes
-        RoverRuckusClass myRobot = initialize();
-        waitForStartTensorFlow(myRobot);
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        RoverRuckusClass myRobot = new RoverRuckusClass();
+        myRobot.initialize(hardwareMap, telemetry);
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive())
-        {
-            //Land
-            LandingFull(myRobot);
-            //Sample
-            SampleFullProcess(myRobot);
-            //Line up to wall
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
-            myRobot.encoderTurn(-45, 30, tolerance, 0.4);
-            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
-            myRobot.colorSensorDrive(ticksPerInch*drivetoMarkerInches, 0.5);
-            //Place Marker
-            myRobot.br8kMotors();
-            ClaimFull(myRobot);
+        while (opModeIsActive()) {
 
-            myRobot.encoderTurn(-45,40, tolerance,0.4);
-
-            myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.5);
-            if(myRobot.getLeftDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
-                myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.5, "Left");
-            }
-            newParking(myRobot, -45, RoverRuckusConstants.park/2);
-            //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
-            break;
-
+            newParking(myRobot, 0 ,0);
         }
-
     }
-
 }
