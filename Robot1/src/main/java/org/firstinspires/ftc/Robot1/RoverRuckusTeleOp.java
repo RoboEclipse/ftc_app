@@ -129,21 +129,18 @@ public class RoverRuckusTeleOp extends OpMode
             fast = false;
         }
         else {
+
             if (gamepad2.dpad_right || gamepad2.right_trigger>0.99) {
                 stage = 0;
+                elevatorServoPosition=1;
             }
             if(gamepad2.y){
                 fast = true;
+                elevatorServoPosition=0.45;
             }
-            if(gamepad2.x){
-                fast = false;
+            else if(!fast){
+                elevatorServoPosition=0.7;
             }
-        }
-        if(stage == 8 && !fast){
-            elevatorServoPosition = 0.7;
-        }
-        else if (stage == 8){
-            elevatorServoPosition = 0.45;
         }
         if (gamepad2.left_trigger>0.99 || stage != 0) {
             stage = myRobot.autoDump(stage, fast);
@@ -295,7 +292,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         }
         //Stop motor from going too low
-        if (elevatorDistance < 10 && gamepad2.left_stick_y > 0) {
+        if (elevatorDistance < 5 && gamepad2.left_stick_y > 0) {
             elevatorPower = 0;
             telemetry.addData("DriveOptimization", "PowerCutForElevator");
             Log.d("DriveOptimization", "PowerCutForElevator");

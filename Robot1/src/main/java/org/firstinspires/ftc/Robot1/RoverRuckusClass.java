@@ -785,16 +785,23 @@ public class RoverRuckusClass {
         double lowerCollector = 0.4;
         double runCollector = 0.79;
         double raiseElevator = -1;
-        double targetDistance = 27;
+        double targetDistance = 22;
+        double slowDistance = 15;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
         if(stage==0){
+            time.reset();
+            double extenderDistance = getExtenderDistanceSensor();
             cflip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             cflip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             Log.d("AutoDumpState", "raiseCollector: " + raiseCollector);
             cFlipDrive(raiseCollector);
-            if(getExtenderDistanceSensor()<targetDistance){
+            if(extenderDistance<slowDistance){
                 exMotor.setPower(retractExtender);
+                Log.d("AutoDumpState", "retractExtender: " + retractExtender);
+            }
+            else if(extenderDistance>slowDistance && extenderDistance<targetDistance){
+                exMotor.setPower(retractExtender/2);
                 Log.d("AutoDumpState", "retractExtender: " + retractExtender);
             }
             stage++;
@@ -808,7 +815,7 @@ public class RoverRuckusClass {
                 cFlipDrive(0);
                 stage++;
             }
-            if(extenderDistance>=targetDistance){
+            if(extenderDistance>=targetDistance || time.milliseconds()>1000){
                 exMotor.setPower(-0.05);
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -850,7 +857,7 @@ public class RoverRuckusClass {
             int currentPosition = cflip.getCurrentPosition();
             cFlipDrive(lowerCollector);
             Log.d("AutoDumpState", "LoweringCollector: " + currentPosition);
-            if(currentPosition>-2*TICKS_PER_ROTATION/3){
+            if(currentPosition>-7*TICKS_PER_ROTATION/12){
                 Log.d("AutoDumpState", "Lowered");
                 cFlipDrive(-0.05);
                 eMotorDrive(raiseElevator);
