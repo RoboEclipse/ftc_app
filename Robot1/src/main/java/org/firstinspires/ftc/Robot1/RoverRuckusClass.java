@@ -85,6 +85,14 @@ public class RoverRuckusClass {
         lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         exMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -785,8 +793,9 @@ public class RoverRuckusClass {
         double lowerCollector = 0.4;
         double runCollector = 0.79;
         double raiseElevator = -1;
-        double targetDistance = 22;
+        double targetDistance = 23;
         double slowDistance = 15;
+        double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
         if(stage==0){
@@ -816,7 +825,7 @@ public class RoverRuckusClass {
                 stage++;
             }
             if(extenderDistance>=targetDistance || time.milliseconds()>1000){
-                exMotor.setPower(-0.05);
+                exMotor.setPower(-0.15);
                 Log.d("AutoDumpState", "Extender Retracted");
             }
         }
@@ -826,7 +835,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
             if(extenderDistance>=targetDistance){
                 cFlipDrive(raiseCollector);
-                exMotor.setPower(-0.05);
+                exMotor.setPower(-0.15);
                 stage++;
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -846,7 +855,7 @@ public class RoverRuckusClass {
         }
         //Rotate collector until timer reaches 200 milliseconds
         else if(stage == 4){
-            if(time.milliseconds() > 400 || fast){
+            if(time.milliseconds() > 800 || fast){
                 cServo.setPower(0);
                 Log.d("AutoDumpState", "Rotated");
                 stage ++;
@@ -869,7 +878,7 @@ public class RoverRuckusClass {
         else if (stage == 6){
             double elevatorDistance = getElevatorDistanceSensor();
             Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
-            if(elevatorDistance > 45){
+            if(elevatorDistance > 49){
                 Log.d("AutoDumpState", "Initial Elevator Servo");
                 elevatorServoPosition = 0.7;
                 elevatorServoDrive(elevatorServoPosition);

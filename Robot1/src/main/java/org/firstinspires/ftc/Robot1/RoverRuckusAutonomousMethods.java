@@ -138,10 +138,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Move sideways to realign
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
 
-        if(Math.abs(myRobot.getHorizontalAngle())>5 || Math.abs(myRobot.getHorizontalAngle())<15){
+        if(Math.abs(myRobot.getHorizontalAngle())>5){
             //Reorient
             //TODO: Possibly remove idealAngle
-            myRobot.encoderTurn(idealAngle,5,2,0.1);
+            myRobot.encoderTurn(0,5,2,0.1);
         }
 
         //Drive forward to clear the lander

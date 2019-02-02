@@ -137,10 +137,10 @@ public class RoverRuckusTeleOp extends OpMode
             }
             if(gamepad2.y){
                 fast = true;
-                elevatorServoPosition=0.45;
+                elevatorServoPosition=0.6;
             }
             else if(!fast){
-                elevatorServoPosition=0.7;
+                elevatorServoPosition=0.8;
             }
         }
         if (gamepad2.left_trigger>0.99 || stage != 0) {
@@ -179,9 +179,9 @@ public class RoverRuckusTeleOp extends OpMode
         //Collector Servo Control
         double cServoPower = 0;
         if (gamepad2.left_bumper) {
-            cServoPower = -0.79;
+            cServoPower = -0.59;
         } else if (gamepad2.right_bumper) {
-            cServoPower = 0.79;
+            cServoPower = 0.59;
             myRobot.resetCFlipEncoder();
         }
         myRobot.cServoDrive(cServoPower);
@@ -252,7 +252,7 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorServoPosition = 1;
         }
         if (gamepad2.y && elevatorServoPosition > 0) {
-            elevatorServoPosition = 0.45;
+            elevatorServoPosition = 0.6;
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
@@ -298,7 +298,7 @@ public class RoverRuckusTeleOp extends OpMode
             Log.d("DriveOptimization", "PowerCutForElevator");
         }
         if (elevatorDistance < 46 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
-            elevatorServoPosition = 0.7;
+            elevatorServoPosition = 0.8;
         }
         if (elevatorPower > 0 && elevatorDistance < 40) {
             elevatorServoPosition = 1;
