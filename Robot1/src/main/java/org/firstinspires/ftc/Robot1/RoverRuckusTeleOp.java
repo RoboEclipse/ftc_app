@@ -110,7 +110,7 @@ public class RoverRuckusTeleOp extends OpMode
             ly=-1;
             speedMultiplier = 0.5;
         }
-        else if(gamepad1.dpad_left){
+        if(gamepad1.dpad_left){
             lx=-1;
             speedMultiplier = 0.5;
         }
@@ -118,11 +118,12 @@ public class RoverRuckusTeleOp extends OpMode
             lx=1;
             speedMultiplier = 0.5;
         }
+
         double theta = Math.atan2(lx, ly);
         double v_theta = Math.sqrt(lx * lx + ly * ly);
         double v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation*.8); //move robot
+        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation); //move robot
 
         if(stage == 0) {
             driver2Manual();
@@ -157,17 +158,16 @@ public class RoverRuckusTeleOp extends OpMode
         //Lead Screw Controls
         if (gamepad1.left_bumper) {
             leadScrewPower = 1;
-        } else if (gamepad1.right_bumper && myRobot.isElevatorLimitSwitchNOTPressed()) {
+        } else if (gamepad1.right_bumper) {
             leadScrewPower = -1;
         }
-        else {
-            if (leadScrewPower > 0) {
-                if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
-                    leadScrewPower = 0;
-                    telemetry.addData("LeadScrewAutoStopped", "True");
-                }
+        if (leadScrewPower > 0) {
+            if (!myRobot.isElevatorLimitSwitchNOTPressed()) {
+                leadScrewPower = 0;
+                telemetry.addData("LeadScrewAutoStopped", "True");
             }
         }
+
 
         myRobot.leadScrewDrive(leadScrewPower);
 
@@ -213,7 +213,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.markerServoDrive(tokenServoPosition);
         //Collector Flipper Controls
-        double cFlipPower = 0;
+        double cFlipPower;
         int cFlipEncoder = myRobot.getCFlipEncoder();
         int eMotorEncoder = myRobot.getElevatorEncoder();
         if (gamepad1.right_trigger > 0.7) {
@@ -224,7 +224,7 @@ public class RoverRuckusTeleOp extends OpMode
             cFlipPower = 0;
         } else if (gamepad2.a) {
             cFlipPower = 0.4;
-        } else if (gamepad2.b) {
+        } else {
             cFlipPower = -0.8;
         }
         /*

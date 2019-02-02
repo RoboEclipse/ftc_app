@@ -831,11 +831,11 @@ public class RoverRuckusClass {
                 Log.d("AutoDumpState", "Extender Retracted");
             }
         }
-        // Retract flipper to dump minerials into basket
+        // Retract flipper to dump minerals into basket
         else if(stage==3){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION){
+            if(currentPosition<-TICKS_PER_ROTATION*.9){
                 cFlipDrive(0);
                 exMotor.setPower(0);
                 stage++;
