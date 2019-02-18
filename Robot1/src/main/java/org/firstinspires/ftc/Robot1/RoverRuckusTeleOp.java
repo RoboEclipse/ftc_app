@@ -60,12 +60,7 @@ public class RoverRuckusTeleOp extends OpMode
     private double tokenServoPosition = 0;
     private int stage = 0;
     private boolean fast = false;
-    //private double theta = 0.0, v_theta = 0.0, v_rotation = 0.0;
-    //private double speedMultiplier = 1;
-    //double leadScrewPower = 0;
-    //private double exMotorPower = 0;
-    //private double cServoPower = 0;
-    //private boolean cFlipCheck = false;
+    private ElapsedTime dumpTime = new ElapsedTime();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -102,28 +97,29 @@ public class RoverRuckusTeleOp extends OpMode
         double lx = gamepad1.left_stick_x;
         double ly = -gamepad1.left_stick_y;
         double speedMultiplier = 1;
+        double rotationMultiplier = 1;
         if(gamepad1.dpad_up){
             ly=1;
-            speedMultiplier = 0.5;
+            speedMultiplier = 0.75;
         }
         else if(gamepad1.dpad_down){
             ly=-1;
-            speedMultiplier = 0.5;
+            speedMultiplier = 0.75;
         }
         if(gamepad1.dpad_left){
             lx=-1;
-            speedMultiplier = 0.5;
+            speedMultiplier = 0.75;
         }
         else if(gamepad1.dpad_right){
             lx=1;
-            speedMultiplier = 0.5;
+            speedMultiplier = 0.75;
         }
 
         double theta = Math.atan2(lx, ly);
         double v_theta = Math.sqrt(lx * lx + ly * ly);
         double v_rotation = gamepad1.right_stick_x;
 
-        myRobot.drive(theta,  speedMultiplier*v_theta, v_rotation); //move robot
+        myRobot.drive(theta,  speedMultiplier*v_theta, rotationMultiplier*v_rotation); //move robot
 
         if(stage == 0) {
             driver2Manual();
@@ -135,6 +131,7 @@ public class RoverRuckusTeleOp extends OpMode
                 stage = 0;
                 elevatorServoPosition=1;
             }
+            /*
             if(gamepad2.y){
                 fast = true;
                 elevatorServoPosition=0.6;
@@ -142,6 +139,7 @@ public class RoverRuckusTeleOp extends OpMode
             else if(!fast){
                 elevatorServoPosition=0.8;
             }
+            */
         }
         if (gamepad2.left_trigger>0.99 || stage != 0) {
             stage = myRobot.autoDump(stage, fast);
@@ -191,16 +189,16 @@ public class RoverRuckusTeleOp extends OpMode
         double exMotorPower = 0;
         int extenderEncoder = myRobot.getExtenderEncoder();
         if (gamepad2.dpad_up) {
-            exMotorPower = 0.6;
-            if(extenderDistance<=2){
-                exMotorPower = 0.3;
+            exMotorPower = 0.89;
+            if(extenderDistance<=1.5){
+                exMotorPower = 0.2;
                 telemetry.addData("Slow", "true");
                 myRobot.resetExtenderEncoder();
             }
         } else if (gamepad2.dpad_down) {
-            exMotorPower = -0.6;
-            if(extenderDistance>23){
-                exMotorPower = -0.3;
+            exMotorPower = -0.89;
+            if(extenderDistance>23.5){
+                exMotorPower = -0.2;
                 telemetry.addData("Slow", "true");
             }
         }
@@ -246,13 +244,20 @@ public class RoverRuckusTeleOp extends OpMode
         }
         */
         myRobot.cFlipDrive(cFlipPower);
-
         //Elevator Flipper Controls
         if (gamepad2.x && elevatorServoPosition < 1) {
             elevatorServoPosition = 1;
         }
-        if (gamepad2.y && elevatorServoPosition > 0) {
-            elevatorServoPosition = 0.6;
+        if (gamepad2.right_trigger> 0.99){
+            elevatorServoPosition = 0.66;
+        }
+        if (gamepad2.y) {
+            //double time = dumpTime.milliseconds();
+            //elevatorServoPosition = myRobot.autoDeposit(time);
+            elevatorServoPosition=0.59;
+        }
+        else{
+            dumpTime.reset();
         }
 
         myRobot.elevatorServoDrive(elevatorServoPosition);
@@ -275,6 +280,8 @@ public class RoverRuckusTeleOp extends OpMode
         String flipperData = "Power" + cFlipPower + "EncoderValue" + cFlipEncoder;
         telemetry.addData("cFlip: ", flipperData);
         Log.d("cFlipper", flipperData);
+
+        telemetry.addData("FlipTime", dumpTime);
 
         myRobot.readEncoders();
 

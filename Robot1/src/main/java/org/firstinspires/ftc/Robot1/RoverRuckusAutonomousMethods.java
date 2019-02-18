@@ -249,16 +249,29 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cFlipDrive(0.4);
         sleep(1000);
         myRobot.cFlipDrive(0);
-        myRobot.exServoDrive(.89);
-        sleep(500);
-        myRobot.exServoDrive(0.5);
-        myRobot.cServoDrive(0.79);
+        while(myRobot.getExtenderDistanceSensor()>10){
+            myRobot.newExMotor(.89);
+        }
+        myRobot.newExMotor(0);
+        myRobot.cServoDrive(0.89);
         sleep(1000);
         myRobot.cServoDrive(0);
+        /*
         int stage = 0;
         while(stage<=4){
             stage = myRobot.autoDump(stage,  false);
         }
+
+        myRobot.cFlipDrive(0.4);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        */
+    }
+    public void doubleSampleParking(RoverRuckusClass myRobot, double angle, double driveDistance){
+        if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
+            myRobot.encoderTurn(angle,10,4,0.1);
+        }
+        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
 
         myRobot.cFlipDrive(0.4);
         sleep(1000);

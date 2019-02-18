@@ -833,7 +833,7 @@ public class RoverRuckusClass {
         else if(stage==2){
             double extenderDistance = getExtenderDistanceSensor();
             Log.d("AutoDumpState", "Extender Distance: " + extenderDistance);
-            if(extenderDistance>=targetDistance){
+            if(extenderDistance>=targetDistance || time.milliseconds()>1000){
                 cFlipDrive(raiseCollector);
                 exMotor.setPower(-0.15);
                 stage++;
@@ -869,13 +869,14 @@ public class RoverRuckusClass {
             if(currentPosition>-7*TICKS_PER_ROTATION/12){
                 Log.d("AutoDumpState", "Lowered");
                 cFlipDrive(-0.05);
-                eMotorDrive(raiseElevator);
+                //eMotorDrive(raiseElevator);
                 time.reset();
                 stage++;
             }
         }
         //Raise up basket and reset
         else if (stage == 6){
+            stage = 0;
             double elevatorDistance = getElevatorDistanceSensor();
             Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
             if(elevatorDistance > 49){
@@ -885,7 +886,7 @@ public class RoverRuckusClass {
                 eMotorDrive(raiseElevator/2);
                 stage++;
             }
-            if (time.milliseconds()>1000){
+            if (time.milliseconds()>3000){
                 stage = 0;
                 eMotorDrive(0);
                 Log.d("AutoDumpState", "AutoStop");
@@ -904,7 +905,7 @@ public class RoverRuckusClass {
                 eMotorDrive(0);
                 stage++;
             }
-            if(time.milliseconds()>1000){
+            if(time.milliseconds()>3000){
                 stage = 0;
                 eMotorDrive(0);
                 Log.d("AutoDumpState", "AutoStop");
@@ -927,4 +928,14 @@ public class RoverRuckusClass {
         exMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         exMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public double autoDeposit(double time){
+        if(time<700){
+            return 0.66;
+        }
+        else{
+            return 0.59;
+        }
+    }
+
 }

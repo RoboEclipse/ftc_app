@@ -79,7 +79,7 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
                 myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.3, "Right");
             }
             //Park
-            newParking(myRobot, -45, RoverRuckusConstants.park);
+            doubleSampleParking(myRobot, -45, RoverRuckusConstants.park);
             //leftParking(myRobot, -45, RoverRuckusConstants.wallDistance);
             break;
 
