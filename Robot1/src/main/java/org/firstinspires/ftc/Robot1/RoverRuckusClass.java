@@ -46,38 +46,30 @@ public class RoverRuckusClass {
     private DigitalChannel elevatorLimitSwitch;
     private static final int ENCODERS_CLOSE_ENOUGH = 10;
 
-
-    //private int TICKS_PER_CENTIMETER =(int)(TICKS_PER_INCH*2.54);
-    //private int leadScrewTime=5000;
-    private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
+    //private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff end
     public void initialize(com.qualcomm.robotcore.hardware.HardwareMap hardwareMap, Telemetry telemetry_){
         telemetry = telemetry_;
-        lf = hardwareMap.dcMotor.get(config.LeftFrontMotorName);
-        lr = hardwareMap.dcMotor.get(config.LeftRearMotorName);
-        rf = hardwareMap.dcMotor.get(config.RightFrontMotorName);
-        rr = hardwareMap.dcMotor.get(config.RightRearMotorName);
-        elevatorServo = hardwareMap.servo.get(config.ElevatorServoName);
-        markerServo = hardwareMap.servo.get(config.TeamMarkerServoName);
+        lf = hardwareMap.dcMotor.get(RoverRuckusConfiguration.LeftFrontMotorName);
+        lr = hardwareMap.dcMotor.get(RoverRuckusConfiguration.LeftRearMotorName);
+        rf = hardwareMap.dcMotor.get(RoverRuckusConfiguration.RightFrontMotorName);
+        rr = hardwareMap.dcMotor.get(RoverRuckusConfiguration.RightRearMotorName);
+        elevatorServo = hardwareMap.servo.get(RoverRuckusConfiguration.ElevatorServoName);
+        markerServo = hardwareMap.servo.get(RoverRuckusConfiguration.TeamMarkerServoName);
 
-        emotor = hardwareMap.dcMotor.get(config.ElevatorMotorName);
-        //exservo = hardwareMap.crservo.get(config.ExtenderMotorName);
-        exMotor = hardwareMap.dcMotor.get(config.ExtenderMotorName);
-        leftDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Left2MeterDistanceSensorName);
-        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Right2MeterDistanceSensorName);
-        elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Elevator2MeterDistanceSensorName);
-        extenderDistanceSensor = hardwareMap.get(DistanceSensor.class, config.Extender2MeterDistanceSensorName);
-        //exservoback = hardwareMap.crservo.get(config.ExtenderBackMotorName);
-        imu = hardwareMap.get(BNO055IMU.class, config.IMUNAme);
-        elevatorLimitSwitch = hardwareMap.digitalChannel.get(config.LimitSwitchName);
-        //touchSensor = hardwareMap.get(DigitalChannel.class, config.TouchSensor);
-        leadScrew = hardwareMap.dcMotor.get(config.LeadScrewMotorName);
-        colorSensor = hardwareMap.colorSensor.get(config.ColorSensorName);
-        //cServoLeft = hardwareMap.crservo.get(config.cServoLeftName);
-        //cServoRight = hardwareMap.crservo.get(config.cServoRightName);
-        cServo = hardwareMap.crservo.get(config.cServoName);
-        cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
+        emotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ElevatorMotorName);
+        exMotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ExtenderMotorName);
+        leftDistanceSensor = hardwareMap.get(DistanceSensor.class, RoverRuckusConfiguration.Left2MeterDistanceSensorName);
+        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, RoverRuckusConfiguration.Right2MeterDistanceSensorName);
+        elevatorDistanceSensor = hardwareMap.get(DistanceSensor.class, RoverRuckusConfiguration.Elevator2MeterDistanceSensorName);
+        extenderDistanceSensor = hardwareMap.get(DistanceSensor.class, RoverRuckusConfiguration.Extender2MeterDistanceSensorName);
+        imu = hardwareMap.get(BNO055IMU.class, RoverRuckusConfiguration.IMUNAme);
+        elevatorLimitSwitch = hardwareMap.digitalChannel.get(RoverRuckusConfiguration.LimitSwitchName);
+        leadScrew = hardwareMap.dcMotor.get(RoverRuckusConfiguration.LeadScrewMotorName);
+        colorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.ColorSensorName);
+        cServo = hardwareMap.crservo.get(RoverRuckusConfiguration.cServoName);
+        cflip = hardwareMap.dcMotor.get(RoverRuckusConfiguration.CollectionFlipperName);
         multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
         lf.setDirection(DcMotor.Direction.REVERSE);
@@ -97,14 +89,6 @@ public class RoverRuckusClass {
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        /*
-        else{
-            cflip = hardwareMap.dcMotor.get(config.CollectionFlipperName);
-            cServo1 = hardwareMap.crservo.get(config.CollectorServo1Name);
-            cServo2 = hardwareMap.crservo.get(config.CollectorServo2Name);
-            cflip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        */
 
         BNO055IMU.Parameters imuSettings = new BNO055IMU.Parameters();
         imuSettings.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -114,12 +98,6 @@ public class RoverRuckusClass {
         imuSettings.loggingTag          = "IMU";
         imuSettings.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        /*
-        imu.startAccelerationIntegration(
-                new Position(),
-                new Velocity(),
-                1000);
-        */
         imuSettings.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(imuSettings);
 
@@ -133,18 +111,7 @@ public class RoverRuckusClass {
         rr.setPower(rightPower);
         rf.setPower(rightPower);
     }
-/*
-    public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
-        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lf.setPower(lfPower);
-        lr.setPower(lrPower);
-        rf.setPower(rfPower);
-        rr.setPower(rrPower);
-    }
-*/
+
     public void leadScrewDrive(double power){
         leadScrew.setPower(power);
     }
@@ -165,28 +132,7 @@ public class RoverRuckusClass {
         emotor.setPower(power);
     }
 
-    public void exServoDrive(double power){
 
-        if(power>0.51){
-            exMotor.setPower(.79);
-            //exservoback.setPower(.02);
-        }
-        else if(power<0.49){
-            //exservoback.setPower(-.79);
-            //exservo.setPower(-.02);
-            exMotor.setPower(-.79);
-        }
-        else{
-            exMotor.setPower(0);
-        }
-        /*
-        else{
-            exservo.setPower(0);
-            exservoback.setPower(0);
-        }
-        */
-
-    }
     public void markerServoDrive(double position){
         markerServo.setPosition(position);
     }
@@ -194,17 +140,6 @@ public class RoverRuckusClass {
     {
         cflip.setPower(power);
     }
-    /*
-    public void singleDrive(double power, DcMotor motor){
-        motor.setPower(power);
-    }
-    public void strafeDrive(double power){
-        lf.setPower(power);
-        lr.setPower(-power);
-        rf.setPower(-power);
-        rr.setPower(power);
-    }
-    */
     public void elevatorServoDrive(double position){
         elevatorServo.setPosition(position);
     }
@@ -407,15 +342,6 @@ public class RoverRuckusClass {
             if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
             }
-            /*
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)>targetDistance+5){
-                encoderStrafeDrive((int)(leftDistanceSensor.getDistance(DistanceUnit.CM)-targetDistance), 0.5, "Left");
-
-            }
-            if(leftDistanceSensor.getDistance(DistanceUnit.CM)<targetDistance-5){
-                encoderStrafeDrive((int)(targetDistance-leftDistanceSensor.getDistance(DistanceUnit.CM)), 0.5, "Right");
-            }
-            */
             if(     getVerticalAngle()-startingVerticalAngle>2
                     || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();
@@ -445,15 +371,6 @@ public class RoverRuckusClass {
             if(Math.abs(getHorizontalAngle()-startingHorizontalAngle)>5){
                 encoderTurn(startingHorizontalAngle, 10,3, 0.1);
             }
-            /*
-            if(rightDistanceSensor.getDistance(DistanceUnit.CM)>targetDistance+5){
-                encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Left");
-
-            }
-            if(rightDistanceSensor.getDistance(DistanceUnit.CM)<targetDistance-5){
-                encoderStrafeDrive(5*TICKS_PER_CENTIMETER, 0.5, "Right");
-            }
-            */
             if(     getVerticalAngle()-startingVerticalAngle>2
                     || getThirdAngle()-startingThirdAngle>2){
                 telemetry.update();
@@ -501,9 +418,7 @@ public class RoverRuckusClass {
     public double getElevatorDistanceSensor(){
         return elevatorDistanceSensor.getDistance(DistanceUnit.CM);
     }
-    public boolean isIMUCalibrated(){
-        return imu.isGyroCalibrated();
-    }
+
     public int getColorSensorRed(){
         return colorSensor.red();
     }
@@ -549,15 +464,7 @@ public class RoverRuckusClass {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public String getEncoderPosition()
-    {
-        return String.format( "lf: %d,rf: %d, lr:%d, rr:%d",
-                lf.getCurrentPosition(),
-                rf.getCurrentPosition(),
-                lr.getCurrentPosition(),
-                rr.getCurrentPosition()
-        );
-    }
+
 
 
 
@@ -572,24 +479,11 @@ public class RoverRuckusClass {
         rr.setPower(w.rr);
         telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
     }
-    public boolean isElevatorLimitSwitchIsNOTPressed(){
-        if(extenderDistanceSensor.getDistance(DistanceUnit.CM) > 0.5) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isExtenderLimitSwitchNOTPressed() {
-        if(!(elevatorDistanceSensor.getDistance(DistanceUnit.CM) <= 0.5)) {
-            return true;
-        }
-        return false;
-    }
 
     private static class Wheels {
-        public double lf, lr, rf, rr;
+        double lf, lr, rf, rr;
 
-        public Wheels(double lf, double rf, double lr, double rr) {
+        Wheels(double lf, double rf, double lr, double rr) {
             this.lf = lf;
             this.rf = rf;
             this.lr = lr;
@@ -597,20 +491,20 @@ public class RoverRuckusClass {
         }
     }
     private RoverRuckusClass.Wheels getWheels(double direction, double velocity, double rotationVelocity) {
-        final double vd = velocity;
-        final double td = direction;
-        final double vt = rotationVelocity;
+        //final double vd = velocity;
+        //final double td = direction;
+        //final double vt = rotationVelocity;
 
-        double s = Math.sin(td + Math.PI / 4.0);
-        double c = Math.cos(td + Math.PI / 4.0);
+        double s = Math.sin(direction + Math.PI / 4.0);
+        double c = Math.cos(direction + Math.PI / 4.0);
         double m = Math.max(Math.abs(s), Math.abs(c));
         s /= m;
         c /= m;
 
-        final double v1 = vd * s + vt;
-        final double v2 = vd * c - vt;
-        final double v3 = vd * c + vt;
-        final double v4 = vd * s - vt;
+        final double v1 = velocity * s + rotationVelocity;
+        final double v2 = velocity * c - rotationVelocity;
+        final double v3 = velocity * c + rotationVelocity;
+        final double v4 = velocity * s - rotationVelocity;
 
         // Ensure that none of the values go over 1.0. If none of the provided values are
         // over 1.0, just scale by 1.0 and keep all values.
@@ -630,7 +524,7 @@ public class RoverRuckusClass {
     /**
      * Initialize the Vuforia localization engine.
      */
-    public void initVuforia(HardwareMap hardwareMap) {
+    private void initVuforia(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -648,7 +542,7 @@ public class RoverRuckusClass {
     /**
      * Initialize the Tensor Flow Object Detection engine.
      */
-    public void initTfod(HardwareMap hardwareMap) {
+    private void initTfod(HardwareMap hardwareMap) {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -657,7 +551,7 @@ public class RoverRuckusClass {
     }
 
     public void initTensorFlow (HardwareMap hardwareMap){
-        /** Activate Tensor Flow Object Detection. */
+        /* Activate Tensor Flow Object Detection. */
         initVuforia(hardwareMap);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -669,7 +563,7 @@ public class RoverRuckusClass {
             tfod.activate();
         }
     }
-
+    //TODO: Figure out what's going on here
     public String runTensorFlow () {
         String output = "";
         if (tfod != null) {
@@ -734,12 +628,14 @@ public class RoverRuckusClass {
                         }
                     }
                 }
+                /*
                 if(output == "" && updatedRecognitions.size()==2){
 
                 }
+                */
                 telemetry.update();
             }
-            if(output != ""){
+            if(!output.equals("")){
                 return output;
             }
             else{
@@ -758,14 +654,15 @@ public class RoverRuckusClass {
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 3) {
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
+                if (updatedRecognitions.size() != 0) {
+                    //int goldMineralX = -1;
+                    //int silverMineral1X = -1;
+                    //int silverMineral2X = -1;
                     for (Recognition recognition : updatedRecognitions) {
                         telemetry.addData("Width", recognition.getImageWidth());
                         telemetry.addData("Height", recognition.getImageHeight());
                     }
+                    /*
                     if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
@@ -775,6 +672,7 @@ public class RoverRuckusClass {
                             telemetry.addData("Gold Mineral Position", "Center");
                         }
                     }
+                    */
                 }
                 telemetry.update();
             }
@@ -795,7 +693,7 @@ public class RoverRuckusClass {
         double raiseElevator = -1;
         double targetDistance = 23;
         double slowDistance = 15;
-        double elevatorTargetDistance = 49;
+        //double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
         if(stage==0){
@@ -929,7 +827,75 @@ public class RoverRuckusClass {
         exMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public double autoDeposit(double time){
+
+
+}
+//Archive
+/*
+    public void allDrive(double lfPower, double lrPower, double rfPower, double rrPower){
+        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lf.setPower(lfPower);
+        lr.setPower(lrPower);
+        rf.setPower(rfPower);
+        rr.setPower(rrPower);
+    }
+        public void exServoDrive(double power){
+
+        if(power>0.51){
+            exMotor.setPower(.79);
+            //exservoback.setPower(.02);
+        }
+        else if(power<0.49){
+            //exservoback.setPower(-.79);
+            //exservo.setPower(-.02);
+            exMotor.setPower(-.79);
+        }
+        else{
+            exMotor.setPower(0);
+        }
+        /*
+        else{
+            exservo.setPower(0);
+            exservoback.setPower(0);
+        }
+            public void singleDrive(double power, DcMotor motor){
+        motor.setPower(power);
+    }
+    public void strafeDrive(double power){
+        lf.setPower(power);
+        lr.setPower(-power);
+        rf.setPower(-power);
+        rr.setPower(power);
+    }
+    public boolean isIMUCalibrated(){
+        return imu.isGyroCalibrated();
+    }
+        public String getEncoderPosition()
+    {
+        return String.format(Locale.US, "lf: %d,rf: %d, lr:%d, rr:%d",
+                lf.getCurrentPosition(),
+                rf.getCurrentPosition(),
+                lr.getCurrentPosition(),
+                rr.getCurrentPosition()
+        );
+    }
+        public boolean isElevatorLimitSwitchIsNOTPressed(){
+        if(extenderDistanceSensor.getDistance(DistanceUnit.CM) > 0.5) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isExtenderLimitSwitchNOTPressed() {
+        if(!(elevatorDistanceSensor.getDistance(DistanceUnit.CM) <= 0.5)) {
+            return true;
+        }
+        return false;
+    }
+        public double autoDeposit(double time){
         if(time<700){
             return 0.66;
         }
@@ -937,5 +903,4 @@ public class RoverRuckusClass {
             return 0.59;
         }
     }
-
-}
+*/
