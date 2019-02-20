@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.Robot1;
 
 
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.annotation.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+//import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -16,33 +14,17 @@ import java.util.List;
 import java.util.Locale;
 
 abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
-    int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*13);
+    private int ticksPerMineral = (int)(RoverRuckusConstants.TICKS_PER_INCH*13);
     int ticksPerInch = RoverRuckusConstants.TICKS_PER_INCH;
-    double leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
-    int hookDetach = RoverRuckusConstants.hookDetach;
-    int hookClear = RoverRuckusConstants.hookClear;
-    int landerClear = (int)RoverRuckusConstants.landerClear;
-    int knockOff = RoverRuckusConstants.knockOff;
-    double idealAngle = 0;
+    private double leadScrewRunTime=RoverRuckusConstants.leadScrewTime;
+    private int hookDetach = RoverRuckusConstants.hookDetach;
+    private int hookClear = RoverRuckusConstants.hookClear;
+    private int landerClear = (int)RoverRuckusConstants.landerClear;
+    private int knockOff = RoverRuckusConstants.knockOff;
     //Declare OpMode members.
     String position = "";
     DetectGoldMineral goldVision;
-    @NonNull
-    public RoverRuckusClass oldInitialize() {
-        telemetry.addData("Status", "Initialized");
-        RoverRuckusClass myRobot = new RoverRuckusClass();
 
-        myRobot.initialize(hardwareMap, telemetry);
-
-        goldVision = new DetectGoldMineral();
-        // can replace with ActivityViewDisplay.getInstance() for fullscreen
-        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        goldVision.setShowCountours(true);
-
-        telemetry.addData("isCalibrated", myRobot.isIMUCalibrated());
-        telemetry.update();
-        return myRobot;
-    }
 
     @NonNull
     public RoverRuckusClass initialize() {
@@ -53,7 +35,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     }
 
     @NonNull
-    public List<MatOfPoint> SetPosition() {
+    List<MatOfPoint> SetPosition() {
         // start the vision system
         goldVision.enable();
         sleep(2000);
@@ -100,7 +82,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         return contours;
     }
  
-    public void waitForStartTensorFlow(RoverRuckusClass myRobot) {
+    void waitForStartTensorFlow(RoverRuckusClass myRobot) {
         myRobot.initTensorFlow(hardwareMap);
 
         //Get mineral positions
@@ -113,7 +95,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.stopTensorFlow();
     }
 
-    public void LandingFull(RoverRuckusClass myRobot) {
+    void LandingFull(RoverRuckusClass myRobot) {
         //Lower the robot onto the field
         myRobot.markerServoDrive(0.3);
         myRobot.extendLeadScrew(leadScrewRunTime);
@@ -131,7 +113,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     }
 
     // 2 inches to the left of start
-    public void SampleFullProcess(RoverRuckusClass myRobot) {
+    void SampleFullProcess(RoverRuckusClass myRobot) {
         telemetry.update();
         //Drive forward to clear the hook
         myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
@@ -149,10 +131,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(100);
         myRobot.leadScrewDrive(-1);
         //Drive sideways to line up with the gold particle 5 seconds
-        if(position == "Left"){
+        if(position.equals("Left")){
             myRobot.encoderStrafeDrive(ticksPerMineral, 0.4, "Left");
         }
-        if(position == "Right"){
+        if(position.equals("Right")){
             myRobot.encoderStrafeDrive(ticksPerMineral,0.4,"Right");
         }
         /*
@@ -178,36 +160,61 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         */
         //aligned to gold particle 5 inches from the lander
         //Move far left
-        if(position == "Left"){
+        if(position.equals("Left")){
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
         }
-        if(position == "Center"){
+        if(position.equals("Center")){
             myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
         }
-        if(position == "Right"){
+        if(position.equals("Right")){
             myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
         }
 
     }
 
-    public void ClaimFull(RoverRuckusClass myRobot){
+    void ClaimFull(RoverRuckusClass myRobot){
         myRobot.markerServoDrive(1);
         telemetry.addData("Drop", "Blue" + myRobot.getColorSensorBlue() +"Red:" + myRobot.getColorSensorRed());
         telemetry.update();
         sleep(1500);
     }
 
-    public void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks, double power){
+   void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks){
+        double power= 0.3;
         myRobot.colorSensorDrive(maxTicks, power);
         myRobot.br8kMotors();
-        if(position == "Right"){
+        switch (position) {
+            case "Right":
+                ClaimFull(myRobot);
+                myRobot.encoderTankDriveInches(13, 0.5);
+                myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
+                myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+                myRobot.encoderTankDriveInches(-13, 0.5);
+                break;
+            case "Center":
+                ClaimFull(myRobot);
+                myRobot.encoderTankDriveInches(2, 0.3);
+                myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
+                myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
+                myRobot.encoderTankDriveInches(-2,0.5);
+                break;
+            default:
+                myRobot.encoderTankDriveInches(-6, 0.5);
+                ClaimFull(myRobot);
+                myRobot.encoderStrafeDrive(27*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
+                myRobot.leftRangeSensorStrafe(28*RoverRuckusConstants.TICKS_PER_INCH, 8, 0.5, "Left");
+                myRobot.encoderTankDriveInches(6, 0.5);
+                break;
+        }
+        /*
+        if(position.equals("Right")){
             ClaimFull(myRobot);
             myRobot.encoderTankDriveInches(13, 0.5);
             myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Right");
             myRobot.encoderStrafeDrive(8*RoverRuckusConstants.TICKS_PER_INCH, 0.5, "Left");
             myRobot.encoderTankDriveInches(-13, 0.5);
         }
-        else if (position == "Center"){
+        else if (position.equals("Center")){
             ClaimFull(myRobot);
             myRobot.encoderTankDriveInches(2, 0.3);
             myRobot.encoderStrafeDrive(17*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
@@ -222,10 +229,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTankDriveInches(6, 0.5);
 
         }
+        */
 
     }
 
-    public void leftParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
+    void leftParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
         //Move sideways until you are an inch or two from the wall
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(angle,10,4,0.1);
@@ -233,7 +241,8 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.driveUntilCraterLeft(0.5);
     }
 
-    public void rightParking(RoverRuckusClass myRobot, double angle, double targetDistance) {
+    void rightParking(RoverRuckusClass myRobot, double targetDistance) {
+        double angle = 135;
         //Move sideways until you are an inch or two from the wall
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(angle,10,4,0.1);
@@ -241,7 +250,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.driveUntilCraterLeft(0.5);
     }
 
-    public void newParking(RoverRuckusClass myRobot, double angle, double driveDistance){
+    void newParking(RoverRuckusClass myRobot, double angle, double driveDistance){
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
@@ -267,7 +276,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cFlipDrive(0);
         */
     }
-    public void doubleSampleParking(RoverRuckusClass myRobot, double angle, double driveDistance){
+    void doubleSampleParking(RoverRuckusClass myRobot, double angle, double driveDistance){
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
@@ -278,5 +287,23 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cFlipDrive(0);
 
     }
+    //Archive
+    /*
+    @NonNull
+    public RoverRuckusClass oldInitialize() {
+        telemetry.addData("Status", "Initialized");
+        RoverRuckusClass myRobot = new RoverRuckusClass();
 
+        myRobot.initialize(hardwareMap, telemetry);
+
+        goldVision = new DetectGoldMineral();
+        // can replace with ActivityViewDisplay.getInstance() for fullscreen
+        goldVision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        goldVision.setShowCountours(true);
+
+        telemetry.addData("isCalibrated", myRobot.isIMUCalibrated());
+        telemetry.update();
+        return myRobot;
+    }
+    */
 }

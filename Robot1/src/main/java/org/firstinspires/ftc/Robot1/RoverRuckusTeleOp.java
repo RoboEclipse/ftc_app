@@ -126,7 +126,6 @@ public class RoverRuckusTeleOp extends OpMode
             fast = false;
         }
         else {
-
             if (gamepad2.dpad_right || gamepad2.right_trigger>0.99) {
                 stage = 0;
                 elevatorServoPosition=1;
@@ -165,21 +164,20 @@ public class RoverRuckusTeleOp extends OpMode
                 telemetry.addData("LeadScrewAutoStopped", "True");
             }
         }
-
-
         myRobot.leadScrewDrive(leadScrewPower);
 
         //Elevator Motor Controls
         double elevatorDistance = myRobot.getElevatorDistanceSensor();
         double elevatorPower = gamepad2.left_stick_y;
         elevatorPower = elevatorTeleOp(elevatorDistance, elevatorPower);
+        int eMotorEncoder = myRobot.getElevatorEncoder();
 
         //Collector Servo Control
         double cServoPower = 0;
         if (gamepad2.left_bumper) {
-            cServoPower = -0.59;
+            cServoPower = -0.49;
         } else if (gamepad2.right_bumper) {
-            cServoPower = 0.59;
+            cServoPower = 0.49;
             myRobot.resetCFlipEncoder();
         }
         myRobot.cServoDrive(cServoPower);
@@ -204,16 +202,17 @@ public class RoverRuckusTeleOp extends OpMode
         }
         myRobot.newExMotor(exMotorPower);
 
+        //Token servo controls
         if (gamepad1.x && tokenServoPosition <= 1) {
             tokenServoPosition += 0.03;
         } else if (gamepad1.y && tokenServoPosition >= 0) {
             tokenServoPosition -= 0.03;
         }
         myRobot.markerServoDrive(tokenServoPosition);
+
         //Collector Flipper Controls
         double cFlipPower;
         int cFlipEncoder = myRobot.getCFlipEncoder();
-        int eMotorEncoder = myRobot.getElevatorEncoder();
         if (gamepad1.right_trigger > 0.7) {
             cFlipPower = 0.4;
         } else if (gamepad1.left_trigger > 0.7) {
@@ -244,6 +243,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
         */
         myRobot.cFlipDrive(cFlipPower);
+
         //Elevator Flipper Controls
         if (gamepad2.x && elevatorServoPosition < 1) {
             elevatorServoPosition = 1;
