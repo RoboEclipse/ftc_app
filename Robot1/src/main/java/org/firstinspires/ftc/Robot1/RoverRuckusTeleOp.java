@@ -187,16 +187,16 @@ public class RoverRuckusTeleOp extends OpMode
         double exMotorPower = 0;
         int extenderEncoder = myRobot.getExtenderEncoder();
         if (gamepad2.dpad_up) {
-            exMotorPower = 0.89;
-            if(extenderDistance<=1.5){
+            exMotorPower = 1;
+            if(extenderDistance<=5){
                 exMotorPower = 0.2;
                 telemetry.addData("Slow", "true");
                 myRobot.resetExtenderEncoder();
             }
         } else if (gamepad2.dpad_down) {
-            exMotorPower = -0.89;
-            if(extenderDistance>23.5){
-                exMotorPower = -0.2;
+            exMotorPower = -1;
+            if(extenderDistance>15){
+                exMotorPower = -0.1;
                 telemetry.addData("Slow", "true");
             }
         }

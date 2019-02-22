@@ -48,11 +48,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name = "SilverDoubleSample", group = "Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMethods {
-    int extraStrafeInches = 10;
-    int drivetoMarkerInches = -35;
     boolean right = false;
     @Override
     public void runOpMode() {
+        int extraStrafeInches = 10;
+        int drivetoMarkerInches = -35;
         //Import classes
         RoverRuckusClass myRobot = initialize();
         waitForStartTensorFlow(myRobot);
