@@ -748,15 +748,21 @@ public class RoverRuckusClass {
                 stage++;
                 //Reset the timer
                 time.reset();
-                cServo.setPower(runCollector);
+                //cServo.setPower(runCollector);
             }
         }
         //Rotate collector until timer reaches 200 milliseconds
         else if(stage == 4){
+            /*
             if(time.milliseconds() > 800 || fast){
                 cServo.setPower(0);
                 Log.d("AutoDumpState", "Rotated");
                 stage ++;
+            }
+            */
+
+            if(time.milliseconds()>200){
+                stage++;
             }
         }
         //Lower down collector to get ready
@@ -826,7 +832,23 @@ public class RoverRuckusClass {
         exMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         exMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-
+    public boolean autoRetract(double time){
+        if(time<1000){
+            elevatorServo.setPosition(0.59);
+            return true;
+        }
+        else{
+            elevatorServo.setPosition(1);
+            if(elevatorDistanceSensor.getDistance(DistanceUnit.CM)>7){
+                eMotorDrive(1);
+                return true;
+            }
+            else{
+                eMotorDrive(0);
+                return false;
+            }
+        }
+    }
 
 
 }

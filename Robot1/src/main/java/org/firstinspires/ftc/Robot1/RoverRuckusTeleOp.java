@@ -60,7 +60,9 @@ public class RoverRuckusTeleOp extends OpMode
     private double tokenServoPosition = 0;
     private int stage = 0;
     private boolean fast = false;
+    private boolean retracting = false;
     private ElapsedTime dumpTime = new ElapsedTime();
+    private ElapsedTime returnTime = new ElapsedTime();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -195,7 +197,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         } else if (gamepad2.dpad_down) {
             exMotorPower = -1;
-            if(extenderDistance>15){
+            if(extenderDistance>17){
                 exMotorPower = -0.1;
                 telemetry.addData("Slow", "true");
             }
@@ -252,15 +254,21 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorServoPosition = 0.66;
         }
         if (gamepad2.y) {
-            //double time = dumpTime.milliseconds();
-            //elevatorServoPosition = myRobot.autoDeposit(time);
-            elevatorServoPosition=0.59;
+            returnTime.reset();
+            retracting = true;
+            elevatorServoPosition = 1;
+            //elevatorServoPosition=0.59;
         }
         else{
             dumpTime.reset();
+            if(retracting){
+                retracting=myRobot.autoRetract(returnTime.milliseconds());
+            }
+        }
+        if(!retracting){
+            myRobot.elevatorServoDrive(elevatorServoPosition);
         }
 
-        myRobot.elevatorServoDrive(elevatorServoPosition);
 
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
@@ -310,9 +318,9 @@ public class RoverRuckusTeleOp extends OpMode
         if (elevatorPower > 0 && elevatorDistance < 40) {
             elevatorServoPosition = 1;
         }
-
-        myRobot.eMotorDrive(elevatorPower);
-
+        if(!retracting){
+            myRobot.eMotorDrive(elevatorPower);
+        }
         if(elevatorDistance < 3){
             myRobot.resetElevatorEncoder();
         }
