@@ -63,7 +63,7 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             //Land
             LandingFull(myRobot);
             //Sample
-            SampleFullProcess(myRobot);
+            rotateSample(myRobot);
             //Line up to wall
             myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
             myRobot.encoderTurn(-45, 30, tolerance, 0.4);
