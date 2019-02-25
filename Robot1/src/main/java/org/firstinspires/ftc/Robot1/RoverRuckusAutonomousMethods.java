@@ -111,9 +111,8 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(0,10,3,0.1);
         }
     }
-
     // 2 inches to the left of start
-    void SampleFullProcess(RoverRuckusClass myRobot) {
+    void rotateSample(RoverRuckusClass myRobot) {
         telemetry.update();
         //Drive forward to clear the hook
         myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
@@ -122,21 +121,46 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         if(Math.abs(myRobot.getHorizontalAngle())>5){
             //Reorient
-            //TODO: Possibly remove idealAngle
             myRobot.encoderTurn(0,5,2,0.1);
         }
 
+        //Rotate to line up with the gold particle 5 seconds
+        if(position.equals("Left")){
+            myRobot.encoderTurn(25,15,5,0.5);
+        }
+        if(position.equals("Right")){
+            myRobot.encoderTurn(-25,15,5,0.5);
+        }
+        //Collect the mineral
+        myRobot.cFlipDrive(0.4);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        myRobot.cServoDrive(0.49);
+        while(myRobot.getExtenderDistanceSensor()>5){
+            myRobot.newExMotor(.89);
+        }
+        myRobot.newExMotor(0);
+        int stage = 0;
+        while(stage<=5){
+            myRobot.autoDump(stage, false);
+            stage++;
+        }
+        myRobot.encoderTurn(0,15,5,0.5);
+        while(myRobot.getElevatorDistanceSensor()<50){
+            myRobot.eMotorDrive(-1);
+        }
+        myRobot.elevatorServoDrive(0.59);
+        sleep(1000);
+        myRobot.elevatorServoDrive(1);
+        while (myRobot.getElevatorDistanceSensor()>5){
+            myRobot.eMotorDrive(1);
+        }
+        myRobot.eMotorDrive(0);
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.5);
         sleep(100);
         myRobot.leadScrewDrive(-1);
-        //Drive sideways to line up with the gold particle 5 seconds
-        if(position.equals("Left")){
-            myRobot.encoderStrafeDrive(ticksPerMineral, 0.4, "Left");
-        }
-        if(position.equals("Right")){
-            myRobot.encoderStrafeDrive(ticksPerMineral,0.4,"Right");
-        }
+
         /*
         myRobot.cFlipDrive(0.2);
         sleep(1500);
@@ -145,10 +169,21 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.update();
 
         //Drive forward to knock off the gold particle 2 seconds
+        myRobot.cFlipDrive(0.4);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        myRobot.cServoDrive(-0.89);
+        sleep(1000);
+        myRobot.cServoDrive(0);
+        myRobot.cFlipDrive(-0.6);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        /*
         myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
         sleep(100);
         myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
         myRobot.leadScrewDrive(0);
+        */
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(0,10,4,0.1);
         }
@@ -169,7 +204,44 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(position.equals("Right")){
             myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
         }
+    }
+    // 2 inches to the left of start
+    void SampleFullProcess(RoverRuckusClass myRobot) {
+        telemetry.update();
+        //Drive forward to clear the hook
+        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
+        //Move sideways to realign
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
 
+        if(Math.abs(myRobot.getHorizontalAngle())>5){
+            //Reorient
+            myRobot.encoderTurn(0,5,2,0.1);
+        }
+
+        telemetry.addData("Angle", myRobot.getHorizontalAngle());
+        telemetry.update();
+
+
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(0,10,4,0.1);
+        }
+        //Retract the collector
+        /*
+        myRobot.cFlipDrive(-0.8);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        */
+        //aligned to gold particle 5 inches from the lander
+        //Move far left
+        if(position.equals("Left")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
+        }
+        if(position.equals("Center")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
+        }
+        if(position.equals("Right")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
+        }
     }
 
     void ClaimFull(RoverRuckusClass myRobot){
@@ -255,15 +327,19 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(angle,10,4,0.1);
         }
         myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
-        myRobot.cFlipDrive(0.4);
-        sleep(1000);
-        myRobot.cFlipDrive(0);
-        while(myRobot.getExtenderDistanceSensor()>10){
+        while(myRobot.getExtenderDistanceSensor()>15){
             myRobot.newExMotor(.89);
         }
         myRobot.newExMotor(0);
-        myRobot.cServoDrive(0.89);
+        myRobot.cFlipDrive(0.4);
         sleep(1000);
+        myRobot.cFlipDrive(0);
+        myRobot.cServoDrive(0.89);
+        while(myRobot.getExtenderDistanceSensor()>5){
+            myRobot.newExMotor(.89);
+        }
+        myRobot.newExMotor(0);
+        sleep(500);
         myRobot.cServoDrive(0);
         /*
         int stage = 0;

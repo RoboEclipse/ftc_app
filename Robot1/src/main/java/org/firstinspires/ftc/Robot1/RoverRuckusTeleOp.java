@@ -253,11 +253,12 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.right_trigger> 0.99){
             elevatorServoPosition = 0.66;
         }
-        if (gamepad2.y) {
+        if (gamepad2.y) {/*
             returnTime.reset();
             retracting = true;
             elevatorServoPosition = 1;
-            //elevatorServoPosition=0.59;
+            */
+            elevatorServoPosition=0.59;
         }
         else{
             dumpTime.reset();

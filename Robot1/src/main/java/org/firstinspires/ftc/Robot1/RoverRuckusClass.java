@@ -276,6 +276,8 @@ public class RoverRuckusClass {
                 br8kMotors();
                 multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
                 Log.d("colorSensorDrive: ", "Detected: Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
+                telemetry.addData("colorSensorDrive: ", "Success");
+                telemetry.update();
                 break;
             }
         }
@@ -689,7 +691,7 @@ public class RoverRuckusClass {
         double retractExtender = -1;
         double raiseCollector = -1;
         double lowerCollector = 0.4;
-        double runCollector = 0.79;
+        //double runCollector = 0.79;
         double raiseElevator = -1;
         double targetDistance = 23;
         double slowDistance = 15;
@@ -783,12 +785,12 @@ public class RoverRuckusClass {
             stage = 0;
             double elevatorDistance = getElevatorDistanceSensor();
             Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
-            if(elevatorDistance > 49){
+            if(elevatorDistance > 49 && elevatorDistance < 800){
                 Log.d("AutoDumpState", "Initial Elevator Servo");
                 elevatorServoPosition = 0.7;
                 elevatorServoDrive(elevatorServoPosition);
                 eMotorDrive(raiseElevator/2);
-                stage++;
+                //stage++;
             }
             if (time.milliseconds()>3000){
                 stage = 0;
