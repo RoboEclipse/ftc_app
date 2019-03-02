@@ -118,11 +118,14 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
         //Move sideways to realign
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
-
+        //Begin moving lead screw
+        myRobot.leadScrewDrive(-1);
+        /*
         if(Math.abs(myRobot.getHorizontalAngle())>5){
             //Reorient
             myRobot.encoderTurn(0,5,2,0.1);
         }
+        */
 
         //Rotate to line up with the gold particle 5 seconds
         if(position.equals("Left")){
@@ -131,42 +134,63 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(position.equals("Right")){
             myRobot.encoderTurn(-25,15,5,0.5);
         }
-        //Collect the mineral
+        //Lower collector
         myRobot.cFlipDrive(0.4);
         sleep(1000);
         myRobot.cFlipDrive(0);
+        //Begin running collector
         myRobot.cServoDrive(0.49);
+        //Stop lowering leadScrew
+        myRobot.leadScrewDrive(0);
+        //Extend slide
         while(myRobot.getExtenderDistanceSensor()>5){
             myRobot.newExMotor(.89);
         }
+        //Stop extender and collector
         myRobot.newExMotor(0);
+        myRobot.cServoDrive(0);
+        //Return mineral to dumping basket
         int stage = 0;
         while(stage<=5){
             stage = myRobot.autoDump(stage, false);
         }
         myRobot.cFlipDrive(0);
-        myRobot.cServoDrive(0);
+        //Realign
         myRobot.encoderTurn(0,15,5,0.5);
+        //Back up
+        myRobot.encoderTankDriveInches(-2,0.5);
+        //Raise up the elevator
         while(myRobot.getElevatorDistanceSensor()<28 && myRobot.getElevatorDistanceSensor()<800){
             myRobot.eMotorDrive(-1);
-            telemetry.addData("A", myRobot.getElevatorDistanceSensor());
-            telemetry.update();        }
+            telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
+            telemetry.update();
+        }
+        //Stop raising the elevator
         myRobot.eMotorDrive(0);
+
+        //Dump the minerals
         if(myRobot.getElevatorDistanceSensor()<800){
             myRobot.elevatorServoDrive(0.59);
             sleep(1000);
             myRobot.elevatorServoDrive(1);
         }
+        //Lower the elevator
         while (myRobot.getElevatorDistanceSensor()>10 && myRobot.getElevatorDistanceSensor()<800){
             myRobot.eMotorDrive(1);
-            telemetry.addData("A", myRobot.getElevatorDistanceSensor());
+            telemetry.addData("Lowering Elevator", myRobot.getElevatorDistanceSensor());
             telemetry.update();
         }
         myRobot.eMotorDrive(0);
+        //Retract the collector
+        myRobot.cFlipDrive(-0.8);
+
+        //Drive forward again
+        myRobot.encoderTankDriveInches(2,0.5);
+        // verify the time
+        myRobot.cFlipDrive(0);
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.5);
         sleep(100);
-        myRobot.leadScrewDrive(-1);
 
         /*
         myRobot.cFlipDrive(0.2);
@@ -175,71 +199,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.addData("Angle", myRobot.getHorizontalAngle());
         telemetry.update();
 
-
-        //Move far left
-        if(position.equals("Left")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
-        }
-        if(position.equals("Center")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
-        }
-        if(position.equals("Right")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
-        }
-    }
-    // 2 inches to the left of start
-    void SampleFullProcess(RoverRuckusClass myRobot) {
-        telemetry.update();
-        //Drive forward to clear the hook
-        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
-        //Move sideways to realign
-        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
-
-        if(Math.abs(myRobot.getHorizontalAngle())>5){
-            //Reorient
-            myRobot.encoderTurn(0,5,2,0.1);
-        }
-
-        telemetry.addData("Angle", myRobot.getHorizontalAngle());
-        telemetry.update();
-
-
-        if(Math.abs(myRobot.getHorizontalAngle())>10){
-            myRobot.encoderTurn(0,10,4,0.1);
-        }
-        //Retract the collector
-        /*
-        myRobot.cFlipDrive(-0.8);
-        sleep(1000);
-        myRobot.cFlipDrive(0);
-        */
-        //aligned to gold particle 5 inches from the lander
-        //Drive forward to knock off the gold particle 2 seconds
-        myRobot.cFlipDrive(0.4);
-        sleep(1000);
-        myRobot.cFlipDrive(0);
-        myRobot.cServoDrive(-0.89);
-        sleep(1000);
-        myRobot.cServoDrive(0);
-        myRobot.cFlipDrive(-0.6);
-        sleep(1000);
-        myRobot.cFlipDrive(0);
-        /*
-        myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
-        sleep(100);
-        myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
-        myRobot.leadScrewDrive(0);
-        */
-        if(Math.abs(myRobot.getHorizontalAngle())>10){
-            myRobot.encoderTurn(0,10,4,0.1);
-        }
-        //Retract the collector
-        /*
-        myRobot.cFlipDrive(-0.8);
-        sleep(1000);
-        myRobot.cFlipDrive(0);
-        */
-        //aligned to gold particle 5 inches from the lander
         //Move far left
         if(position.equals("Left")){
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
@@ -390,4 +349,68 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         return myRobot;
     }
     */
+    // 2 inches to the left of start
+    void SampleFullProcess(RoverRuckusClass myRobot) {
+        telemetry.update();
+        //Drive forward to clear the hook
+        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
+        //Move sideways to realign
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
+
+        if(Math.abs(myRobot.getHorizontalAngle())>5){
+            //Reorient
+            myRobot.encoderTurn(0,5,2,0.1);
+        }
+
+        telemetry.addData("Angle", myRobot.getHorizontalAngle());
+        telemetry.update();
+
+
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(0,10,4,0.1);
+        }
+        //Retract the collector
+        /*
+        myRobot.cFlipDrive(-0.8);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        */
+        //aligned to gold particle 5 inches from the lander
+        //Drive forward to knock off the gold particle 2 seconds
+        myRobot.cFlipDrive(0.4);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        myRobot.cServoDrive(-0.89);
+        sleep(1000);
+        myRobot.cServoDrive(0);
+        myRobot.cFlipDrive(-0.6);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        /*
+        myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
+        sleep(100);
+        myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
+        myRobot.leadScrewDrive(0);
+        */
+        if(Math.abs(myRobot.getHorizontalAngle())>10){
+            myRobot.encoderTurn(0,10,4,0.1);
+        }
+        //Retract the collector
+        /*
+        myRobot.cFlipDrive(-0.8);
+        sleep(1000);
+        myRobot.cFlipDrive(0);
+        */
+        //aligned to gold particle 5 inches from the lander
+        //Move far left
+        if(position.equals("Left")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
+        }
+        if(position.equals("Center")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
+        }
+        if(position.equals("Right")){
+            myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
+        }
+    }
 }
