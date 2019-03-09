@@ -177,9 +177,9 @@ public class RoverRuckusTeleOp extends OpMode
         //Collector Servo Control
         double cServoPower = 0;
         if (gamepad2.left_bumper) {
-            cServoPower = -0.49;
+            cServoPower = -0.39;
         } else if (gamepad2.right_bumper) {
-            cServoPower = 0.49;
+            cServoPower = 0.39;
             myRobot.resetCFlipEncoder();
         }
         myRobot.cServoDrive(cServoPower);
@@ -253,11 +253,13 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.right_trigger> 0.99){
             elevatorServoPosition = 0.66;
         }
-        if (gamepad2.y) {/*
+        if (gamepad2.y) {
+            /*
             returnTime.reset();
             retracting = true;
             elevatorServoPosition = 1;
             */
+
             elevatorServoPosition=0.59;
         }
         else{

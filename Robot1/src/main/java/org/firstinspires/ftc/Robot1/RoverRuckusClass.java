@@ -198,7 +198,7 @@ public class RoverRuckusClass {
         rr.setTargetPosition(multiplier*ticks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
-        while (anyBusy()) {
+        while (anyBusy()){
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
@@ -744,7 +744,7 @@ public class RoverRuckusClass {
         else if(stage==3){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION*.9){
+            if(currentPosition<-TICKS_PER_ROTATION){
                 cFlipDrive(0);
                 exMotor.setPower(0);
                 stage++;
@@ -763,7 +763,7 @@ public class RoverRuckusClass {
             }
             */
 
-            if(time.milliseconds()>200){
+            if(time.milliseconds()>300){
                 stage++;
             }
         }
@@ -841,7 +841,7 @@ public class RoverRuckusClass {
         }
         else{
             elevatorServo.setPosition(1);
-            if(elevatorDistanceSensor.getDistance(DistanceUnit.CM)>7){
+            if(elevatorDistanceSensor.getDistance(DistanceUnit.CM)>7 && elevatorDistanceSensor.getDistance(DistanceUnit.CM)<800){
                 eMotorDrive(1);
                 return true;
             }
