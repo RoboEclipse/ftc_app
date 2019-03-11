@@ -31,6 +31,14 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.addData("Status", "Initialized");
         RoverRuckusClass myRobot = new RoverRuckusClass();
         myRobot.initialize(hardwareMap, telemetry);
+        myRobot.SetOpmodeLiveCheck(
+            new OpModeCheck(){
+                @Override
+                public boolean CheckOpModeIsActive() {
+                    return opModeIsActive();
+                }
+            }
+        );
         return myRobot;
     }
 
@@ -143,7 +151,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Stop lowering leadScrew
         myRobot.leadScrewDrive(0);
         //Extend slide
-        while(myRobot.getExtenderDistanceSensor()>5){
+        while(myRobot.getExtenderDistanceSensor()>5 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
         //Stop extender and collector
@@ -160,7 +168,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Back up
         myRobot.encoderTankDriveInches(-2,0.5);
         //Raise up the elevator
-        while(myRobot.getElevatorDistanceSensor()<28 && myRobot.getElevatorDistanceSensor()<800){
+        while(myRobot.getElevatorDistanceSensor()<28 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
             myRobot.eMotorDrive(-1);
             telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
             telemetry.update();
@@ -175,7 +183,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.elevatorServoDrive(1);
         }
         //Lower the elevator
-        while (myRobot.getElevatorDistanceSensor()>10 && myRobot.getElevatorDistanceSensor()<800){
+        while (myRobot.getElevatorDistanceSensor()>10 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
             myRobot.eMotorDrive(1);
             telemetry.addData("Lowering Elevator", myRobot.getElevatorDistanceSensor());
             telemetry.update();
@@ -294,7 +302,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(angle,10,4,0.1);
         }
         myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
-        while(myRobot.getExtenderDistanceSensor()>15){
+        while(myRobot.getExtenderDistanceSensor()>15 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
         myRobot.newExMotor(0);
@@ -302,7 +310,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(1000);
         myRobot.cFlipDrive(0);
         myRobot.cServoDrive(0.89);
-        while(myRobot.getExtenderDistanceSensor()>5){
+        while(myRobot.getExtenderDistanceSensor()>5 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
         myRobot.newExMotor(0);

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,6 +29,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
+
+interface OpModeCheck
+        {
+            boolean CheckOpModeIsActive();
+        }
+
 public class RoverRuckusClass {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -46,6 +53,7 @@ public class RoverRuckusClass {
     private DigitalChannel elevatorLimitSwitch;
     private static final int ENCODERS_CLOSE_ENOUGH = 10;
 
+    private OpModeCheck opModeCheck;
     //private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff end
@@ -442,7 +450,16 @@ public class RoverRuckusClass {
             m.setPower(power);
         }
     }
+
+    public void SetOpmodeLiveCheck(OpModeCheck check){
+        opModeCheck = check;
+    }
+
     private boolean anyBusy(){
+        if(opModeCheck != null && !opModeCheck.CheckOpModeIsActive()){
+            // stop running if opmode isn't running
+            return false;
+        }
         return busy(lf, lr, rf, rr);
     }
     private boolean busy(DcMotor... ms) {
