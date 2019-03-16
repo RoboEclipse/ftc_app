@@ -84,7 +84,7 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             break;
 
         }
-
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 
 }
