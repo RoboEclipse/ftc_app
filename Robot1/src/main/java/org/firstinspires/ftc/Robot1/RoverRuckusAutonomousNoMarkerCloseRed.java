@@ -73,7 +73,7 @@ public class RoverRuckusAutonomousNoMarkerCloseRed extends RoverRuckusAutonomous
             break;
 
         }
-
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 
 }

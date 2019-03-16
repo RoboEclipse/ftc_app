@@ -31,8 +31,6 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.opencv.core.Mat;
-
 @Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
 //@Disabled
 public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
@@ -69,5 +67,6 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             break;
 
         }
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 }

@@ -64,7 +64,7 @@ public class RoverRuckusAutonomousDropOnly extends RoverRuckusAutonomousMethods 
             break;
 
         }
-
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 
 }

@@ -62,5 +62,6 @@ public class RoverRuckusAutonomousNoMarkerFarRed extends RoverRuckusAutonomousMe
             break;
 
         }
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 }

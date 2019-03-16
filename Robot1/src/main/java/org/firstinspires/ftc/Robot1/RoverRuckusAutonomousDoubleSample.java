@@ -84,7 +84,7 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
             break;
 
         }
-
+        AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
 
 }
