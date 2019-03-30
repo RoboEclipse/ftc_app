@@ -56,11 +56,8 @@ public class RoverRuckusAutonomousNoMarkerFarRed extends RoverRuckusAutonomousMe
             //myRobot.encoderTurn(135,40,5,0.5);
             //newParking(myRobot, 135, RoverRuckusConstants.park);
             rightParking(myRobot, RoverRuckusConstants.wallDistance);
-
-
             // Show the elapsed game time and wheel power.
             break;
-
         }
         AutoTransitioner.transitionOnStop(this,"TeleOp");
     }
