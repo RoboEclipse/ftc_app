@@ -628,18 +628,18 @@ public class RoverRuckusClass {
                             goldMineralX = (int) recognition.getLeft();
                         }
                         if(goldMineralX != -1){
-                            if(goldMineralX<oneThirdImageSize){
-                                output = "Left";
+                            if(goldMineralX>2*oneThirdImageSize){
+                                output = "Right";
                                 telemetry.addData("Gold Mineral Position", "Left");
                                 Log.d("Order: ", "Gold, ?, ?");
                             }
-                            else if(goldMineralX<2*oneThirdImageSize){
+                            else if(goldMineralX>oneThirdImageSize){
                                 output = "Center";
                                 telemetry.addData("Gold Mineral Position", "Center");
                                 Log.d("Order: ", "?, Gold, ?");
                             }
                             else{
-                                output = "Right";
+                                output = "Left";
                                 telemetry.addData("Gold Mineral Position", "Right");
                                 Log.d("Order: ", "?, ?, Gold");
                             }
@@ -761,7 +761,7 @@ public class RoverRuckusClass {
         else if(stage==3){
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION*1.05){
+            if(currentPosition<-TICKS_PER_ROTATION*1.1){
                 cFlipDrive(0);
                 exMotor.setPower(0);
                 stage++;
@@ -780,7 +780,7 @@ public class RoverRuckusClass {
             }
             */
 
-            if(time.milliseconds()>500){
+            if(time.milliseconds()>10){
                 stage++;
             }
         }

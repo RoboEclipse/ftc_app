@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //@Disabled
 public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods {
     int extraStrafeInches = 10;
-    int drivetoMarkerInches = -35;
+    int drivetoMarkerInches = -40;
     int tolerance = RoverRuckusConstants.tolerance;
     @Override
     public void runOpMode() {

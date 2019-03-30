@@ -143,9 +143,12 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(-25,15,5,0.5);
         }
         //Lower collector
-        myRobot.cFlipDrive(0.4);
-        sleep(1000);
+        myRobot.cFlipDrive(0.25);
+        sleep(1500);
+        myRobot.cFlipDrive(-0.6);
+        sleep(200);
         myRobot.cFlipDrive(0);
+        sleep(500);
         //Begin running collector
         myRobot.cServoDrive(0.49);
         //Stop lowering leadScrew
@@ -154,28 +157,32 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         while(myRobot.getExtenderDistanceSensor()>5 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
-        //Stop extender and collector
+        //Stop extender
         myRobot.newExMotor(0);
+        //Wait a little before stopping collector
+        sleep(500);
         myRobot.cServoDrive(0);
         //Return mineral to dumping basket
         int stage = 0;
-        while(stage<=5){
+        while(stage<=5 && opModeIsActive()){
             stage = myRobot.autoDump(stage, false);
         }
         myRobot.cFlipDrive(0);
         //Realign
-        myRobot.encoderTurn(0,15,5,0.5);
+        myRobot.encoderTurn(0,15,5,0.1);
         //Back up
-        myRobot.encoderTankDriveInches(-2,0.5);
+        myRobot.encoderTankDriveInches(-2,0.3);
         //Raise up the elevator
-        while(myRobot.getElevatorDistanceSensor()<28 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
+        while(myRobot.getElevatorDistanceSensor()<38 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
             myRobot.eMotorDrive(-1);
             telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
             telemetry.update();
         }
+        sleep(500);
         //Stop raising the elevator
         myRobot.eMotorDrive(0);
-
+        //Realign
+        myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
         if(myRobot.getElevatorDistanceSensor()<800){
             myRobot.elevatorServoDrive(0.59);

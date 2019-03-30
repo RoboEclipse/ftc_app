@@ -262,7 +262,7 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorServoPosition = 1;
             */
 
-            elevatorServoPosition=0.59;
+            elevatorServoPosition=0.56;
         }
         else{
             dumpTime.reset();

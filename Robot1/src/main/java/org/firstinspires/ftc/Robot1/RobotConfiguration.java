@@ -14,11 +14,12 @@ public class RobotConfiguration {
     public static final String ArmDriveMotorName = "arm_drive";
     public static final String LinearSlideMotorName = "linearslide_motor";
 
+
     // Servos
     public static final String SideBarLeftName = "SideBarLeft";
     public static final String SideBarRightName = "SideBarRight";
     public static final String LowerSideBarLeftName = "LowerSideBarLeft";
-    public static final String LowerSideBarRightName= "LowerSideBarRight";
+    public static final String LowerSideBarRightName = "LowerSideBarRight";
     public static final String UpperSideBarRightName = "UpperSideBarRight";
     public static final String UpperSideBarLeftName = "UpperSideBarLeft";
     public static final String JewelServoName= "jewelServo";
@@ -30,14 +31,14 @@ public class RobotConfiguration {
 
 
     //Sensors
-
-
     public static final String JewelColorSensorName= "jewel_sensor";
     public static final String BottomColorSensorName= "bottom_sensor";
     //public static final String GyroSensorName= "gyro_sensor";
     public static final String IMUName = "imu";
     public static final String TouchSensorName="touch_sensor";
     public static final String RangeSensorName="sensor_range";
+    public static final String LeftCollectorSensorName="left_color";
+    public static final String RightCollectorSensorName="right_color";
 
     public static final double PowerIncrement = 0.01;
 }

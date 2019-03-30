@@ -48,7 +48,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             LandingFull(myRobot);
-            SampleFullProcess(myRobot);
+            rotateSample(myRobot);
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Left");
             myRobot.encoderTurn(135,40,tolerance,0.5);
             myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
