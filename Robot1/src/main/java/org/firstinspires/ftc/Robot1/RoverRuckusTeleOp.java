@@ -306,9 +306,9 @@ public class RoverRuckusTeleOp extends OpMode
         //Set holding powers
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
-                elevatorPower = -0.1;
+                elevatorPower = -0.25;
             } else {
-                elevatorPower = -0.05;
+                elevatorPower = -0.1;
             }
         }
         //Stop motor from going too low
@@ -320,7 +320,7 @@ public class RoverRuckusTeleOp extends OpMode
         if (elevatorDistance < 46 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
             elevatorServoPosition = 0.8;
         }
-        if (elevatorPower > 0 && elevatorDistance < 40) {
+        if (elevatorPower > 0 && elevatorDistance < 45) {
             elevatorServoPosition = 1;
         }
         if(!retracting){
