@@ -76,7 +76,8 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
             myRobot.encoderTurn(-45,40, tolerance,0.4);
 
             myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.5);
-            if(myRobot.getLeftDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
+            if(myRobot.getLeftDistanceSensor()> RoverRuckusConstants.wallDistance+2
+                    || myRobot.getLeftDistanceSensor()<RoverRuckusConstants.wallDistance-2){
                 myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.5, "Left");
             }
             newParking(myRobot, -45, RoverRuckusConstants.park/2);

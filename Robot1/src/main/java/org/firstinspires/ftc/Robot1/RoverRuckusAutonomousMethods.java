@@ -143,7 +143,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(-25,15,5,0.5);
         }
         //Lower collector
-        myRobot.cFlipDrive(0.25);
+        myRobot.cFlipDrive(0.4);
         sleep(1500);
         myRobot.cFlipDrive(-0.6);
         sleep(200);
@@ -173,14 +173,15 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Back up
         myRobot.encoderTankDriveInches(-2,0.3);
         //Raise up the elevator
+        //Equivalent encoder value: -525
         while(myRobot.getElevatorDistanceSensor()<38 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
-            myRobot.eMotorDrive(-1);
+            myRobot.elevatorEncoderDrive(-525, -1);
             telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
             telemetry.update();
         }
         sleep(500);
         //Stop raising the elevator
-        myRobot.eMotorDrive(0);
+        myRobot.eMotorDrive(-0.4);
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
@@ -190,11 +191,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.elevatorServoDrive(1);
         }
         //Lower the elevator
-        while (myRobot.getElevatorDistanceSensor()>10 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
-            myRobot.eMotorDrive(1);
-            telemetry.addData("Lowering Elevator", myRobot.getElevatorDistanceSensor());
-            telemetry.update();
-        }
+        myRobot.elevatorEncoderDrive(-10, 0.5);
+        telemetry.addData("Lowering Elevator", myRobot.getElevatorDistanceSensor());
+        telemetry.update();
         myRobot.eMotorDrive(0);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);

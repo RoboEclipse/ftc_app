@@ -303,26 +303,40 @@ public class RoverRuckusTeleOp extends OpMode
     }
 
     private double elevatorTeleOp(double elevatorDistance, double elevatorPower) {
+        //Stuff that happens when it's going downwards
+        if(elevatorPower>0){
+            //Stop motor from going too low
+            if(elevatorDistance<5){
+                elevatorPower = 0;
+                telemetry.addData("DriveOptimization", "PowerCutForElevator");
+                Log.d("DriveOptimization", "PowerCutForElevator");
+            }
+            //Return servo to default position at certain point
+            if(elevatorDistance<45){
+                elevatorServoPosition = 1;
+            }
+            elevatorPower=elevatorPower*2/3;
+        }
+        //Stuff that happens when it's going upwards
+        if(elevatorPower<0){
+            //Half-rotate at certain heights
+            if(elevatorDistance < 46 && elevatorDistance > 20){
+                elevatorServoPosition = 0.8;
+            }
+            //Slow down at certain heights
+            if(elevatorDistance>40){
+                elevatorPower *= 4/5;
+            }
+        }
         //Set holding powers
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
-                elevatorPower = -0.25;
+                elevatorPower = -0.3;
             } else {
-                elevatorPower = -0.1;
+                elevatorPower = -0.2;
             }
         }
-        //Stop motor from going too low
-        if (elevatorDistance < 5 && gamepad2.left_stick_y > 0) {
-            elevatorPower = 0;
-            telemetry.addData("DriveOptimization", "PowerCutForElevator");
-            Log.d("DriveOptimization", "PowerCutForElevator");
-        }
-        if (elevatorDistance < 46 && elevatorDistance > 20 && gamepad2.left_stick_y < 0) {
-            elevatorServoPosition = 0.8;
-        }
-        if (elevatorPower > 0 && elevatorDistance < 45) {
-            elevatorServoPosition = 1;
-        }
+
         if(!retracting){
             myRobot.eMotorDrive(elevatorPower);
         }

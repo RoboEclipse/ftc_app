@@ -45,7 +45,7 @@ public class RoverRuckusClass {
     private DcMotor lf, lr, rf, rr, leadScrew,exMotor, cflip, emotor;
     private CRServo cServo;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
-    private ColorSensor colorSensor;
+    private ColorSensor colorSensor, leftColorSensor, rightColorSensor;
     private Servo elevatorServo, markerServo;
     private Telemetry telemetry;
     private BNO055IMU imu;
@@ -76,9 +76,9 @@ public class RoverRuckusClass {
         elevatorLimitSwitch = hardwareMap.digitalChannel.get(RoverRuckusConfiguration.LimitSwitchName);
         leadScrew = hardwareMap.dcMotor.get(RoverRuckusConfiguration.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.ColorSensorName);
+        //leftColorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.)
         cServo = hardwareMap.crservo.get(RoverRuckusConfiguration.cServoName);
         cflip = hardwareMap.dcMotor.get(RoverRuckusConfiguration.CollectionFlipperName);
-        multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, lf, lr, rf, rr);
         lr.setDirection(DcMotor.Direction.REVERSE);
         lf.setDirection(DcMotor.Direction.REVERSE);
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -89,10 +89,8 @@ public class RoverRuckusClass {
         lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        multiSetMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, lf, lr, rf, rr);
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         exMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leadScrew.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         emotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -331,7 +329,16 @@ public class RoverRuckusClass {
             telemetry.update();
         }
     }
+    public void elevatorEncoderDrive(int ticks, double power){
+        emotor.setPower(0);
+        emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        emotor.setTargetPosition(ticks);
+        emotor.setPower(power);
+        while(anyBusy()){
 
+        }
+    }
     public void driveUntilCraterLeft(double speed /*, double targetDistance*/){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();

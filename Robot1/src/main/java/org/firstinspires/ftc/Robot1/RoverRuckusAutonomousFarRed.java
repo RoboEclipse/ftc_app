@@ -49,15 +49,16 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
         while (opModeIsActive()) {
             LandingFull(myRobot);
             rotateSample(myRobot);
-            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.5, "Left");
-            myRobot.encoderTurn(135,40,tolerance,0.5);
+            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.6, "Left");
+            myRobot.encoderTurn(135,40,tolerance,0.6);
             myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.3,"Right");
-            myRobot.colorSensorDrive(ticksPerInch*reverseInches, 0.5);
+            myRobot.colorSensorDrive(ticksPerInch*reverseInches, 0.6);
             ClaimFull(myRobot);
-            myRobot.encoderTurn(135,40,tolerance,0.5);
-            myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.5);
-            if(myRobot.getRightDistanceSensor()> Math.abs(RoverRuckusConstants.wallDistance)+2){
-                myRobot.rightRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.5, "Right");
+            myRobot.encoderTurn(135,40,tolerance,0.6);
+            myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.6);
+            if(myRobot.getRightDistanceSensor()> RoverRuckusConstants.wallDistance+2
+                    || myRobot.getRightDistanceSensor()<RoverRuckusConstants.wallDistance-2){
+                myRobot.rightRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.6, "Right");
             }
             newParking(myRobot, 135, RoverRuckusConstants.park/2);
             //rightParking(myRobot, 135, RoverRuckusConstants.wallDistance);
