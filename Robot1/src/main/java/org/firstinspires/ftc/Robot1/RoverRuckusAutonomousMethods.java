@@ -174,11 +174,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTankDriveInches(-2,0.3);
         //Raise up the elevator
         //Equivalent encoder value: -525
-        while(myRobot.getElevatorDistanceSensor()<38 && myRobot.getElevatorDistanceSensor()<800 && opModeIsActive()){
-            myRobot.elevatorEncoderDrive(-525, -1);
-            telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
-            telemetry.update();
-        }
+        myRobot.elevatorEncoderDrive(-525, -1);
+        telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
+        telemetry.update();
         sleep(500);
         //Stop raising the elevator
         myRobot.eMotorDrive(-0.4);
