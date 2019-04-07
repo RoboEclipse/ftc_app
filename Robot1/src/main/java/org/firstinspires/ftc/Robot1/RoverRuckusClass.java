@@ -467,7 +467,7 @@ public class RoverRuckusClass {
             // stop running if opmode isn't running
             return false;
         }
-        return busy(lf, lr, rf, rr);
+        return busy(lf, lr, rf, rr, emotor);
     }
     private boolean busy(DcMotor... ms) {
         int total = 0;
