@@ -54,6 +54,8 @@ public class RoverRuckusClass {
     private static final int ENCODERS_CLOSE_ENOUGH = 10;
 
     private OpModeCheck opModeCheck;
+    double elevatorModifier = 0.2;
+    double dumpingPosition = 0.58;
     //private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff end
@@ -335,9 +337,14 @@ public class RoverRuckusClass {
         emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);
-        while(anyBusy()){
-
+        int position = emotor.getCurrentPosition();
+        while(position<ticks-10 || position>ticks+10){
+            position = emotor.getCurrentPosition();
+            telemetry.addData("emotor", position);
+            Log.d("emotorrunning", ""+position);
+            telemetry.update();
         }
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void driveUntilCraterLeft(double speed /*, double targetDistance*/){
         double startingHorizontalAngle = getHorizontalAngle();
@@ -467,7 +474,7 @@ public class RoverRuckusClass {
             // stop running if opmode isn't running
             return false;
         }
-        return busy(lf, lr, rf, rr, emotor);
+        return busy(lf, lr, rf, rr);
     }
     private boolean busy(DcMotor... ms) {
         int total = 0;

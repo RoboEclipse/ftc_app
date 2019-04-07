@@ -64,6 +64,7 @@ public class RoverRuckusTeleOp extends OpMode
     private ElapsedTime dumpTime = new ElapsedTime();
     private ElapsedTime returnTime = new ElapsedTime();
 
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -262,7 +263,7 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorServoPosition = 1;
             */
 
-            elevatorServoPosition=0.56;
+            elevatorServoPosition=myRobot.dumpingPosition;
         }
         else{
             dumpTime.reset();
@@ -315,7 +316,7 @@ public class RoverRuckusTeleOp extends OpMode
             if(elevatorDistance<45){
                 elevatorServoPosition = 1;
             }
-            elevatorPower=elevatorPower*2/3;
+            elevatorPower=elevatorPower*myRobot.elevatorModifier;
         }
         //Stuff that happens when it's going upwards
         if(elevatorPower<0){

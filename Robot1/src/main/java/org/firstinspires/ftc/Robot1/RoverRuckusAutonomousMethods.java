@@ -2,6 +2,7 @@ package org.firstinspires.ftc.Robot1;
 
 
 import android.support.annotation.*;
+import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -174,35 +175,37 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTankDriveInches(-2,0.3);
         //Raise up the elevator
         //Equivalent encoder value: -525
-        myRobot.elevatorEncoderDrive(-525, -1);
-        telemetry.addData("Raising elevator", myRobot.getElevatorDistanceSensor());
+        telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
+        myRobot.elevatorEncoderDrive(-580, -.8);
+        telemetry.addData("After Raising elevator", myRobot.getElevatorEncoder());
         telemetry.update();
-        sleep(500);
+        Log.d("Status", "Elevator Done Raising");
         //Stop raising the elevator
         myRobot.eMotorDrive(-0.4);
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
-        if(myRobot.getElevatorDistanceSensor()<800){
-            myRobot.elevatorServoDrive(0.59);
-            sleep(1000);
-            myRobot.elevatorServoDrive(1);
-        }
+        myRobot.elevatorServoDrive(myRobot.dumpingPosition);
+        sleep(1500);
+        myRobot.elevatorServoDrive(1);
         //Lower the elevator
-        myRobot.elevatorEncoderDrive(-10, 0.5);
-        telemetry.addData("Lowering Elevator", myRobot.getElevatorDistanceSensor());
+        telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
+        myRobot.elevatorEncoderDrive(500, myRobot.elevatorModifier);
+        telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
+        telemetry.update();
+        Log.d("Status", "Elevator Done Lowering");
         myRobot.eMotorDrive(0);
+        //Drive forward again
+        myRobot.encoderTankDriveInches(2,0.5);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);
 
-        //Drive forward again
-        myRobot.encoderTankDriveInches(2,0.5);
-        // verify the time
-        myRobot.cFlipDrive(0);
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.5);
-        sleep(100);
+        // verify the time
+        myRobot.cFlipDrive(0);
+            sleep(100);
 
         /*
         myRobot.cFlipDrive(0.2);
