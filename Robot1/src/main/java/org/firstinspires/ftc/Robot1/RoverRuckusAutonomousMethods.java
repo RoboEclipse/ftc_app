@@ -124,9 +124,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     void rotateSample(RoverRuckusClass myRobot) {
         telemetry.update();
         //Drive forward to clear the hook
-        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.5);
+        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.6);
         //Move sideways to realign
-        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Right");
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.6, "Right");
         //Begin moving lead screw
         myRobot.leadScrewDrive(-1);
         /*
@@ -138,10 +138,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         //Rotate to line up with the gold particle 5 seconds
         if(position.equals("Left")){
-            myRobot.encoderTurn(25,15,5,0.5);
+            myRobot.encoderTurn(27,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-25,15,5,0.5);
+            myRobot.encoderTurn(-36,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
@@ -156,7 +156,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.leadScrewDrive(0);
         //Extend slide
         while(myRobot.getExtenderDistanceSensor()>5 && opModeIsActive()){
-            myRobot.newExMotor(.89);
+            myRobot.newExMotor(1);
         }
         //Stop extender
         myRobot.newExMotor(0);
@@ -172,11 +172,11 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Back up
-        myRobot.encoderTankDriveInches(-2,0.3);
+        myRobot.encoderTankDriveInches(-2,0.6);
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
-        myRobot.elevatorEncoderDrive(-580, -.8);
+        myRobot.elevatorEncoderDrive(-580, -1);
         telemetry.addData("After Raising elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Raising");
@@ -191,18 +191,18 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Lower the elevator
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
-        myRobot.elevatorEncoderDrive(500, myRobot.elevatorModifier);
+        myRobot.elevatorEncoderDrive(540, myRobot.elevatorModifier);
         telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Lowering");
         myRobot.eMotorDrive(0);
         //Drive forward again
-        myRobot.encoderTankDriveInches(2,0.5);
+        myRobot.encoderTankDriveInches(2,0.6);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);
 
         //Drive forward to clear the lander
-        myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.5);
+        myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.6);
         // verify the time
         myRobot.cFlipDrive(0);
             sleep(100);
@@ -215,15 +215,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.update();
 
         //Move far left
-        if(position.equals("Left")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5, 0.4, "Left");
-        }
-        if(position.equals("Center")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
-        }
-        if(position.equals("Right")){
-            myRobot.encoderStrafeDrive(ticksPerInch*5+2*ticksPerMineral,0.4,"Left");
-        }
+        myRobot.encoderStrafeDrive(ticksPerInch*5+ticksPerMineral, 0.4, "Left");
     }
 
     void ClaimFull(RoverRuckusClass myRobot){
@@ -308,7 +300,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
+        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.8);
         while(myRobot.getExtenderDistanceSensor()>15 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }

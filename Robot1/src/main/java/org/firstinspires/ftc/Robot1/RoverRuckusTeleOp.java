@@ -100,7 +100,7 @@ public class RoverRuckusTeleOp extends OpMode
         double lx = gamepad1.left_stick_x;
         double ly = -gamepad1.left_stick_y;
         double speedMultiplier = 1;
-        double rotationMultiplier = 1;
+        double rotationMultiplier = .8;
         if(gamepad1.dpad_up){
             ly=1;
             speedMultiplier = 0.75;
@@ -316,7 +316,7 @@ public class RoverRuckusTeleOp extends OpMode
             if(elevatorDistance<45){
                 elevatorServoPosition = 1;
             }
-            elevatorPower=elevatorPower*myRobot.elevatorModifier;
+            elevatorPower=elevatorPower*myRobot.elevatorModifier*0.3;
         }
         //Stuff that happens when it's going upwards
         if(elevatorPower<0){
@@ -325,9 +325,11 @@ public class RoverRuckusTeleOp extends OpMode
                 elevatorServoPosition = 0.8;
             }
             //Slow down at certain heights
+            /*
             if(elevatorDistance>40){
                 elevatorPower *= 4/5;
             }
+            */
         }
         //Set holding powers
         if (gamepad2.left_stick_y == 0) {

@@ -54,7 +54,7 @@ public class RoverRuckusClass {
     private static final int ENCODERS_CLOSE_ENOUGH = 10;
 
     private OpModeCheck opModeCheck;
-    double elevatorModifier = 0.2;
+    double elevatorModifier = 0.4;
     double dumpingPosition = 0.58;
     //private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
@@ -78,7 +78,8 @@ public class RoverRuckusClass {
         elevatorLimitSwitch = hardwareMap.digitalChannel.get(RoverRuckusConfiguration.LimitSwitchName);
         leadScrew = hardwareMap.dcMotor.get(RoverRuckusConfiguration.LeadScrewMotorName);
         colorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.ColorSensorName);
-        //leftColorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.)
+        leftColorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.LeftColorSensorName);
+        rightColorSensor = hardwareMap.colorSensor.get(RoverRuckusConfiguration.RightColorSensorName);
         cServo = hardwareMap.crservo.get(RoverRuckusConfiguration.cServoName);
         cflip = hardwareMap.dcMotor.get(RoverRuckusConfiguration.CollectionFlipperName);
         lr.setDirection(DcMotor.Direction.REVERSE);
@@ -451,6 +452,20 @@ public class RoverRuckusClass {
     }
     public double getExtenderDistanceSensor(){
         return extenderDistanceSensor.getDistance(DistanceUnit.CM);
+    }
+    public int[] getLeftColorSensor(){
+        int[] output = new int[3];
+        output[0]=leftColorSensor.red();
+        output[1]=leftColorSensor.blue();
+        output[2]=leftColorSensor.green();
+        return output;
+    }
+    public int[] getRightColorSensor(){
+        int[] output = new int[3];
+        output[0]=rightColorSensor.red();
+        output[1]=rightColorSensor.blue();
+        output[2]=rightColorSensor.green();
+        return output;
     }
 
     //Space savers
