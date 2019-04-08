@@ -138,10 +138,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         //Rotate to line up with the gold particle 5 seconds
         if(position.equals("Left")){
-            myRobot.encoderTurn(27,15,5,0.6);
+            myRobot.encoderTurn(22,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-36,15,5,0.6);
+            myRobot.encoderTurn(-31,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);

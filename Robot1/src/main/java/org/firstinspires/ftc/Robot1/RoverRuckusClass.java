@@ -46,7 +46,7 @@ public class RoverRuckusClass {
     private CRServo cServo;
     private DistanceSensor leftDistanceSensor, rightDistanceSensor, elevatorDistanceSensor, extenderDistanceSensor;
     private ColorSensor colorSensor, leftColorSensor, rightColorSensor;
-    private Servo elevatorServo, markerServo;
+    private Servo elevatorServo, markerServo, led;
     private Telemetry telemetry;
     private BNO055IMU imu;
     private Orientation angles;
@@ -67,6 +67,7 @@ public class RoverRuckusClass {
         rr = hardwareMap.dcMotor.get(RoverRuckusConfiguration.RightRearMotorName);
         elevatorServo = hardwareMap.servo.get(RoverRuckusConfiguration.ElevatorServoName);
         markerServo = hardwareMap.servo.get(RoverRuckusConfiguration.TeamMarkerServoName);
+        led = hardwareMap.servo.get(RoverRuckusConfiguration.LEDLightName);
 
         emotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ElevatorMotorName);
         exMotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ExtenderMotorName);
@@ -466,6 +467,22 @@ public class RoverRuckusClass {
         output[1]=rightColorSensor.blue();
         output[2]=rightColorSensor.green();
         return output;
+    }
+    public boolean isLeftFull(){
+        if(leftColorSensor.red()>1000 && leftColorSensor.blue()>1000 && leftColorSensor.green()>1000){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean isRightFull(){
+        if(rightColorSensor.red()>1000 && rightColorSensor.blue()>1000 && rightColorSensor.green()>1000){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     //Space savers
@@ -896,6 +913,9 @@ public class RoverRuckusClass {
                 return false;
             }
         }
+    }
+    public void LEDControl(double input){
+        led.setPosition(input);
     }
 
 

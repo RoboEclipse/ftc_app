@@ -7,23 +7,25 @@
             <NeveRest40Gearmotor name="rightb_motor" port="1" />
             <NeveRest20Gearmotor name="leadScrewMotor" port="2" />
             <NeveRest60Gearmotor name="collectionFlipperMotor" port="3" />
-            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
             <LynxColorSensor name="colorSensor" port="0" bus="2" />
             <REV_VL53L0X_RANGE_SENSOR name="elevatorDistanceSensor" port="0" bus="3" />
             <REV_VL53L0X_RANGE_SENSOR name="extenderDistanceSensor" port="0" bus="1" />
+            <LynxColorSensor name="rightColorSensor" port="0" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 1" port="3">
             <NeveRest40Gearmotor name="leftf_motor" port="0" />
             <NeveRest40Gearmotor name="leftb_motor" port="1" />
             <NeveRest20Gearmotor name="extenderMotor" port="2" />
-            <NeveRest20Gearmotor name="elevatorMotor" port="3" />
+            <NeveRest3.7v1Gearmotor name="elevatorMotor" port="3" />
             <ContinuousRotationServo name="cServo" port="0" />
             <Servo name="elevatorServo" port="1" />
             <Servo name="teamMarkerServo" port="2" />
+            <RevBlinkinLedDriver name="led" port="3" />
             <DigitalDevice name="limitSwitch" port="6" />
             <REV_VL53L0X_RANGE_SENSOR name="2mDistanceSensorLeft" port="0" bus="2" />
-            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <REV_VL53L0X_RANGE_SENSOR name="2mDistanceSensorRight" port="0" bus="1" />
+            <LynxColorSensor name="leftColorSensor" port="0" bus="0" />
+            <LynxEmbeddedIMU name="imu" port="1" bus="0" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>
