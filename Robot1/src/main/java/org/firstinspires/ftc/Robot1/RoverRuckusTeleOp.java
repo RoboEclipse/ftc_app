@@ -59,6 +59,7 @@ public class RoverRuckusTeleOp extends OpMode
     private double elevatorServoPosition = 1;
     private double tokenServoPosition = 0;
     private int stage = 0;
+    private double tiltPosition = 0.6;
     private boolean fast = false;
     private boolean retracting = false;
     private ElapsedTime dumpTime = new ElapsedTime();
@@ -254,7 +255,7 @@ public class RoverRuckusTeleOp extends OpMode
             elevatorServoPosition = 1;
         }
         if (gamepad2.right_trigger> 0.99){
-            elevatorServoPosition = 0.66;
+            elevatorServoPosition = tiltPosition;
         }
         if (gamepad2.y) {
             /*
