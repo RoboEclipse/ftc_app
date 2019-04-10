@@ -141,7 +141,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(22,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-31,15,5,0.6);
+            myRobot.encoderTurn(-30,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
@@ -187,7 +187,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
         myRobot.elevatorServoDrive(myRobot.dumpingPosition);
-        sleep(1500);
+        sleep(1000);
         myRobot.elevatorServoDrive(1);
         //Lower the elevator
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
@@ -223,7 +223,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.markerServoDrive(1);
         telemetry.addData("Drop", "Blue" + myRobot.getColorSensorBlue() +"Red:" + myRobot.getColorSensorRed());
         telemetry.update();
-        sleep(1500);
+        sleep(500);
     }
 
    void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks){
