@@ -57,7 +57,7 @@ public class LEDTest extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private RoverRuckusClass myRobot = new RoverRuckusClass();
-    private double ledPower = .5;
+    private double ledPower = 0.5000;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -94,7 +94,7 @@ public class LEDTest extends OpMode
         if(gamepad1.dpad_up && ledPower<=0.7475){
             ledPower+=0.0001;
         }
-        if(gamepad1.dpad_down){
+        if(gamepad1.dpad_down && ledPower >= 0.2525){
             ledPower-=0.0001;
         }
         myRobot.LEDControl(ledPower);
