@@ -775,7 +775,7 @@ public class RoverRuckusClass {
         double targetDistance = 23;
         double slowDistance = 15;
         double tiltPosition=0.65;
-        double rotateCollector = 2.3;
+        double rotateCollector = 0.22;
         //double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders

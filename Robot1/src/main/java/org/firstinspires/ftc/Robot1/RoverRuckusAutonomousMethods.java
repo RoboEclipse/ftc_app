@@ -193,15 +193,15 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         myRobot.elevatorEncoderDriveStart(540, myRobot.elevatorModifier);
+        //Drive forward again
+        myRobot.encoderTankDriveInches(2,0.6);
+        myRobot.elevatorEncoderDriveEnd(540);
         telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Lowering");
         myRobot.eMotorDrive(0);
-        //Drive forward again
-        myRobot.encoderTankDriveInches(2,0.6);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);
-        myRobot.elevatorEncoderDriveEnd(540);
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.6);
         // verify the time
