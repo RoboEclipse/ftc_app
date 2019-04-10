@@ -348,6 +348,36 @@ public class RoverRuckusClass {
         }
         emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+    public void elevatorEncoderDriveStart(int ticks, double power){
+        emotor.setPower(0);
+        emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        emotor.setTargetPosition(ticks);
+        emotor.setPower(power);
+        int position = emotor.getCurrentPosition();
+        /*while(position<ticks-10 || position>ticks+10){
+            position = emotor.getCurrentPosition();
+            telemetry.addData("emotor", position);
+            Log.d("emotorrunning", ""+position);
+            telemetry.update();
+        }
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+    }
+    public void elevatorEncoderDriveEnd(int ticks, double power){
+        /*emotor.setPower(0);
+        emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        emotor.setTargetPosition(ticks);
+        emotor.setPower(power);*/
+        int position = emotor.getCurrentPosition();
+        while(position<ticks-10 || position>ticks+10){
+            position = emotor.getCurrentPosition();
+            telemetry.addData("emotor", position);
+            Log.d("emotorrunning", ""+position);
+            telemetry.update();
+        }
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
     public void driveUntilCraterLeft(double speed /*, double targetDistance*/){
         double startingHorizontalAngle = getHorizontalAngle();
         double startingVerticalAngle = getVerticalAngle();
