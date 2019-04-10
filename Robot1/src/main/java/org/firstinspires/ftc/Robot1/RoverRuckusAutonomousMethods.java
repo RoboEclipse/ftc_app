@@ -141,7 +141,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(22,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-31,15,5,0.6);
+            myRobot.encoderTurn(-30,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
@@ -169,6 +169,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             stage = myRobot.autoDump(stage, false);
         }
         myRobot.cFlipDrive(0);
+        myRobot.elevatorEncoderDriveStart(-580, -1);
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Back up
@@ -176,7 +177,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
-        myRobot.elevatorEncoderDrive(-580, -1);
+        myRobot.elevatorEncoderDriveEnd(-580);
         telemetry.addData("After Raising elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Raising");
@@ -186,21 +187,21 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
         myRobot.elevatorServoDrive(myRobot.dumpingPosition);
-        sleep(1500);
+        sleep(1000);
         myRobot.elevatorServoDrive(1);
         //Lower the elevator
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
-        myRobot.elevatorEncoderDrive(540, myRobot.elevatorModifier);
+        myRobot.elevatorEncoderDriveStart(540, myRobot.elevatorModifier);
+        //Drive forward again
+        myRobot.encoderTankDriveInches(2,0.6);
+        myRobot.elevatorEncoderDriveEnd(540);
         telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Lowering");
         myRobot.eMotorDrive(0);
-        //Drive forward again
-        myRobot.encoderTankDriveInches(2,0.6);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);
-
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.6);
         // verify the time
@@ -222,7 +223,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.markerServoDrive(1);
         telemetry.addData("Drop", "Blue" + myRobot.getColorSensorBlue() +"Red:" + myRobot.getColorSensorRed());
         telemetry.update();
-        sleep(1500);
+        sleep(500);
     }
 
    void doubleSampleClaimFull(RoverRuckusClass myRobot, int maxTicks){

@@ -334,12 +334,27 @@ public class RoverRuckusClass {
             telemetry.update();
         }
     }
-    public void elevatorEncoderDrive(int ticks, double power){
+    public void elevatorEncoderDriveStart(int ticks, double power){
         emotor.setPower(0);
         emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);
+        int position = emotor.getCurrentPosition();
+        /*while(position<ticks-10 || position>ticks+10){
+            position = emotor.getCurrentPosition();
+            telemetry.addData("emotor", position);
+            Log.d("emotorrunning", ""+position);
+            telemetry.update();
+        }
+        emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+    }
+    public void elevatorEncoderDriveEnd(int ticks){
+        /*emotor.setPower(0);
+        emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        emotor.setTargetPosition(ticks);
+        emotor.setPower(power);*/
         int position = emotor.getCurrentPosition();
         while(position<ticks-10 || position>ticks+10){
             position = emotor.getCurrentPosition();
@@ -759,6 +774,8 @@ public class RoverRuckusClass {
         double raiseElevator = -1;
         double targetDistance = 23;
         double slowDistance = 15;
+        double tiltPosition=0.65;
+        double rotateCollector = 0.22;
         //double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
@@ -784,7 +801,7 @@ public class RoverRuckusClass {
             double extenderDistance = getExtenderDistanceSensor();
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifting: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION/4){
+            if(currentPosition < (-TICKS_PER_ROTATION * rotateCollector)){
                 cFlipDrive(0);
                 stage++;
             }
@@ -851,7 +868,7 @@ public class RoverRuckusClass {
             Log.d("AutoDumpState", "Raising Elevator: " + elevatorDistance);
             if(elevatorDistance > 49 && elevatorDistance < 800){
                 Log.d("AutoDumpState", "Initial Elevator Servo");
-                elevatorServoPosition = 0.7;
+                elevatorServoPosition = tiltPosition;
                 elevatorServoDrive(elevatorServoPosition);
                 eMotorDrive(raiseElevator/2);
                 //stage++;
