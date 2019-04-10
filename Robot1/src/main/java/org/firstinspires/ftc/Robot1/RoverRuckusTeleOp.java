@@ -33,6 +33,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -274,7 +275,8 @@ public class RoverRuckusTeleOp extends OpMode
         if(!retracting){
             myRobot.elevatorServoDrive(elevatorServoPosition);
         }
-
+        double LEDPower = getLedPower();
+        myRobot.LEDControl(LEDPower);
 
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());
@@ -301,6 +303,40 @@ public class RoverRuckusTeleOp extends OpMode
 
         telemetry.addData("collectorServoPower", cServoPower);
 
+    }
+
+    private double getLedPower() {
+        int[] leftColorSensor = myRobot.getLeftColorSensor();
+        int[] rightColorSensor = myRobot.getRightColorSensor();
+        boolean LED = true;
+        boolean left = (leftColorSensor[0]>1000 && leftColorSensor[1]>1000 && leftColorSensor[2]>1000);
+        boolean right = (rightColorSensor[0]>1000 && rightColorSensor[1]>1000 && rightColorSensor[2]>1000);
+        double LEDPower;
+        if(gamepad1.b){
+            if(LED){
+                LED=false;
+            }
+            else{
+                LED=true;
+            }
+        }
+        if(LED){
+            if(left || right){
+                if(!left || !right){
+                    LEDPower=0.65;
+                }
+                else{
+                    LEDPower=0.70;
+                }
+            }
+            else {
+                LEDPower=0.75;
+            }
+        }
+        else{
+            LEDPower=0.75;
+        }
+        return LEDPower;
     }
 
     private double elevatorTeleOp(double elevatorDistance, double elevatorPower) {
