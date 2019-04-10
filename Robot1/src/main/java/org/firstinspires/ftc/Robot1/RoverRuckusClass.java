@@ -775,6 +775,7 @@ public class RoverRuckusClass {
         double targetDistance = 23;
         double slowDistance = 15;
         double tiltPosition=0.65;
+        double rotateCollector = 2.3;
         //double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
@@ -800,7 +801,7 @@ public class RoverRuckusClass {
             double extenderDistance = getExtenderDistanceSensor();
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Lifting: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION/4){
+            if(currentPosition < (-TICKS_PER_ROTATION * rotateCollector)){
                 cFlipDrive(0);
                 stage++;
             }
