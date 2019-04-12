@@ -981,7 +981,7 @@ public class RoverRuckusClass {
     public boolean isIMUCalibrated(){
         return imu.isGyroCalibrated();
     }
-        public String getEncoderPosition()
+    public String getEncoderPosition()
     {
         return String.format(Locale.US, "lf: %d,rf: %d, lr:%d, rr:%d",
                 lf.getCurrentPosition(),
