@@ -932,7 +932,7 @@ public class RoverRuckusClass {
             }
         }
     }
-    public void LEDControl(double input){
+    public void ledControl(double input){
         led.setPosition(input);
     }
 
