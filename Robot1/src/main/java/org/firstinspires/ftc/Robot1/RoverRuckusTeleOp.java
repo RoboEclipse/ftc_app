@@ -310,8 +310,8 @@ public class RoverRuckusTeleOp extends OpMode
         int[] leftColorSensor = myRobot.getLeftColorSensor();
         int[] rightColorSensor = myRobot.getRightColorSensor();
         boolean LED = true;
-        boolean left = (leftColorSensor[0]>1000 && leftColorSensor[1]>1000 && leftColorSensor[2]>1000);
-        boolean right = (rightColorSensor[0]>1000 && rightColorSensor[1]>1000 && rightColorSensor[2]>1000);
+        boolean left = (leftColorSensor[0]>1000 && leftColorSensor[1]>700 && leftColorSensor[2]>1000);
+        boolean right = (rightColorSensor[0]>1000 && rightColorSensor[1]>700 && rightColorSensor[2]>1000);
         double LEDPower;
         if(gamepad1.b){
             if(LED){
@@ -324,19 +324,22 @@ public class RoverRuckusTeleOp extends OpMode
         if(LED){
             if(left || right){
                 if(!left || !right){
-                    LEDPower=0.65;
+                    LEDPower=0.7254;
                 }
                 else{
-                    LEDPower=0.70;
+                    LEDPower=0.71;
                 }
             }
             else {
-                LEDPower=0.75;
+                LEDPower=0.6657;
             }
         }
         else{
-            LEDPower=0.75;
+            LEDPower=0.6657;
         }
+        telemetry.addData("Left: ", "Red: "+ leftColorSensor[0] + " Blue: " + leftColorSensor[1] + " Green: " + leftColorSensor[2]);
+        telemetry.addData("Right: ", "Red: "+ rightColorSensor[0] + " Blue: " + rightColorSensor[1] + " Green: " + rightColorSensor[2]);
+        telemetry.addData("LEDPower", LEDPower);
         return LEDPower;
     }
 
