@@ -56,8 +56,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
             ClaimFull(myRobot);
             myRobot.encoderTurn(135,30,tolerance,0.6);
             myRobot.encoderTankDriveInches(RoverRuckusConstants.park/2, 0.8);
-            if(myRobot.getRightDistanceSensor()> RoverRuckusConstants.wallDistance+2
-                    || myRobot.getRightDistanceSensor()<RoverRuckusConstants.wallDistance-2){
+            if(myRobot.getRightDistanceSensor()> RoverRuckusConstants.wallDistance+2){
                 myRobot.rightRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.6, "Right");
             }
             newParking(myRobot, 135, RoverRuckusConstants.park/2);

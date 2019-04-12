@@ -60,7 +60,7 @@ public class RoverRuckusTeleOp extends OpMode
     private double elevatorServoPosition = 1;
     private double tokenServoPosition = 0;
     private int stage = 0;
-    private double tiltPosition = 0.6;
+    private double tiltPosition = 0.58;
     private boolean fast = false;
     private boolean retracting = false;
     private ElapsedTime dumpTime = new ElapsedTime();
@@ -264,8 +264,7 @@ public class RoverRuckusTeleOp extends OpMode
             retracting = true;
             elevatorServoPosition = 1;
             */
-
-            elevatorServoPosition=myRobot.dumpingPosition;
+            elevatorServoPosition=tiltPosition;
         }
         else{
             dumpTime.reset();
@@ -335,7 +334,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         }
         else{
-            LEDPower=0.6657;
+            LEDPower=0.4941;
         }
         telemetry.addData("Left: ", "Red: "+ leftColorSensor[0] + " Blue: " + leftColorSensor[1] + " Green: " + leftColorSensor[2]);
         telemetry.addData("Right: ", "Red: "+ rightColorSensor[0] + " Blue: " + rightColorSensor[1] + " Green: " + rightColorSensor[2]);

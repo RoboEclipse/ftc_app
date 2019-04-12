@@ -145,7 +145,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
-        sleep(1500);
+        sleep(1300);
         myRobot.cFlipDrive(-0.6);
         sleep(200);
         myRobot.cFlipDrive(0);
@@ -184,7 +184,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Stop raising the elevator
         myRobot.eMotorDrive(-0.4);
         //Realign
-        myRobot.encoderTurn(0,15,5,0.1);
+        myRobot.encoderTurn(0,15,5,0.4);
         //Dump the minerals
         myRobot.elevatorServoDrive(myRobot.dumpingPosition);
         sleep(1000);
@@ -301,7 +301,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.8);
+        myRobot.gyroTankDriveInches(driveDistance, 0.8);
         while(myRobot.getExtenderDistanceSensor()>15 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
