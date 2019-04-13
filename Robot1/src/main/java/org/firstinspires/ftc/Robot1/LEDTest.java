@@ -97,7 +97,7 @@ public class LEDTest extends OpMode
         if(gamepad1.dpad_down && ledPower >= 0.2525){
             ledPower-=0.0001;
         }
-        myRobot.LEDControl(ledPower);
+        myRobot.ledControl(ledPower);
         telemetry.addData("Value", ledPower);
         telemetry.update();
     }

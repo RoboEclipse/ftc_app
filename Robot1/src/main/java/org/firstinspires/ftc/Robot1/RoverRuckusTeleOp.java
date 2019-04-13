@@ -63,6 +63,7 @@ public class RoverRuckusTeleOp extends OpMode
     private double tiltPosition = 0.58;
     private boolean fast = false;
     private boolean retracting = false;
+    boolean LED = true;
     private ElapsedTime dumpTime = new ElapsedTime();
     private ElapsedTime returnTime = new ElapsedTime();
 
@@ -308,7 +309,6 @@ public class RoverRuckusTeleOp extends OpMode
     private double getLedPower() {
         int[] leftColorSensor = myRobot.getLeftColorSensor();
         int[] rightColorSensor = myRobot.getRightColorSensor();
-        boolean LED = true;
         boolean left = (leftColorSensor[0]>1000 && leftColorSensor[1]>700 && leftColorSensor[2]>1000);
         boolean right = (rightColorSensor[0]>1000 && rightColorSensor[1]>700 && rightColorSensor[2]>1000);
         double LEDPower;
@@ -355,7 +355,7 @@ public class RoverRuckusTeleOp extends OpMode
             if(elevatorDistance<45){
                 elevatorServoPosition = 1;
             }
-            elevatorPower=elevatorPower*myRobot.elevatorModifier*0.3;
+            elevatorPower=elevatorPower*myRobot.elevatorModifier*0.2;
         }
         //Stuff that happens when it's going upwards
         if(elevatorPower<0){
@@ -374,7 +374,11 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
                 elevatorPower = -0.3;
-            } else {
+            }
+            else if (elevatorDistance<10){
+                elevatorPower = 0;
+            }
+            else {
                 elevatorPower = -0.2;
             }
         }

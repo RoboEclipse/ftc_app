@@ -116,8 +116,8 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //idealAngle = myRobot.getHorizontalAngle();
         //Move sideways to detach from the hook
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.8, "Left");
-        if(Math.abs(myRobot.getHorizontalAngle())>10){
-            myRobot.encoderTurn(0,10,3,0.1);
+        if(Math.abs(myRobot.getHorizontalAngle())>5){
+            myRobot.encoderTurn(0,10,5,0.1);
         }
     }
     // 2 inches to the left of start
@@ -169,7 +169,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             stage = myRobot.autoDump(stage, false);
         }
         myRobot.cFlipDrive(0);
-        myRobot.elevatorEncoderDriveStart(-580, -1);
+        myRobot.elevatorEncoderDriveStart(-630, -1);
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Back up
@@ -177,7 +177,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
-        myRobot.elevatorEncoderDriveEnd(-580);
+        myRobot.elevatorEncoderDriveEnd(-630);
         telemetry.addData("After Raising elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Raising");
