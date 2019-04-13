@@ -115,7 +115,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         //idealAngle = myRobot.getHorizontalAngle();
         //Move sideways to detach from the hook
-        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.4, "Left");
+        myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.8, "Left");
         if(Math.abs(myRobot.getHorizontalAngle())>10){
             myRobot.encoderTurn(0,10,3,0.1);
         }
@@ -124,7 +124,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     void rotateSample(RoverRuckusClass myRobot) {
         telemetry.update();
         //Drive forward to clear the hook
-        myRobot.encoderTankDrive(ticksPerInch*hookClear,ticksPerInch*hookClear, 0.6);
+        myRobot.encoderTankDriveInches(hookClear, 0.6);
         //Move sideways to realign
         myRobot.encoderStrafeDrive(hookDetach*ticksPerInch, 0.6, "Right");
         //Begin moving lead screw
@@ -173,7 +173,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
         //Back up
-        myRobot.encoderTankDriveInches(-2,0.6);
+        myRobot.encoderTankDriveInches(-hookClear,0.6);
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
@@ -187,14 +187,14 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTurn(0,15,5,0.1);
         //Dump the minerals
         myRobot.elevatorServoDrive(myRobot.dumpingPosition);
-        sleep(1000);
+        sleep(1200);
         myRobot.elevatorServoDrive(1);
         //Lower the elevator
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         myRobot.elevatorEncoderDriveStart(540, myRobot.elevatorModifier);
         //Drive forward again
-        myRobot.encoderTankDriveInches(2,0.6);
+        myRobot.encoderTankDriveInches(hookClear,0.6);
         myRobot.elevatorEncoderDriveEnd(540);
         telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
