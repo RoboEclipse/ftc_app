@@ -180,6 +180,22 @@ public class RoverRuckusClass {
         int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
         encoderTankDrive((int)(inches * TICKS_PER_INCH),(int)(inches*TICKS_PER_INCH), power);
     }
+    public void gyroTankDriveInches(double inches, double power){
+        int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
+        multiSetPower(0.0, lf, lr, rf, rr);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
+        lf.setTargetPosition(TICKS_PER_INCH*(int)inches);
+        rf.setTargetPosition(TICKS_PER_INCH*(int)inches);
+        lr.setTargetPosition(TICKS_PER_INCH*(int)inches);
+        rr.setTargetPosition(TICKS_PER_INCH*(int)inches);
+        multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
+        multiSetPower(power, lf, lr, rf, rr);
+        while (anyBusy() && getVerticalAngle()<5) {
+            readEncoders();
+            telemetry.addData("gyroPosition", getHorizontalAngle());
+            telemetry.update();
+        }
+    }
     public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -229,8 +245,15 @@ public class RoverRuckusClass {
         rr.setTargetPosition(multiplier*ticks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
+        double initialDistance= rightDistanceSensor.getDistance(DistanceUnit.CM)-distanceCM;
         while (anyBusy()) {
             double currentDistanceInCM = leftDistanceSensor.getDistance(DistanceUnit.CM);
+            // Option 1
+            power*=(currentDistanceInCM-distanceCM)/initialDistance;
+            power+=.1;
+            if(power>1){
+                power=1;
+            }
             Log.d("leftRangeSensorStrafe", "Distance "+ currentDistanceInCM + " Goal: " + distanceCM);
             if(currentDistanceInCM < distanceCM){
                 br8kMotors();
@@ -257,8 +280,22 @@ public class RoverRuckusClass {
         rr.setTargetPosition(multiplier*ticks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
+        double initialDistance= rightDistanceSensor.getDistance(DistanceUnit.CM)-distanceCM;
         while (anyBusy()) {
             double currentDistanceInCM = rightDistanceSensor.getDistance(DistanceUnit.CM);
+            // Option 1
+            power*=(currentDistanceInCM-distanceCM)/initialDistance;
+            power+=.1;
+            if(power>1){
+                power=1;
+            }
+
+            /*Option 2
+            if(distanceCM-currentDistanceInCM<10){
+                power=0.3;
+            }
+            */
+            multiSetPower(power, lf, lr, rf, rr);
             Log.d("rightRangeSensorStrafe", "Distance "+ currentDistanceInCM + " Goal: " + distanceCM);
             if(currentDistanceInCM < distanceCM){
                 br8kMotors();
