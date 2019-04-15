@@ -409,7 +409,7 @@ public class RoverRuckusClass {
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);
         int position = emotor.getCurrentPosition();
-        while(position<ticks-8 || position>ticks+8 || killTimer.milliseconds()>2000){
+        while(position<ticks-8 || position>ticks+8 && killTimer.milliseconds()<2000){
             position = emotor.getCurrentPosition();
             telemetry.addData("emotor", position);
             Log.d("emotorrunning", ""+position);
@@ -825,7 +825,7 @@ public class RoverRuckusClass {
         double lowerCollector = 0.4;
         //double runCollector = 0.79;
         double raiseElevator = -1;
-        double targetDistance = 23;
+        double targetDistance = 19;
         double slowDistance = 15;
         double tiltPosition=0.65;
         double rotateCollector = 0.22;

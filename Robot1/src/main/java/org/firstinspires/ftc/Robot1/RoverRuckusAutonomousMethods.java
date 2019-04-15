@@ -173,6 +173,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTurn(0,15,5,0.1);
         //Back up
         myRobot.encoderTankDriveInches(-hookClear,0.6);
+        myRobot.newExMotor(0.5);
+        sleep(100);
+        myRobot.newExMotor(0);
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
@@ -204,7 +207,6 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.6);
         // verify the time
         myRobot.cFlipDrive(0);
-            sleep(100);
 
         /*
         myRobot.cFlipDrive(0.2);
