@@ -21,7 +21,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     private int hookDetach = RoverRuckusConstants.hookDetach;
     private int hookClear = RoverRuckusConstants.hookClear;
     private int landerClear = (int)RoverRuckusConstants.landerClear;
-    private int knockOff = RoverRuckusConstants.knockOff;
+    private double knockOff = RoverRuckusConstants.knockOff;
     //Declare OpMode members.
     String position = "";
     DetectGoldMineral goldVision;
@@ -138,7 +138,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         //Rotate to line up with the gold particle 5 seconds
         if(position.equals("Left")){
-            myRobot.encoderTurn(22,15,5,0.6);
+            myRobot.encoderTurn(23,15,5,0.6);
         }
         if(position.equals("Right")){
             myRobot.encoderTurn(-30,15,5,0.6);
@@ -248,8 +248,8 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             default:
                 myRobot.encoderTankDriveInches(-6, 0.5);
                 ClaimFull(myRobot);
-                myRobot.encoderStrafeDrive(27*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
-                myRobot.leftRangeSensorStrafe(28*RoverRuckusConstants.TICKS_PER_INCH, 8, 0.5, "Left");
+                myRobot.encoderStrafeDrive(29*RoverRuckusConstants.TICKS_PER_INCH, 0.3, "Right");
+                myRobot.leftRangeSensorStrafe(29*RoverRuckusConstants.TICKS_PER_INCH, 8, 0.5, "Left");
                 myRobot.encoderTankDriveInches(6, 0.5);
                 break;
         }
@@ -298,6 +298,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
     }
 
     void newParking(RoverRuckusClass myRobot, double angle, double driveDistance){
+        myRobot.addBrake();
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
@@ -314,7 +315,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.newExMotor(.89);
         }
         myRobot.newExMotor(0);
-        sleep(500);
+        sleep(1000);
         myRobot.cServoDrive(0);
         /*
         int stage = 0;
@@ -331,7 +332,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(Math.abs(myRobot.getHorizontalAngle()-angle)>10){
             myRobot.encoderTurn(angle,10,4,0.1);
         }
-        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.5);
+        myRobot.encoderTankDrive((int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), (int)(RoverRuckusConstants.TICKS_PER_INCH*driveDistance), 0.6);
 
         myRobot.cFlipDrive(0.4);
         sleep(1000);
@@ -392,9 +393,9 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         if(position.equals("Right")){
             myRobot.encoderStrafeDrive(ticksPerMineral,0.4,"Right");
         }
-        myRobot.encoderTankDrive(knockOff*ticksPerInch,knockOff*ticksPerInch,0.5);
+        myRobot.encoderTankDrive((int)(knockOff*ticksPerInch),(int)(knockOff*ticksPerInch),0.5);
         sleep(100);
-        myRobot.encoderTankDrive(-knockOff*ticksPerInch, -knockOff*ticksPerInch, 0.5);
+        myRobot.encoderTankDrive((int)(-knockOff*ticksPerInch), (int)(-knockOff*ticksPerInch), 0.5);
         myRobot.leadScrewDrive(0);
 
         if(Math.abs(myRobot.getHorizontalAngle())>10){

@@ -65,18 +65,18 @@ public class RoverRuckusAutonomousDoubleSample extends RoverRuckusAutonomousMeth
             //Sample
             SampleFullProcess(myRobot);
             //Line up to wall
-            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.5, "Left");
+            myRobot.encoderStrafeDrive(RoverRuckusConstants.TICKS_PER_INCH * extraStrafeInches, 0.6, "Left");
             myRobot.encoderTurn(-45, 30, 3, 0.4);
-            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.3, "Left");
+            myRobot.leftRangeSensorStrafe(RoverRuckusConstants.TICKS_PER_INCH*10, RoverRuckusConstants.wallDistance, 0.6, "Left");
             doubleSampleClaimFull(myRobot, drivetoMarkerInches*RoverRuckusConstants.TICKS_PER_INCH);
             if(Math.abs(myRobot.getHorizontalAngle()+45)>10){
                 myRobot.encoderTurn(-45,10,3,0.5);
             }
             if(myRobot.getLeftDistanceSensor()>RoverRuckusConstants.wallDistance+5){
-                myRobot.leftRangeSensorStrafe(200, RoverRuckusConstants.wallDistance, 0.3, "Left");
+                myRobot.leftRangeSensorStrafe(200, RoverRuckusConstants.wallDistance, 0.5, "Left");
             }
             if(myRobot.getLeftDistanceSensor()<RoverRuckusConstants.wallDistance-5){
-                myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.3, "Right");
+                myRobot.leftRangeSensorStrafe(200,RoverRuckusConstants.wallDistance, 0.5, "Right");
             }
             //Park
             doubleSampleParking(myRobot, -45, RoverRuckusConstants.park);

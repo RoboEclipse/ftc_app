@@ -409,7 +409,7 @@ public class RoverRuckusClass {
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);
         int position = emotor.getCurrentPosition();
-        while(position<ticks-8 || position>ticks+8 && killTimer.milliseconds()<2000){
+        while(position<ticks-8 || position>ticks+8 && killTimer.milliseconds()<1500){
             position = emotor.getCurrentPosition();
             telemetry.addData("emotor", position);
             Log.d("emotorrunning", ""+position);
@@ -825,8 +825,8 @@ public class RoverRuckusClass {
         double lowerCollector = 0.4;
         //double runCollector = 0.79;
         double raiseElevator = -1;
-        double targetDistance = 19;
-        double slowDistance = 15;
+        double targetDistance = 22;
+        double slowDistance = 22;
         double tiltPosition=0.65;
         double rotateCollector = 0.22;
         //double elevatorTargetDistance = 49;
@@ -844,7 +844,7 @@ public class RoverRuckusClass {
                 Log.d("AutoDumpState", "retractExtender: " + retractExtender);
             }
             else if(extenderDistance>slowDistance && extenderDistance<targetDistance){
-                exMotor.setPower(retractExtender/2);
+                exMotor.setPower(retractExtender*.8);
                 Log.d("AutoDumpState", "retractExtender: " + retractExtender);
             }
             stage++;
@@ -988,7 +988,25 @@ public class RoverRuckusClass {
     public void ledControl(double input){
         led.setPosition(input);
     }
-
+    public void removeBrake(){
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+    public void addBrake(){
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public void teleOpSleep(long time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 //Archive

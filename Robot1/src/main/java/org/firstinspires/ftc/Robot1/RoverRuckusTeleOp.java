@@ -60,9 +60,11 @@ public class RoverRuckusTeleOp extends OpMode
     private double elevatorServoPosition = 1;
     private double tokenServoPosition = 0;
     private int stage = 0;
-    private double tiltPosition = 0.58;
+    private double tiltPosition = 0.59;
     private boolean fast = false;
     private boolean retracting = false;
+    private boolean dumping = false;
+    private ElapsedTime tiltTime = new ElapsedTime();
     boolean LED = true;
     private ElapsedTime dumpTime = new ElapsedTime();
     private ElapsedTime returnTime = new ElapsedTime();
@@ -138,6 +140,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
             /*
             if(gamepad2.y){
+            if(gamepad2.y){
                 fast = true;
                 elevatorServoPosition=0.6;
             }
@@ -197,14 +200,14 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.dpad_up) {
             exMotorPower = 1;
             if(extenderDistance<=5){
-                exMotorPower = 0.2;
+                exMotorPower = 0.8;
                 telemetry.addData("Slow", "true");
                 myRobot.resetExtenderEncoder();
             }
         } else if (gamepad2.dpad_down) {
             exMotorPower = -1;
             if(extenderDistance>17){
-                exMotorPower = -0.1;
+                exMotorPower = -0.8;
                 telemetry.addData("Slow", "true");
             }
         }
@@ -265,7 +268,9 @@ public class RoverRuckusTeleOp extends OpMode
             retracting = true;
             elevatorServoPosition = 1;
             */
-            elevatorServoPosition=tiltPosition;
+            elevatorServoPosition=tiltPosition-0.1;
+            tiltTime.reset();
+            dumping=true;
         }
         else{
             dumpTime.reset();
@@ -276,6 +281,12 @@ public class RoverRuckusTeleOp extends OpMode
         if(!retracting){
             myRobot.elevatorServoDrive(elevatorServoPosition);
         }
+
+        if(dumping && tiltTime.milliseconds()>100){
+            elevatorServoPosition=tiltPosition;
+            dumping=false;
+        }
+
         double ledPower = getLedPower();
         myRobot.ledControl(ledPower);
 
@@ -352,7 +363,7 @@ public class RoverRuckusTeleOp extends OpMode
                 Log.d("DriveOptimization", "PowerCutForElevator");
             }
             //Return servo to default position at certain point
-            if(elevatorDistance<45){
+            if(elevatorDistance<48){
                 elevatorServoPosition = 1;
             }
             elevatorPower=elevatorPower*myRobot.elevatorModifier*0.2;
