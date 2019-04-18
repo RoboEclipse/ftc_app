@@ -141,7 +141,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
             myRobot.encoderTurn(23,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-30,15,5,0.6);
+            myRobot.encoderTurn(-31,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
@@ -171,6 +171,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.cFlipDrive(0);
         //Realign
         myRobot.encoderTurn(0,15,5,0.1);
+        myRobot.elevatorEncoderDriveStart(-630,-1);
         //Back up
         myRobot.encoderTankDriveInches(-hookClear,0.6);
         myRobot.newExMotor(0.5);
@@ -179,7 +180,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Raise up the elevator
         //Equivalent encoder value: -525
         telemetry.addData("Before Raising elevator", myRobot.getElevatorEncoder());
-        myRobot.elevatorEncoderDrive(-630,-1);
+        myRobot.elevatorEncoderDriveEnd(-630);
         telemetry.addData("After Raising elevator", myRobot.getElevatorEncoder());
         telemetry.update();
         Log.d("Status", "Elevator Done Raising");
@@ -194,11 +195,12 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         //Lower the elevator
         telemetry.addData("Before Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
-        myRobot.elevatorEncoderDrive(600, myRobot.elevatorModifier);
+        myRobot.elevatorEncoderDriveStart(600, myRobot.elevatorModifier);
         //Drive forward again
         myRobot.encoderTankDriveInches(hookClear,0.6);
         telemetry.addData(" After Lowering Elevator", myRobot.getElevatorEncoder());
         telemetry.update();
+        myRobot.elevatorEncoderDriveEnd(600);
         Log.d("Status", "Elevator Done Lowering");
         myRobot.eMotorDrive(0);
         //Retract the collector

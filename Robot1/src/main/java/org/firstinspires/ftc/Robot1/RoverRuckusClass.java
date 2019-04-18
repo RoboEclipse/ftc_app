@@ -387,13 +387,14 @@ public class RoverRuckusClass {
         emotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
     }
     public void elevatorEncoderDriveEnd(int ticks){
+        ElapsedTime killTimer = new ElapsedTime();
         /*emotor.setPower(0);
         emotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         emotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);*/
         int position = emotor.getCurrentPosition();
-        while(position<ticks-10 || position>ticks+10){
+        while((position<ticks-10 || position>ticks+10) && killTimer.milliseconds()<1000){
             position = emotor.getCurrentPosition();
             telemetry.addData("emotor", position);
             Log.d("emotorrunning", ""+position);
@@ -409,7 +410,7 @@ public class RoverRuckusClass {
         emotor.setTargetPosition(ticks);
         emotor.setPower(power);
         int position = emotor.getCurrentPosition();
-        while(position<ticks-8 || position>ticks+8 && killTimer.milliseconds()<1500){
+        while((position<ticks-8 || position>ticks+8) && killTimer.milliseconds()<1500){
             position = emotor.getCurrentPosition();
             telemetry.addData("emotor", position);
             Log.d("emotorrunning", ""+position);

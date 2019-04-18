@@ -31,9 +31,9 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="FarRedCloseBlueGolden", group="Linear Opmode")
+@Autonomous(name="FarRedCloseBlueGoldenRotate", group="Linear Opmode")
 //@Disabled
-public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
+public class RoverRuckusAutonomousFarRedRotate extends RoverRuckusAutonomousMethods {
 
     int strafeInches = 15;
     int reverseInches = -26;
@@ -48,7 +48,7 @@ public class RoverRuckusAutonomousFarRed extends RoverRuckusAutonomousMethods {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             LandingFull(myRobot);
-            SampleFullProcess(myRobot);
+            rotateSample(myRobot);
             myRobot.encoderStrafeDrive(ticksPerInch*5, 0.6, "Left");
             myRobot.encoderTurn(135,30,tolerance,0.4);
             myRobot.rightRangeSensorStrafe(ticksPerInch*strafeInches, RoverRuckusConstants.wallDistance, 0.7,"Right");

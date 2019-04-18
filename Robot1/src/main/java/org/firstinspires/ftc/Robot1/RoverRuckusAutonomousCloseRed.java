@@ -60,6 +60,7 @@ public class RoverRuckusAutonomousCloseRed extends RoverRuckusAutonomousMethods 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
+            sleep(5000);
             //Land
             LandingFull(myRobot);
             //Sample

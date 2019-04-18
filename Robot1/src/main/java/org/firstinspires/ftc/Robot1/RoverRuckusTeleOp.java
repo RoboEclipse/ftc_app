@@ -199,8 +199,8 @@ public class RoverRuckusTeleOp extends OpMode
         int extenderEncoder = myRobot.getExtenderEncoder();
         if (gamepad2.dpad_up) {
             exMotorPower = 1;
-            if(extenderDistance<=5){
-                exMotorPower = 0.8;
+            if(extenderDistance<=3){
+                exMotorPower = 0.1;
                 telemetry.addData("Slow", "true");
                 myRobot.resetExtenderEncoder();
             }
@@ -259,8 +259,8 @@ public class RoverRuckusTeleOp extends OpMode
         if (gamepad2.x && elevatorServoPosition < 1) {
             elevatorServoPosition = 1;
         }
-        if (gamepad2.right_trigger> 0.99){
-            elevatorServoPosition = tiltPosition;
+        if (gamepad2.dpad_left){
+            elevatorServoPosition = tiltPosition+0.1;
         }
         if (gamepad2.y) {
             /*
@@ -268,9 +268,9 @@ public class RoverRuckusTeleOp extends OpMode
             retracting = true;
             elevatorServoPosition = 1;
             */
-            elevatorServoPosition=tiltPosition-0.1;
-            tiltTime.reset();
-            dumping=true;
+            elevatorServoPosition=tiltPosition;
+            //tiltTime.reset();
+            //dumping=true;
         }
         else{
             dumpTime.reset();
@@ -282,7 +282,8 @@ public class RoverRuckusTeleOp extends OpMode
             myRobot.elevatorServoDrive(elevatorServoPosition);
         }
 
-        if(dumping && tiltTime.milliseconds()>100){
+        if(dumping /*&& tiltTime.milliseconds()>100*/){
+            myRobot.teleOpSleep(150);
             elevatorServoPosition=tiltPosition;
             dumping=false;
         }
@@ -345,7 +346,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
         }
         else{
-            LEDPower=0.4941;
+            LEDPower=0.4768;
         }
         telemetry.addData("Left: ", "Red: "+ leftColorSensor[0] + " Blue: " + leftColorSensor[1] + " Green: " + leftColorSensor[2]);
         telemetry.addData("Right: ", "Red: "+ rightColorSensor[0] + " Blue: " + rightColorSensor[1] + " Green: " + rightColorSensor[2]);
