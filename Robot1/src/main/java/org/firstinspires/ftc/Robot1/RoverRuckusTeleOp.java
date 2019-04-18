@@ -385,13 +385,13 @@ public class RoverRuckusTeleOp extends OpMode
         //Set holding powers
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
-                elevatorPower = -0.3;
+                elevatorPower = -0.2;
             }
             else if (elevatorDistance<10){
                 elevatorPower = 0;
             }
             else {
-                elevatorPower = -0.2;
+                elevatorPower = -0.1;
             }
         }
 

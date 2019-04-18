@@ -826,7 +826,7 @@ public class RoverRuckusClass {
         double lowerCollector = 0.4;
         //double runCollector = 0.79;
         double raiseElevator = -1;
-        double targetDistance = 22;
+        double targetDistance = 23;
         double slowDistance = 22;
         double tiltPosition=0.65;
         double rotateCollector = 0.22;
