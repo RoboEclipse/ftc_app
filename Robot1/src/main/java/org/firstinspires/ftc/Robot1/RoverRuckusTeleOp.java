@@ -57,10 +57,12 @@ public class RoverRuckusTeleOp extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     RoverRuckusClass myRobot = new RoverRuckusClass();
-    private double elevatorServoPosition = 1;
+    //private double elevatorServoPosition = 1;
+    private double elevatorServoPosition = 0.7;
     private double tokenServoPosition = 0;
     private int stage = 0;
-    private double tiltPosition = 0.59;
+    //private double tiltPosition = 0.59;
+    private double tiltPosition = 0.187;
     private boolean fast = false;
     private boolean retracting = false;
     private boolean dumping = false;
@@ -136,7 +138,7 @@ public class RoverRuckusTeleOp extends OpMode
         else {
             if (gamepad2.dpad_right || gamepad2.right_trigger>0.99) {
                 stage = 0;
-                elevatorServoPosition=1;
+                elevatorServoPosition=.7;
             }
             /*
             if(gamepad2.y){
@@ -257,7 +259,8 @@ public class RoverRuckusTeleOp extends OpMode
 
         //Elevator Flipper Controls
         if (gamepad2.x && elevatorServoPosition < 1) {
-            elevatorServoPosition = 1;
+            //elevatorServoPosition = 1;
+            elevatorServoPosition = 0.7;
         }
         if (gamepad2.dpad_left){
             elevatorServoPosition = tiltPosition+0.1;
@@ -365,7 +368,7 @@ public class RoverRuckusTeleOp extends OpMode
             }
             //Return servo to default position at certain point
             if(elevatorDistance<48){
-                elevatorServoPosition = 1;
+                elevatorServoPosition = .7;
             }
             elevatorPower=elevatorPower*myRobot.elevatorModifier*0.2;
         }
@@ -373,7 +376,7 @@ public class RoverRuckusTeleOp extends OpMode
         if(elevatorPower<0){
             //Half-rotate at certain heights
             if(elevatorDistance < 46 && elevatorDistance > 20){
-                elevatorServoPosition = 0.8;
+                elevatorServoPosition = 0.4;
             }
             //Slow down at certain heights
             /*

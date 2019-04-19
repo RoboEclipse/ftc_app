@@ -56,7 +56,8 @@ public class RoverRuckusClass {
 
     private OpModeCheck opModeCheck;
     double elevatorModifier = 0.4;
-    double dumpingPosition = 0.58;
+    //double dumpingPosition = 0.58;
+    double dumpingPosition = 0.187;
     //private static RoverRuckusConfiguration config = new RoverRuckusConfiguration();
 
     //New collector stuff end
