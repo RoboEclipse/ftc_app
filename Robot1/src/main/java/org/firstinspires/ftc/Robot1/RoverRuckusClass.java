@@ -27,6 +27,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.nio.file.WatchEvent;
 import java.util.List;
 import java.util.Locale;
 
@@ -198,6 +199,7 @@ public class RoverRuckusClass {
         }
     }
     public void encoderTankDrive(int leftTicks, int rightTicks, double power) {
+        ElapsedTime KILLTIMER = new ElapsedTime();
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
         lf.setTargetPosition(leftTicks);
@@ -206,7 +208,7 @@ public class RoverRuckusClass {
         rr.setTargetPosition(rightTicks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
-        while (anyBusy()) {
+        while (anyBusy() && KILLTIMER.seconds()<8) {
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
@@ -214,6 +216,7 @@ public class RoverRuckusClass {
 
     }
     public void encoderStrafeDrive(int ticks, double power, String direction) {
+        ElapsedTime KILLTIMER = new ElapsedTime();
         int multiplier = -1;
         if (direction.equals("Right") || direction.equals("right")){
             multiplier = 1;
@@ -226,7 +229,7 @@ public class RoverRuckusClass {
         rr.setTargetPosition(multiplier*ticks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
-        while (anyBusy()){
+        while (anyBusy() && KILLTIMER.seconds()<8){
             readEncoders();
             telemetry.addData("gyroPosition", getHorizontalAngle());
             telemetry.update();
@@ -234,6 +237,7 @@ public class RoverRuckusClass {
     }
 
     public void leftRangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
+        ElapsedTime KILLTIMER = new ElapsedTime();
         int multiplier = -1;
         if (direction.equals("Right") || direction.equals("right")){
             multiplier = 1;
@@ -247,7 +251,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         double initialDistance= rightDistanceSensor.getDistance(DistanceUnit.CM)-distanceCM;
-        while (anyBusy()) {
+        while (anyBusy() && KILLTIMER.seconds()<8) {
             double currentDistanceInCM = leftDistanceSensor.getDistance(DistanceUnit.CM);
             // Option 1
             power*=(currentDistanceInCM-distanceCM)/initialDistance;
@@ -269,6 +273,7 @@ public class RoverRuckusClass {
     }
 
     public void rightRangeSensorStrafe(int ticks, double distanceCM, double power, String direction){
+        ElapsedTime KILLTIMER = new ElapsedTime();
         int multiplier = -1;
         if (direction.equals("Right") || direction.equals("right")){
             multiplier = 1;
@@ -282,7 +287,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
         double initialDistance= rightDistanceSensor.getDistance(DistanceUnit.CM)-distanceCM;
-        while (anyBusy()) {
+        while (anyBusy() && KILLTIMER.seconds()<8) {
             double currentDistanceInCM = rightDistanceSensor.getDistance(DistanceUnit.CM);
             // Option 1
             power*=(currentDistanceInCM-distanceCM)/initialDistance;
@@ -311,6 +316,7 @@ public class RoverRuckusClass {
     }
 
     public void colorSensorDrive(int ticks, double power){
+        ElapsedTime KILLTIMER = new ElapsedTime();
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
         lf.setTargetPosition(ticks);
@@ -319,7 +325,7 @@ public class RoverRuckusClass {
         rr.setTargetPosition(ticks);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
         multiSetPower(power, lf, lr, rf, rr);
-        while (anyBusy()) {
+        while (anyBusy() && KILLTIMER.seconds()<8) {
             Log.d("colorSensorDrive: ", "Red: "+colorSensor.red()+ " Blue: " + colorSensor.blue() + " Ticks: " + lf.getCurrentPosition());
             if(colorSensor.red()>90 || colorSensor.blue()>80){
                 br8kMotors();
@@ -333,6 +339,7 @@ public class RoverRuckusClass {
     }
     public void encoderTurn(double degrees, double close, double enuff, double speed){
         //Note: These first two parts are just encoderTankDrive.
+        ElapsedTime KILLTIMER = new ElapsedTime();
         double currentDegrees = getHorizontalAngle();
         multiSetPower(0.0, lf, lr, rf, rr);
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, lf, lr, rf, rr);
@@ -352,7 +359,7 @@ public class RoverRuckusClass {
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, lf, rf, lr, rr);
 
         //This part needs to be different though
-        while (anyBusy()) {
+        while (anyBusy() && KILLTIMER.seconds()<8) {
             //telemetry.addData("encoderPosition", getEncoderPosition());
             //telemetry.addData("gyroPosition", getHorizontalAngle());
 
@@ -830,7 +837,7 @@ public class RoverRuckusClass {
         double targetDistance = 23;
         double slowDistance = 22;
         double tiltPosition=0.65;
-        double rotateCollector = 0.22;
+        double rotateCollector = 0.25;
         //double elevatorTargetDistance = 49;
         int TICKS_PER_ROTATION = 1120;
         //Assume collector is down and reset encoders
@@ -860,7 +867,7 @@ public class RoverRuckusClass {
                 cFlipDrive(0);
                 stage++;
             }
-            if(extenderDistance>=targetDistance || time.milliseconds()>1000){
+            if(extenderDistance>=targetDistance || time.milliseconds()>500){
                 exMotor.setPower(-0.15);
                 Log.d("AutoDumpState", "Extender Retracted");
             }
@@ -878,9 +885,11 @@ public class RoverRuckusClass {
         }
         // Retract flipper to dump minerals into basket
         else if(stage==3){
+            ElapsedTime time = new ElapsedTime();
             int currentPosition = cflip.getCurrentPosition();
             Log.d("AutoDumpState", "Collector Retracted: " + currentPosition);
-            if(currentPosition<-TICKS_PER_ROTATION*1.1){
+            telemetry.addData("CurrentPosition", currentPosition);
+            if(currentPosition<-TICKS_PER_ROTATION*1.0 || time.milliseconds()>500){
                 cFlipDrive(0);
                 exMotor.setPower(0);
                 stage++;
@@ -899,7 +908,7 @@ public class RoverRuckusClass {
             }
             */
 
-            if(time.milliseconds()>10){
+            if(time.milliseconds()>30){
                 stage++;
             }
         }

@@ -190,7 +190,7 @@ public class RoverRuckusTeleOp extends OpMode
             cServoPower = -0.89;
         } else if (gamepad2.right_bumper) {
             //Collect
-            cServoPower = 0.49;
+            cServoPower = 0.89;
             myRobot.resetCFlipEncoder();
         }
         myRobot.cServoDrive(cServoPower);
@@ -208,8 +208,8 @@ public class RoverRuckusTeleOp extends OpMode
             }
         } else if (gamepad2.dpad_down) {
             exMotorPower = -1;
-            if(extenderDistance>17){
-                exMotorPower = -0.8;
+            if(extenderDistance>24){
+                exMotorPower = -0.3;
                 telemetry.addData("Slow", "true");
             }
         }
@@ -338,7 +338,7 @@ public class RoverRuckusTeleOp extends OpMode
         if(LED){
             if(left || right){
                 if(!left || !right){
-                    LEDPower=0.7254;
+                    LEDPower=0.6;
                 }
                 else{
                     LEDPower=0.71;
@@ -388,13 +388,13 @@ public class RoverRuckusTeleOp extends OpMode
         //Set holding powers
         if (gamepad2.left_stick_y == 0) {
             if (elevatorDistance > 30) {
-                elevatorPower = -0.2;
+                elevatorPower = -0.3;
             }
             else if (elevatorDistance<10){
                 elevatorPower = 0;
             }
             else {
-                elevatorPower = -0.1;
+                elevatorPower = -0.2;
             }
         }
 

@@ -138,10 +138,10 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
 
         //Rotate to line up with the gold particle 5 seconds
         if(position.equals("Left")){
-            myRobot.encoderTurn(23,15,5,0.6);
+            myRobot.encoderTurn(22,15,5,0.6);
         }
         if(position.equals("Right")){
-            myRobot.encoderTurn(-31,15,5,0.6);
+            myRobot.encoderTurn(-34,15,5,0.6);
         }
         //Lower collector
         myRobot.cFlipDrive(0.4);
@@ -205,6 +205,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         myRobot.eMotorDrive(0);
         //Retract the collector
         myRobot.cFlipDrive(-0.8);
+        sleep(100);
         //Drive forward to clear the lander
         myRobot.encoderTankDrive(landerClear*ticksPerInch,landerClear*ticksPerInch,0.6);
         // verify the time
@@ -313,7 +314,7 @@ abstract class RoverRuckusAutonomousMethods extends LinearOpMode{
         sleep(1000);
         myRobot.cFlipDrive(0);
         myRobot.cServoDrive(0.89);
-        while(myRobot.getExtenderDistanceSensor()>5 && opModeIsActive()){
+        while(myRobot.getExtenderDistanceSensor()>10 && opModeIsActive()){
             myRobot.newExMotor(.89);
         }
         myRobot.newExMotor(0);

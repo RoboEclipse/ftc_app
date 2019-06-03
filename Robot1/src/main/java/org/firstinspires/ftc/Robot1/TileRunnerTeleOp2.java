@@ -55,7 +55,6 @@ public class TileRunnerTeleOp2 extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
     private TileRunnerClass myRobot = new TileRunnerClass();
 
     /*
