@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.Robot1;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class RoverRuckusConstants {
-    public static final int ENCODERS_CLOSE_ENOUGH = 10;
+    public static int ENCODERS_CLOSE_ENOUGH = 10;
     static public int TICKS_PER_ROTATION = 1120;
     static public int TICKS_PER_INCH = (int)(1120/(6*Math.PI));
     static public double leadScrewTime=5.1;

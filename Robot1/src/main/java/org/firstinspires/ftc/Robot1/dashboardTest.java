@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -40,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@TeleOp(name = "dashboardTest", group = "Linear Opmode")
+@Autonomous(name = "dashboardTest", group = "Linear Opmode")
 //@Disabled
 public class dashboardTest extends LinearOpMode {
 
@@ -53,7 +54,6 @@ public class dashboardTest extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -61,8 +61,11 @@ public class dashboardTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            dashboardTelemetry.addData("x", 3.7);
-            dashboardTelemetry.update();
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("cat", 3.7);
+            packet.fieldOverlay().setFill("blue").fillCircle(10,10,1);
+
+            dashboard.sendTelemetryPacket(packet);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
