@@ -31,23 +31,8 @@ package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @TeleOp(name="TileRunnerTeleOp2", group="Iterative Opmode")
 //@Disabled
@@ -64,12 +49,6 @@ public class TileRunnerTeleOp2 extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
         myRobot.init(hardwareMap);
-        /*
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        */
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -101,9 +80,6 @@ public class TileRunnerTeleOp2 extends OpMode
 
         power = gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
-
-        //leftPower  = -gamepad1.left_stick_y;
-        //rightPower = -gamepad1.right_stick_y;
 
         leftPower = Range.clip(power+turn, -1, 1);
         rightPower = Range.clip(power-turn, -1,1);

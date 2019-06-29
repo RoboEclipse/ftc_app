@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 class TileRunnerClass {
     DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
+    private Telemetry telemetry;
+
     private double wheelCircumference = 6*Math.PI;
     private double TICKS_PER_ROTATION = 1120;
     private double TICKS_PER_INCH = Math.round(wheelCircumference*TICKS_PER_ROTATION);
@@ -58,14 +60,35 @@ class TileRunnerClass {
 
     public void encoderDriveInches(double inches, double power) {
         int ticks = (int)Math.round(inches*TICKS_PER_INCH);
-        multiSetMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
+        multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         multiSetTargetPosition(ticks, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         multiSetMode(DcMotor.RunMode.RUN_TO_POSITION, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         multiSetPower(power, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         while (frontRightDrive.isBusy() || frontLeftDrive.isBusy() || backRightDrive.isBusy() || backLeftDrive.isBusy()) {
-
+            telemetry.addData("frontRightDrive: ", frontRightDrive.getCurrentPosition());
+            telemetry.addData("frontLeftDrive: ", frontLeftDrive.getCurrentPosition());
+            telemetry.addData("backRightDrive: ", frontRightDrive.getCurrentPosition());
+            telemetry.addData("backRightDrive: ", frontLeftDrive.getCurrentPosition());
         }
         multiSetMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         multiSetPower(0, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
