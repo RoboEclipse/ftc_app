@@ -318,7 +318,6 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.readEncoders();
 
         telemetry.addData("collectorServoPower", cServoPower);
-
     }
 
     private double getLedPower() {
