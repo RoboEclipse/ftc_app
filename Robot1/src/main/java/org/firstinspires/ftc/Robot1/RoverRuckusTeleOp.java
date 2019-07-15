@@ -292,7 +292,7 @@ public class RoverRuckusTeleOp extends OpMode
         }
 
         double ledPower = getLedPower();
-        myRobot.ledControl(ledPower);
+        //myRobot.ledControl(ledPower);
 
         telemetry.addData("", "Run Time: " + runtime.toString() + " Angle: " + myRobot.getHorizontalAngle());
         //telemetry.addData("", "LeftDistanceSensor: " + myRobot.getLeftDistanceSensor() + " RightDistanceSensor: "+myRobot.getRightDistanceSensor());

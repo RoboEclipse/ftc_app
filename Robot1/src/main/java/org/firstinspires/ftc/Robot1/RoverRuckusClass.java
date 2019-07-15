@@ -70,7 +70,7 @@ public class RoverRuckusClass {
         rr = hardwareMap.dcMotor.get(RoverRuckusConfiguration.RightRearMotorName);
         elevatorServo = hardwareMap.servo.get(RoverRuckusConfiguration.ElevatorServoName);
         markerServo = hardwareMap.servo.get(RoverRuckusConfiguration.TeamMarkerServoName);
-        led = hardwareMap.servo.get(RoverRuckusConfiguration.LEDLightName);
+        //led = hardwareMap.servo.get(RoverRuckusConfiguration.LEDLightName);
 
         emotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ElevatorMotorName);
         exMotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ExtenderMotorName);
