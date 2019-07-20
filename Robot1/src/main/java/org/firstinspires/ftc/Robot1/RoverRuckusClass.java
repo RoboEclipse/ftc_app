@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,7 +25,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-import java.nio.file.WatchEvent;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +68,7 @@ public class RoverRuckusClass {
         elevatorServo = hardwareMap.servo.get(RoverRuckusConfiguration.ElevatorServoName);
         markerServo = hardwareMap.servo.get(RoverRuckusConfiguration.TeamMarkerServoName);
         led = hardwareMap.servo.get(RoverRuckusConfiguration.LEDLightName);
+
 
         emotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ElevatorMotorName);
         exMotor = hardwareMap.dcMotor.get(RoverRuckusConfiguration.ExtenderMotorName);
