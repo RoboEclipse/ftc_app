@@ -253,7 +253,7 @@ public class FtcRobotControllerActivity extends Activity
         // Double-sure check that we can talk to the DB over the serial TTY
         DragonboardLynxDragonboardIsPresentPin.getInstance().setState(true);
       }
-      FtcDashboard.start();
+
     }
 
     context = this;
@@ -342,6 +342,7 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper.readBoolean(getString(R.string.pref_wifi_automute), false)) {
       initWifiMute(true);
     }
+    FtcDashboard.start();
   }
 
   protected UpdateUI createUpdateUI() {
