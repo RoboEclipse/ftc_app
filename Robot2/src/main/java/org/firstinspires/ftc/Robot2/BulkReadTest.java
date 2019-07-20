@@ -85,6 +85,8 @@ public class BulkReadTest extends OpMode
             timeStamps.remove(0);
         }
 
+        expansionHub.setAllI2cBusSpeeds(ExpansionHubEx.I2cBusSpeed.FAST_400K);
+
         telemetry.addData("M0 enocder", bulkData.getMotorCurrentPosition(frontRightDrive));
         telemetry.addData("M1 encoder", bulkData.getMotorCurrentPosition(frontLeftDrive));
         telemetry.addData("M2 encoder", bulkData.getMotorCurrentPosition(backRightDrive));
