@@ -117,7 +117,8 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
 
     @Override
     public void enrichPacket(TelemetryPacket packet){
-        packet.put("imuRaw", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        packet.put("imuRaw", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+        packet.put("imuGet", getRawExternalHeading());
         packet.put("lf", leftFront.getCurrentPosition());
         packet.put("lr", leftRear.getCurrentPosition());
         packet.put("rf", rightFront.getCurrentPosition());
