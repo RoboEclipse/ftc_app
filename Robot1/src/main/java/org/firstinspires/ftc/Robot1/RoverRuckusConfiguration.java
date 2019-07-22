@@ -19,7 +19,7 @@ public class RoverRuckusConfiguration {
     //Servos
     public static final String ElevatorServoName = "elevatorServo";
     public static final String TeamMarkerServoName = "teamMarkerServo";
-    public static final String LEDLightName = "led";
+    //public static final String LEDLightName = "led";
 
     //Sensors
     public static final String cameraName = "TensorFlow";

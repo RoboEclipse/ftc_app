@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.Robot1;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -24,6 +27,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
 
     public SampleMecanumDriveREV(HardwareMap hardwareMap) {
         super();
@@ -54,9 +58,10 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
-        // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
+        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, TRANSLATIONAL_PID);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -93,10 +98,21 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         leftRear.setPower(v1);
         rightRear.setPower(v2);
         rightFront.setPower(v3);
-    }
+/*
+        TelemetryPacket leftFront = new TelemetryPacket();
+        leftFront.put("lf" , v);
+        leftFront.put("lr", v1);
+        leftFront.put("rr", v2);
+        leftFront.put("rf", v3);
+        dashboard.sendTelemetryPacket(leftFront);
+      */
+      }
 
     @Override
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;
     }
+
+
+
 }

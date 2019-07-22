@@ -1,58 +1,46 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.Robot2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcom.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import java.util.*;
 
 
 @TeleOp(name="idleEncoder", group="Iterative Opmode")
-@Disabled
-public class BasicOpMode_Iterative extends OpMode
+//@Disabled
+public class idleEncoder extends OpMode
 {
-    // Declare OpMode members.
+    //final numbers
+    final double maxVolt = 3.3;
+
+    //create elapsed time object
     private ElapsedTime runtime = new ElapsedTime();
 
-    final double maxVolt = 3.3;
+    //create Analog Input controller object
+    AnalogInput controller;
+
+    //voltage and angle changes
+    double currentVoltage;
+    double currentAngleChange;
+    double currentTimeChange;
+    double totalAngleChange = 0.0;
+
+    //create lists for storing voltage and angle changes
+    ArrayList<Double> voltageLevels = new ArrayList<Double>();
+    ArrayList<Double> angleChanges = new ArrayList<Double>();
+    ArrayList<Double> timeStamps = new ArrayList<Double>();
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+
+        //find controller in hardware map
+        controller = hardwareMap.get( AnalogInput.class, "encoder");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -71,11 +59,14 @@ public class BasicOpMode_Iterative extends OpMode
     @Override
     public void start() {
         runtime.reset();
-        ArrayList<double> voltageLevels = new ArrayList<double>();
-        ArrayList<double> angleChanges = new Arraylist<double>();
-        double totalAngleChange = 0;
+
+        //create buffer for the voltage list
+        voltageLevels.add(0.0);
+        voltageLevels.add(0.0);
+        timeStamps.add(0.1);
+        timeStamps.add(0.2);
         voltageLevels.add(returnVoltage());
-        controller = hardwareMap.get( AnalogInput.class, "encoder");
+
     }
 
     /*
@@ -83,26 +74,32 @@ public class BasicOpMode_Iterative extends OpMode
      */
     @Override
     public void loop() {
-            runtime.reset();
 
-            double currentAngleChange = angleChange();
-            double currentVoltage = returnVoltage();
+            currentVoltage = returnVoltage();
+            currentAngleChange = angleChange();
+
+            totalAngleChange += currentAngleChange;
 
             voltageLevels.add(currentVoltage);
             angleChanges.add(currentAngleChange);
+            timeStamps.add(runtime.seconds());
+
+            currentTimeChange = timeStamps.get(timeStamps.size() - 1) - timeStamps.get(timeStamps.size()-2);
+
+            System.out.println(angleChanges.toString());
 
             if (voltageLevels.size() > 50){
                 voltageLevels.remove(0);
             }
             if (angleChanges.size() > 50){
-                anglechanges.remove(0);
+                angleChanges.remove(0);
             }
 
-            totalAngleChange += currentAngleChange;
-
-            double timeChange = runtime.seconds();
-            telemetry.addData("Encoder Value", totalAngleChange);
-            telemetry.addData("Angular Velocity", totalAngleChange/timeChange);
+            telemetry.addData("Current Voltage", currentVoltage);
+            telemetry.addData("Current Angle Change", currentAngleChange);
+            telemetry.addData("Total Angle Change", (int) totalAngleChange);
+            telemetry.addData("Angular Velocity", (int) (currentAngleChange/currentTimeChange));
+            telemetry.addData("Update Hertz", (int)(1/currentTimeChange));
             telemetry.update();
         }
 
@@ -113,21 +110,37 @@ public class BasicOpMode_Iterative extends OpMode
     public void stop() {
     }
 
+    //small method to get input voltage of encoder
     public double returnVoltage(){
+
+        //return the current voltage
         return controller.getVoltage();
     }
 
+    //calculate the change in angle using the change in voltage
     public double angleChange(){
+
         double volt1 = voltageLevels.get(voltageLevels.size() - 1);
         double volt2 = voltageLevels.get(voltageLevels.size() - 2);
-        double voltDif;
-        double angleDif;
-        if (volt2 >= volt1){
-            voltDif = volt2 - volt1;
-        } else{
-            voltDif = maxVolt - volt1 + volt2;
+
+        double voltDif = 0.0;
+        double angleDif = 0.0;
+
+        //initial calculation difference
+        voltDif = (volt2 - volt1);
+
+
+        if (voltDif < -maxVolt/2){
+            //angle goes over the apex of the bump from FLATTER side -> angle gets larger
+            voltDif += maxVolt;
         }
-        angleDif = voltDif/3.3*360.0;
+        else if (voltDif > maxVolt/2){
+            //angle goes over the apex of the bump from STEEP side -> angle gets smaller
+            voltDif -= maxVolt;
+        }
+
+        angleDif = (voltDif/3.3) * 360.0;
+
         return angleDif;
     }
 
