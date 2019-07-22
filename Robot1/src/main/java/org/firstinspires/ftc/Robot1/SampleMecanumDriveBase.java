@@ -101,6 +101,12 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         waitForIdle();
     }
 
+
+    public void enrichPacket(TelemetryPacket packet)
+    {
+
+    }
+
     public void update() {
         updatePoseEstimate();
 
@@ -109,6 +115,7 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         TelemetryPacket packet = new TelemetryPacket();
         Canvas fieldOverlay = packet.fieldOverlay();
 
+        enrichPacket(packet);
         packet.put("mode", mode);
         packet.put("x", currentPose.getX());
         packet.put("y", currentPose.getY());

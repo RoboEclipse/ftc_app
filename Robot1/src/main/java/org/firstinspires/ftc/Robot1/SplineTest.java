@@ -23,6 +23,7 @@ public class SplineTest extends LinearOpMode {
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .splineTo(new Pose2d(30, 30, 0))
+                        //.splineTo(new Pose2d(20,20,0))
                         .build()
         );
 
@@ -31,7 +32,8 @@ public class SplineTest extends LinearOpMode {
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .reverse()
-                        .splineTo(new Pose2d(0, 0, 0))
+                        .splineTo(new Pose2d(30,30,0))
+                        //.splineTo(new Pose2d(0, 0, 0))
                         .build()
         );
     }
