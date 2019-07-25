@@ -11,7 +11,7 @@ import org.firstinspires.ftc.Robot1.SampleMecanumDriveREV;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous(group = "drive")
-public class SplineTest extends LinearOpMode {
+public class EightTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
@@ -22,20 +22,21 @@ public class SplineTest extends LinearOpMode {
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(30, 15, 0))
-                        //.splineTo(new Pose2d(20,20,0))
+                        .splineTo(new Pose2d(30,30,0))
+                        .splineTo(new Pose2d(0, 0, 0))
                         .build()
         );
 
-        sleep(2000);
-/*
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .reverse()
-                        .splineTo(new Pose2d(30,30,0))
-                        //.splineTo(new Pose2d(0, 0, 0))
-                        .build()
-        );
+        /*
+        drive.followTrajectorySync(drive.trajectoryBuilder().splineTo(new Pose2d(30, 15, 0)).build());
+        drive.turnSync(-Math.PI/2);
+        drive.followTrajectorySync(drive.trajectoryBuilder().forward(15).build());
+        drive.turnSync(-Math.PI/2);
+        drive.followTrajectorySync(drive.trajectoryBuilder().splineTo(new Pose2d(0, 15, -Math.PI)).build());
+        drive.turnSync(-Math.PI/2);
+        drive.followTrajectorySync(drive.trajectoryBuilder().forward(15).build());
 */
+
+
     }
 }
