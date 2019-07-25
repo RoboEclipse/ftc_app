@@ -33,8 +33,9 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.RevExtensions2;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -70,6 +71,7 @@ public class RoverRuckusTeleOp extends OpMode
     boolean LED = true;
     private ElapsedTime dumpTime = new ElapsedTime();
     private ElapsedTime returnTime = new ElapsedTime();
+    ExpansionHubEx expansionHub;
 
 
     /*
@@ -80,6 +82,9 @@ public class RoverRuckusTeleOp extends OpMode
         myRobot.initialize(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        RevExtensions2.init();
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+        expansionHub.setAllI2cBusSpeeds(ExpansionHubEx.I2cBusSpeed.FAST_400K);
     }
 
     /*
