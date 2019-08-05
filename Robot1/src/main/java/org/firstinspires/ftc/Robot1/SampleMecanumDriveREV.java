@@ -12,8 +12,10 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import static org.firstinspires.ftc.Robot1.DriveConstants.*;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.jetbrains.annotations.NotNull;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+//import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +42,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
 
         // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
         // upward (normal to the floor) using a command like the following:
-        BNO055IMUUtil.remapAxes(imu, AxesOrder.ZYX, AxesSigns.NPN);
+        BNO055IMUUtil.remapAxes(imu, AxesOrder.YZX, AxesSigns.NPN);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -64,7 +66,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, TRANSLATIONAL_PID);
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+        //for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         }
     }
 
-    @NotNull
+    //@NotNull
     @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
@@ -113,6 +115,14 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         return imu.getAngularOrientation().firstAngle;
     }
 
-
+    @Override
+    public void enrichPacket(TelemetryPacket packet){
+        packet.put("imuRaw", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+        packet.put("imuGet", getRawExternalHeading());
+        packet.put("lf", leftFront.getCurrentPosition());
+        packet.put("lr", leftRear.getCurrentPosition());
+        packet.put("rf", rightFront.getCurrentPosition());
+        packet.put("rr", rightRear.getCurrentPosition());
+    }
 
 }

@@ -33,8 +33,8 @@ import static org.firstinspires.ftc.Robot1.DriveConstants.kStatic;
  */
 @Config
 public abstract class SampleMecanumDriveBase extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5.5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.5, 0, 0);
 
 
     public enum Mode {
@@ -101,6 +101,12 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         waitForIdle();
     }
 
+
+    public void enrichPacket(TelemetryPacket packet)
+    {
+
+    }
+
     public void update() {
         updatePoseEstimate();
 
@@ -109,6 +115,7 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         TelemetryPacket packet = new TelemetryPacket();
         Canvas fieldOverlay = packet.fieldOverlay();
 
+        enrichPacket(packet);
         packet.put("mode", mode);
         packet.put("x", currentPose.getX());
         packet.put("y", currentPose.getY());
