@@ -125,8 +125,4 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         packet.put("rr", rightRear.getCurrentPosition());
     }
 
-
-
-
-
 }
