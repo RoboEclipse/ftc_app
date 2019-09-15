@@ -30,12 +30,8 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -51,9 +47,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="SKYSTONEAutonomousTest", group="Linear Opmode")
+@Autonomous(name="SKYSTONEAutonomousSensorTest", group="Linear Opmode")
 //@Disabled
-public class SKYSTONEAutonomousTest extends LinearOpMode {
+public class SKYSTONEAutonomousSensorTest extends LinearOpMode {
     private SKYSTONEConstants constants = new SKYSTONEConstants();
 
     // Declare OpMode members.
@@ -61,24 +57,31 @@ public class SKYSTONEAutonomousTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
         SKYSTONEAutonomousMethods methods = new SKYSTONEAutonomousMethods() {
             @Override
             public void runOpMode() throws InterruptedException {
 
             }
         };
+
+        //SKYSTONEClass methods = new SKYSTONEClass();
         methods.initialize(hardwareMap, telemetry);
         // Wait for the game to start (driver presses PLAY)
-        methods.waitForStart2();
+        //methods.waitForStart2();
+        waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            methods.encoderStraightDriveInches(constants.testDistance, 0.5);
+            methods.runMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
             // Show the elapsed game time and wheel power.
+            telemetry.addData("FirstAngle", methods.getAngleOne());
+            telemetry.addData("SecondAngle", methods.getAngleTwo());
+            telemetry.addData("ThirdAngle", methods.getAngleThree());
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
-            break;
         }
     }
 }
