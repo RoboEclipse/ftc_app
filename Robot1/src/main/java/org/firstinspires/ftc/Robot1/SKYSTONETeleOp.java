@@ -101,6 +101,14 @@ public class SKYSTONETeleOp extends OpMode
         double v_rotation = -gamepad1.right_stick_x;
 
         myRobot.drive(theta,  speedMultiplier*v_theta, rotationMultiplier*v_rotation);
+        double leftClawPosition = 0.5;
+        if(gamepad1.dpad_up){
+            leftClawPosition += 0.01;
+        }
+        if(gamepad1.dpad_down) {
+            leftClawPosition -= 0.01;
+        }
+        myRobot.setLeftClawPosition(leftClawPosition);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }

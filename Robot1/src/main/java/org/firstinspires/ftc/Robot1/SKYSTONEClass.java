@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -12,6 +13,7 @@ import java.util.Locale;
 public class SKYSTONEClass {
     //Hardware
     DcMotor lb, lf, rb, rf;
+    Servo leftClaw;
 
     //Software
     private Telemetry telemetry;
@@ -32,6 +34,7 @@ public class SKYSTONEClass {
         lf = hardwareMap.dcMotor.get(skystoneNames.frontLeftMotor);
         rb = hardwareMap.dcMotor.get(skystoneNames.backRightMotor);
         rf = hardwareMap.dcMotor.get(skystoneNames.frontRightMotor);
+        leftClaw = hardwareMap.servo.get(skystoneNames.leftClawServo);
 
 
 
@@ -46,6 +49,7 @@ public class SKYSTONEClass {
     }
 
     //Methods
+    //Drivetrain
     void encoderStraightDriveInches(double inches, double power){
         setModeAllDrive(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         multiSetTargetPosition(inches*skystoneConstants.TICKS_PER_INCH, lb, lf, rb, rf);
@@ -60,7 +64,10 @@ public class SKYSTONEClass {
         runMotors(0,0);
         setModeAllDrive(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-
+    //Left Claw Servo
+    public void setLeftClawPosition(double position){
+        leftClaw.setPosition(position);
+    }
     //Shortcuts
     private void setModeAllDrive(DcMotor.RunMode mode){
         lb.setMode(mode);

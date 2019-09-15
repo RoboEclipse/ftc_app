@@ -74,6 +74,7 @@ public class SKYSTONEAutonomousSensorTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
             methods.runMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
             // Show the elapsed game time and wheel power.
             telemetry.addData("FirstAngle", methods.getAngleOne());
