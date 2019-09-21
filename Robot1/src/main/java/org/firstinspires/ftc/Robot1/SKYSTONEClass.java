@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -14,83 +13,8 @@ import java.util.Locale;
 public class SKYSTONEClass {
     //Hardware
     DcMotor lb, lf, rb, rf;
-    CRServo collector;
+    Servo leftClaw;
 
-    public void initialize(HardwareMap hardwareMap, Telemetry telemetry) {
-    }
-    public void spinCollector(double position) {
-        collector.setPower(1);
-    }
-    public void drive(double theta, double v, double v1) {
-        public void drive(double direction, double velocity, double rotationVelocity) {
-            SKYSTONEClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
-            lf.setPower(w.lf);
-            rf.setPower(w.rf);
-            lb.setPower(w.lb);
-            rb.setPower(w.rb);
-            telemetry.addData("Powers", String.format(Locale.US, "%.2f %.2f %.2f %.2f", w.lf, w.rf, w.lr, w.rr));
-        }
-    }
-/*
-        public ServoController getController() {
-            return null;
-        }
-
-
-        public int getPortNumber() {
-            return 0;
-        }
-
-
-        public void setDirection(Direction direction) {
-
-        }
-
-        @Override
-        public Direction getDirection() {
-            return null;
-        }
-
-        @Override
-        public void setPower(double power) {
-
-        }
-
-        @Override
-        public double getPower() {
-            return 0;
-        }
-
-        @Override
-        public Manufacturer getManufacturer() {
-            return null;
-        }
-
-        @Override
-        public String getDeviceName() {
-            return null;
-        }
-
-        //@Override
-        public String getConnectionInfo() {
-            return null;
-        }
-
-        @Override
-        public int getVersion() {
-            return 0;
-        }
-
-        @Override
-        public void resetDeviceConfigurationForOpMode() {
-
-        }
-
-        @Override
-        public void close() {
-
-
-    }
     //Software
     private Telemetry telemetry;
 
@@ -110,6 +34,7 @@ public class SKYSTONEClass {
         lf = hardwareMap.dcMotor.get(skystoneNames.frontLeftMotor);
         rb = hardwareMap.dcMotor.get(skystoneNames.backRightMotor);
         rf = hardwareMap.dcMotor.get(skystoneNames.frontRightMotor);
+        leftClaw = hardwareMap.servo.get(skystoneNames.leftClawServo);
 
 
 
@@ -124,6 +49,7 @@ public class SKYSTONEClass {
     }
 
     //Methods
+    //Drivetrain
     void encoderStraightDriveInches(double inches, double power){
         setModeAllDrive(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         multiSetTargetPosition(inches*skystoneConstants.TICKS_PER_INCH, lb, lf, rb, rf);
@@ -139,6 +65,19 @@ public class SKYSTONEClass {
         setModeAllDrive(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void readEncoders(){
+        telemetry.addData(
+                "Encoders", "lf: " + lf.getCurrentPosition()
+                        + " lb: " + lb.getCurrentPosition()
+                        + " rf: " +rf.getCurrentPosition()
+                        + " rb: "+ rb.getCurrentPosition());
+    }
+
+
+    //Left Claw Servo
+    public void setLeftClawPosition(double position){
+        leftClaw.setPosition(position);
+    }
     //Shortcuts
     private void setModeAllDrive(DcMotor.RunMode mode){
         lb.setMode(mode);
@@ -214,6 +153,4 @@ public class SKYSTONEClass {
         }
         return ret;
     }
-
- */
 }

@@ -29,12 +29,14 @@
 
 package org.firstinspires.ftc.Robot1;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -54,10 +56,12 @@ import com.qualcomm.robotcore.util.Range;
 @Autonomous(name="SKYSTONEAutonomousMovementTest", group="Linear Opmode")
 //@Disabled
 public class SKYSTONEAutonomousMovementTest extends LinearOpMode {
-    private SKYSTONEConstants constants = new SKYSTONEConstants();
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private int x;
+    private int y;
+    FtcDashboard dashboard;
 
     @Override
     public void runOpMode() {
@@ -68,7 +72,8 @@ public class SKYSTONEAutonomousMovementTest extends LinearOpMode {
 
             }
         };
-
+        dashboard = FtcDashboard.getInstance();
+        final double speed = 0.3;
         //SKYSTONEClass methods = new SKYSTONEClass();
         methods.initialize(hardwareMap, telemetry);
         // Wait for the game to start (driver presses PLAY)
@@ -78,11 +83,46 @@ public class SKYSTONEAutonomousMovementTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            methods.encoderStraightDriveInches(constants.testDistance, 1);
+            methods.encoderStraightDriveInches(SKYSTONEConstants.aFoundationDistance, speed);
+
+            x = 0;
+            y = 0;
+            dashboardRecordPosition(144, 144);
+            TelemetryPacket packet;
+
+            methods.encoderStraightDriveInches(-SKYSTONEConstants.aFoundationDistance + 2, speed);
+            packet = new TelemetryPacket();
+            packet.put("cat", 3.8);
+            //packet.fieldOverlay().setFill("blue").fillRect(-);
+
+            dashboard.sendTelemetryPacket(packet);
+
+            methods.encoderStrafeDriveInchesRight(SKYSTONEConstants.bFoundationClear, speed);
+            methods.encoderTurn(-90, speed, 3);
+            methods.encoderStraightDriveInches(SKYSTONEConstants.cSkybridgeClear, speed);
+            methods.encoderStrafeDriveInchesRight(SKYSTONEConstants.dSkyStoneAlign,speed);
+            /*
+            methods.encoderStrafeDriveInchesRight(5, speed);
+            methods.encoderStraightDriveInches(-30,speed);
+            methods.encoderStraightDriveInches(35, speed);
+            methods.encoderStrafeDriveInchesRight(-5,speed);
+            methods.encoderStrafeDriveInchesRight(5,speed);
+            methods.encoderStraightDriveInches(-20,speed);
+            */
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
             break;
         }
+    }
+
+    private void dashboardRecordPosition(int deltax, int deltay) {
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("cat", 3.7);
+        packet.fieldOverlay().setFill("blue").fillRect(x,y,x+ deltax,y + deltay +2);
+
+        dashboard.sendTelemetryPacket(packet);
+        x = x + deltax;
+        y = y + deltay;
     }
 }
