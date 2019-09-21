@@ -64,6 +64,16 @@ public class SKYSTONEClass {
         runMotors(0,0);
         setModeAllDrive(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public void readEncoders(){
+        telemetry.addData(
+                "Encoders", "lf: " + lf.getCurrentPosition()
+                        + " lb: " + lb.getCurrentPosition()
+                        + " rf: " +rf.getCurrentPosition()
+                        + " rb: "+ rb.getCurrentPosition());
+    }
+
+
     //Left Claw Servo
     public void setLeftClawPosition(double position){
         leftClaw.setPosition(position);

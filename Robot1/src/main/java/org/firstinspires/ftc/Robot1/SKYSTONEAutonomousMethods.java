@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.Robot1;
 
-import android.graphics.drawable.GradientDrawable;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,6 +31,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
     //Backend
     void initialize(HardwareMap hardwareMap, Telemetry telemetry){
         myRobot.initialize(hardwareMap, telemetry);
+        
         this.telemetry = telemetry;
         //Sensors
         // Set up the parameters with which we will use our IMU. Note that integration
@@ -53,7 +50,6 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
     }
     void waitForStart2(){
         ElapsedTime time  = new ElapsedTime();
@@ -71,7 +67,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         multiSetTargetPosition(inches*SKYSTONEConstants.TICKS_PER_INCH, myRobot.lb, myRobot.lf, myRobot.rb, myRobot.rf);
         setModeAllDrive(DcMotor.RunMode.RUN_TO_POSITION);
         runMotors(power, power);
-        while (anyBusy() && opModeIsActive()){
+        while (anyBusy() /*&& opModeisActive()*/){
             telemetry.addData("Left Front: ", myRobot.lf.getCurrentPosition());
             telemetry.addData("Left Back: ", myRobot.lb.getCurrentPosition());
             telemetry.addData("Right Front: ", myRobot.rf.getCurrentPosition());
@@ -90,7 +86,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         multiSetTargetPosition(inches*SKYSTONEConstants.TICKS_PER_INCH, myRobot.lb, myRobot.lf, myRobot.rb, myRobot.rf);
         setModeAllDrive(DcMotor.RunMode.RUN_TO_POSITION);
         runMotors(power, power);
-        while (anyBusy() && opModeIsActive()){
+        while (anyBusy() /*&& opModeisActive()*/){
             telemetry.addData("Left Front: ", myRobot.lf.getCurrentPosition());
             telemetry.addData("Left Back: ", myRobot.lb.getCurrentPosition());
             telemetry.addData("Right Front: ", myRobot.rf.getCurrentPosition());
@@ -101,14 +97,14 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
     }
     //Positive = Clockwise, Negative = Counterclockwise
     void encoderTurn(double targetAngle, double power, double tolerance){
-        double currentAngle = getAngleOne();
+        double currentAngle = getHorizontalAngle();
         double startDifference = targetAngle-currentAngle;
         double currentDifference = startDifference;
         double drivePower = power;
         setModeAllDrive(DcMotor.RunMode.RUN_USING_ENCODER);
         runMotors(drivePower, -drivePower);
-        while(getAngleOne()<targetAngle-tolerance || getAngleOne()>targetAngle+tolerance && opModeIsActive()){
-            currentAngle = getAngleOne();
+        while(getHorizontalAngle()<targetAngle-tolerance || getHorizontalAngle()>targetAngle+tolerance /*&& opModeisActive()*/){
+            currentAngle = getHorizontalAngle();
             currentDifference = targetAngle-currentAngle;
             drivePower = 0.1 + Math.abs(currentDifference/startDifference)*power*0.9;
             runMotors(drivePower, -drivePower);
@@ -138,7 +134,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         myRobot.rb.setPower(rightPower);
         myRobot.rf.setPower(rightPower);
     }
-    double getAngleOne(){
+    double getHorizontalAngle(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double output = angles.firstAngle;
         if(output>180){
@@ -149,7 +145,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         }
         return output;
     }
-    double getAngleTwo(){
+    double getRoll(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double output = angles.secondAngle;
         if(output>180){
@@ -160,7 +156,7 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         }
         return output;
     }
-    double getAngleThree(){
+    double getVerticalAngle(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double output = angles.thirdAngle;
         if(output>180){
@@ -171,5 +167,10 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         }
         return output;
     }
-
+    boolean opModeStatus(){
+        if(opModeIsActive()){
+            return true;
+        }
+        else return false;
+    }
 }

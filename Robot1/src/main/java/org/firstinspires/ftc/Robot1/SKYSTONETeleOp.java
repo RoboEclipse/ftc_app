@@ -111,6 +111,7 @@ public class SKYSTONETeleOp extends OpMode
         myRobot.setLeftClawPosition(leftClawPosition);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        myRobot.readEncoders();
     }
 
     /*
