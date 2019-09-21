@@ -29,12 +29,9 @@
 
 package org.firstinspires.ftc.Robot1;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="SKYSTONETeleOp", group="Iterative Opmode")
@@ -90,6 +87,9 @@ public class SKYSTONETeleOp extends OpMode
         if(gamepad1.dpad_left){
             lx=-1;
             speedMultiplier = 0.75;
+        }
+        if(gamepad1.x) {
+
         }
         else if(gamepad1.dpad_right){
             lx=1;
