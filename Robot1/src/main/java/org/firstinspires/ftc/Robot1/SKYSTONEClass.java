@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.Robot1;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,6 +15,7 @@ public class SKYSTONEClass {
     //Hardware
     DcMotor lb, lf, rb, rf;
     Servo leftClaw;
+    CRServo fingers;
 
     //Software
     private Telemetry telemetry;
@@ -35,7 +37,7 @@ public class SKYSTONEClass {
         rb = hardwareMap.dcMotor.get(skystoneNames.backRightMotor);
         rf = hardwareMap.dcMotor.get(skystoneNames.frontRightMotor);
         leftClaw = hardwareMap.servo.get(skystoneNames.leftClawServo);
-
+        fingers = hardwareMap.crservo.get(skystoneNames.fingers);
 
 
         //Motor Settings

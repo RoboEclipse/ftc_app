@@ -6,4 +6,5 @@ class SKYSTONEConfiguration {
     final String backRightMotor = "backRight";
     final String frontRightMotor = "frontRight";
     final String leftClawServo = "leftClawServo";
+    final String fingers = "fingers";
 }

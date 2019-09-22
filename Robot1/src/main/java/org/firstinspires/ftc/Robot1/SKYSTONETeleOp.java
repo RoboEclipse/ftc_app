@@ -88,12 +88,15 @@ public class SKYSTONETeleOp extends OpMode
             lx=-1;
             speedMultiplier = 0.75;
         }
-        if(gamepad1.x) {
-
-        }
         else if(gamepad1.dpad_right){
             lx=1;
             speedMultiplier = 0.75;
+        }
+        if(gamepad2.a) {
+            myRobot.fingers.setPower(1);
+        }
+        else if (gamepad2.b) {
+            myRobot.fingers.setPower(-1);
         }
 
         double theta = Math.atan2(lx, ly);
@@ -102,12 +105,13 @@ public class SKYSTONETeleOp extends OpMode
 
         myRobot.drive(theta,  speedMultiplier*v_theta, rotationMultiplier*v_rotation);
         double leftClawPosition = 0.5;
-        if(gamepad1.dpad_up){
+        if(gamepad2.dpad_up){
             leftClawPosition += 0.01;
         }
-        if(gamepad1.dpad_down) {
+        if(gamepad2.dpad_down) {
             leftClawPosition -= 0.01;
         }
+        if (gamepad2.b)
         myRobot.setLeftClawPosition(leftClawPosition);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
