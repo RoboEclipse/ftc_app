@@ -13,8 +13,9 @@ import java.util.Locale;
 
 public class SKYSTONEClass {
     //Hardware
-    DcMotor lb, lf, rb, rf;
-    Servo leftClaw;
+    DcMotor lb, lf, rb, rf, horizontalSlider;
+
+    Servo leftClaw, grabber, grabberClaw;
     CRServo fingers;
 
     //Software
@@ -38,6 +39,7 @@ public class SKYSTONEClass {
         rf = hardwareMap.dcMotor.get(skystoneNames.frontRightMotor);
         leftClaw = hardwareMap.servo.get(skystoneNames.leftClawServo);
         fingers = hardwareMap.crservo.get(skystoneNames.fingers);
+        horizontalSlider = hardwareMap.dcMotor.get(skystoneNames.horizonatalSlider);
 
 
         //Motor Settings
