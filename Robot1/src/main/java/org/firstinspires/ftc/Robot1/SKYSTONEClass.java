@@ -157,4 +157,24 @@ public class SKYSTONEClass {
         }
         return ret;
     }
+    /** This method is used for testing purposes **/
+
+    void diagonalDriveInchesTestRightForwardFourInchWheel(double direction, double velocity, double rotationVelocity) {
+
+        SKYSTONEClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
+        lf.setPower(velocity);
+        rb.setPower(velocity);
+
+    }
+
+    void diagonalDriveInchesTestLeftForwardFourInchWheel(double direction, double velocity, double rotationVelocity) {
+
+        SKYSTONEClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
+        lf.setPower(velocity);
+        rb.setPower(velocity);
+
+    }
+
+    /** The method will be used to move diagonally in both Autonomous and TeleOp**/
+
 }

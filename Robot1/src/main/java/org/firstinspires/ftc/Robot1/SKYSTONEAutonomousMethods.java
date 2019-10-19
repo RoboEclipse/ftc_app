@@ -61,6 +61,23 @@ abstract class SKYSTONEAutonomousMethods extends LinearOpMode {
         }
     }
 
+    /** This method is used for testing purposes **/
+
+    void diagonalDriveInchesTestRightForwardFourInchWheel(double power, double time, double wheelToMecanumDistanceX, double wheelToMecanumDistanceY) {
+        int wheelPower1 = 0;
+        int wheelPower2 = 0;
+        int wheelPower3 = 0;
+        int wheelPower4 = 0;
+        double rotationDistance = 4 * Math.PI;
+        myRobot.encoderStraightDriveInches(4,5);
+
+    }
+
+    /** The method will be used to move diagonally in both Autonomous and TeleOp**/
+
+
+
+
     //Methods
     void encoderStraightDriveInches(double inches, double power){
         setModeAllDrive(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
