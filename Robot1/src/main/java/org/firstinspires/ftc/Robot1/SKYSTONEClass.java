@@ -166,7 +166,7 @@ public class SKYSTONEClass {
         rb.setPower(velocity);
 
     }
-
+    // Other diagonal
     void diagonalDriveInchesTestLeftForwardFourInchWheel(double direction, double velocity, double rotationVelocity) {
 
         SKYSTONEClass.Wheels w = getWheels(direction, velocity, rotationVelocity);
